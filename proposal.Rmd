@@ -22,6 +22,8 @@ Increasing transportation costs, congested streets, and subway delays across New
 
 ## Intended Final Products
 
+
+
 ## Anticipated Data Sources
 
 We will use the publicly available CitiBike located at `https://s3.amazonaws.com/tripdata/index.html`. These files contain monthly logs of trips and record data elements such as the ride ID, the user's status (subscriber or casual user), the trip start location and longitude/latitude coordinates, the trip end location and latitude/longitude coordinates, and the trip start/stop times and duration. 
@@ -31,6 +33,37 @@ Additionally we plan to investigate weather trends in the area using data from N
 Lastly, for temperature-related trends, we will use data from the Global Historical Climatology Network - Daily (GHCN-Daily) dataset published by the National Centers for Environmental Information (NCEI) located here `https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html`. These data reflect those used in the rnoaa package, and include the weather station identifier, the date, latitude/longitude, maximum temperature, minimum temperature, and precipitation. 
 
 ## Planned Analyses and Visualizations
+
+We want to investigate:
+
+**1) Who uses CitiBikes?**
+
+  - What is the ratio of subscriber : tourist (i.e. "customer") utilization?
+    - Does this vary by time of day?
+    - Does this vary by time of year?
+    
+**2) When/how long do they use them?**
+
+  - How does this vary by subscriber/customer status?
+  - How does usage vary by time of day, time of year, and weather quality?
+  
+**3) Where are they leaving from and going toward?**
+
+  - What are the most common origin/destination stations?
+  - How do these vary by subscriber/customer status?
+  - How does this vary by time of day, time of year, and weather quality?
+
+**4) What does it cost to use the CitiBikes, and how does this compare to rideshares or subways?**
+
+  - Cost of subscription
+  - Cost of single-usage
+  - Cost of gear (for a commuter)
+
+We want to create visualizations of: 
+
+**1) A map of CitiBike stations, indicating usage frequency**
+
+**2) lijlik**
 
 ## Anticipated Challenges/Limitations
 

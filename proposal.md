@@ -51,6 +51,39 @@ temperature, minimum temperature, and precipitation.
 
 ## Planned Analyses and Visualizations
 
+We want to investigate:
+
+**1) Who uses CitiBikes?**
+
+- What is the ratio of subscriber : tourist (i.e. “customer”)
+  utilization?
+  - Does this vary by time of day?
+  - Does this vary by time of year?
+
+**2) When/how long do they use them?**
+
+- How does this vary by subscriber/customer status?
+- How does usage vary by time of day, time of year, and weather quality?
+
+**3) Where are they leaving from and going toward?**
+
+- What are the most common origin/destination stations?
+- How do these vary by subscriber/customer status?
+- How does this vary by time of day, time of year, and weather quality?
+
+**4) What does it cost to use the CitiBikes, and how does this compare
+to rideshares or subways?**
+
+- Cost of subscription
+- Cost of single-usage
+- Cost of gear (for a commuter)
+
+We want to create visualizations of:
+
+**1) A map of CitiBike stations, indicating usage frequency**
+
+**2) lijlik**
+
 ## Anticipated Challenges/Limitations
 
 Each of our datasets may be subject to missing data and thus require
