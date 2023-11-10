@@ -22,7 +22,7 @@ Increasing transportation costs, congested streets, and subway delays across New
 
 ## Intended Final Products
 
-
+Our aims are detailed below. In brief, we intend to make an interactive website summarizing the findings based on our investigation into Citibike data and weather/air quality in NYC.
 
 ## Anticipated Data Sources
 
