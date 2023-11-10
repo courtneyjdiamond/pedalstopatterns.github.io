@@ -47,10 +47,10 @@ region of interest, and perhaps identify areas where further
 
 ## Anticipated Data Sources
 
-**CitiBike Data** We will use the publicly available CitiBike located at
-`https://s3.amazonaws.com/tripdata/index.html`. These files contain
-monthly logs of trips and record data elements such as the ride ID, the
-user’s status (subscriber or casual user), the trip start location and
+[**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html) We
+will use the publicly available CitiBike. These datasets contain monthly
+logs of trips and record data elements such as the ride ID, the user’s
+status (subscriber or casual user), the trip start location and
 longitude/latitude coordinates, the trip end location and
 latitude/longitude coordinates, and the trip start/stop times and
 duration.
@@ -61,27 +61,28 @@ duration.
   will determine feasibility of incorporating these different variables
   in our analysis.
 
-**Air Quality Data** Additionally we plan to investigate how weather
-trends impact Citibike ridership in the area using data from NYC Open
-Data, contributed by the Department of Hygiene and Mental Health at
-`https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r`. These
-data include the air quality indexes measured across boroughs in NYC.
+[**Air Quality
+Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r)
+Additionally, we plan to investigate how weather trends impact Citibike
+ridership in the area using data from NYC Open Data, contributed by the
+Department of Hygiene and Mental Health. These data include the air
+quality indexes measured across boroughs in NYC.
 
-**Social Deprivation Index** Social deprivation index (SDI) is an effort
-in generating composite measures of socioeconomic factors across NYC by
-census tract. We will use the [publicly available SDI data
-set](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html)
-to explore CitiBike availability and usage patterns across
-neighborhoods.
+[**Social Deprivation
+Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html)
+Social deprivation index (SDI) is an effort in generating composite
+measures of socioeconomic factors across NYC by census tract. We will
+use these datasets to explore CitiBike availability and usage patterns
+across neighborhoods.
 
-**Weather Data** Lastly, for temperature-related trends, we will use
-data from the Global Historical Climatology Network - Daily (GHCN-Daily)
-dataset published by the National Centers for Environmental Information
-(NCEI) located here
-`https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html`.
-These data reflect those used in the rnoaa package, and include the
-weather station identifier, the date, latitude/longitude, maximum
-temperature, minimum temperature, and precipitation.
+[**Weather
+Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html)
+Lastly, for temperature-related trends, we will use data from the Global
+Historical Climatology Network - Daily (GHCN-Daily) dataset published by
+the National Centers for Environmental Information (NCEI). These data
+reflect those used in the rnoaa package, and include the weather station
+identifier, the date, latitude/longitude, maximum temperature, minimum
+temperature, and precipitation.
 
 ## Planned Analyses and Visualizations
 
@@ -127,7 +128,7 @@ by SDI?**
 **6) What are the impacts of bike availability and usage on
 healthoutcomes by SDI?**
 
-We want to create visualizations of:
+## We want to create visualizations of:
 
 **1) A map of CitiBike stations, indicating usage frequency**
 
