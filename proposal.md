@@ -28,7 +28,7 @@ of bike rides and membership.
 
 We, as young professionals/students in the city, want to know if turning
 to CitiBike is a viable alternative. We also want to explore if there is
-differential availability and utilization of CitiBikes across
+disproportionate availability and utilization of CitiBikes across
 neighborhoods with varied social deprivation index that can exacerbate
 disparities in health status. To that end, we will explore CitiBike
 usage, aiming to understand usage patterns related to location within
@@ -74,6 +74,12 @@ Social deprivation index (SDI) is an effort in generating composite
 measures of socioeconomic factors across NYC by census tract. We will
 use these datasets to explore CitiBike availability and usage patterns
 across neighborhoods.
+
+[**Overweight
+Data**](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113)
+To provide an insight into health outcomes associated with factors such
+as physical acitvity aand socioeconomic factors, we will use NYC’s
+publicly available overweight health outcomes data, which is.
 
 [**Weather
 Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html)
