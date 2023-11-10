@@ -17,21 +17,33 @@ From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months
 ## Motivation
 
 Increasing transportation costs, congested streets, and subway delays
-across New York City are pressuring residents and tourists alike to find
-cheaper and faster means of navigating the Big Apple. We, as young
-professionals/students in the city, want to know if turning to CitiBike
-is a viable alternative, or if the monetary, time, and weather-related
-costs or availability of biking negate any benefits gained by biking. We
-will explore CitiBike usage, aiming to understand usage patterns related
-to location within NYC, time of year/seasons, weather, and air quality.
+across New York City are pressuring residents to find cheaper and faster
+means of navigating the Big Apple. CitiBikes have had an impact in
+increasing access to biking as a viable alternative to other means of
+transportation. There is an added health benefit to the physical
+activity of biking. Bike usage also confers health related benefits on
+air quality. The utilization of CitiBikes, however, is dependent on
+factors such as availability of bike stations, bike lanes, and the cost
+of bike rides and membership.
+
+We, as young professionals/students in the city, want to know if turning
+to CitiBike is a viable alternative. We also want to explore if there is
+differential availability and utilization of CitiBikes across
+neighborhoods with varied social deprivation index that can exacerbate
+disparities in health status. To that end, we will explore CitiBike
+usage, aiming to understand usage patterns related to location within
+NYC, and its relation to social deprivation index, air quality, and
+health outcomes.
 
 ## Intended Final Products
 
-Our aims are detailed below. In brief, we intend to make a website
-summarizing the findings based on our investigation into Citibike data
-and weather/air quality in NYC. This will include interactive
-visualizations that allow users to investigate their region, time, or
-weather of interest.
+Our aims are detailed below. In brief, we intend to develop a website
+summarizing the findings of our investigation into Citibike data. This
+investigation will examine the interaction of availability and
+utilization of CitiBikes, socioeconomic and air quality variability
+across NYC neighborhoods, and the relation to health outcomes. This will
+include interactive visualizations that allow users to investigate their
+region of interest, and perhaps identify areas where further
 
 ## Anticipated Data Sources
 
@@ -55,6 +67,13 @@ Data, contributed by the Department of Hygiene and Mental Health at
 `https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r`. These
 data include the air quality indexes measured across boroughs in NYC.
 
+**Social Deprivation Index** Social deprivation index (SDI) is an effort
+in generating composite measures of socioeconomic factors across NYC by
+census tract. We will use the [publicly available SDI data
+set](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html)
+to explore CitiBike availability and usage patterns across
+neighborhoods.
+
 **Weather Data** Lastly, for temperature-related trends, we will use
 data from the Global Historical Climatology Network - Daily (GHCN-Daily)
 dataset published by the National Centers for Environmental Information
@@ -74,7 +93,15 @@ We want to investigate:
   utilization? Are there trends that indicate tourism usage, such as
   one-time usage around Holidays?
   - Does this vary by time of day?
+
   - Does this vary by time of year?
+
+  - What is the ratio of recurrent subscriber : one-time customer
+    utilization? Are there trends that indicate tourism usage, such as
+    one-time usage around Holidays?
+
+    - Does this vary by time of day?
+    - Does this vary by time of year?
 
 **2) When/how long is the average ride?**
 
@@ -93,6 +120,12 @@ to rideshares or subways?**
 - Cost of subscription
 - Cost of single-usage
 - Cost of gear (for a commuter)
+
+**5) What are the impacts of bike availability and usage on air quality
+by SDI?**
+
+**6) What are the impacts of bike availability and usage on
+healthoutcomes by SDI?**
 
 We want to create visualizations of:
 
