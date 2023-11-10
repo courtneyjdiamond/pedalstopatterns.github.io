@@ -63,7 +63,7 @@ We want to create visualizations of:
 
 **1) A map of CitiBike stations, indicating usage frequency**
 
-**2) Plots breaking down crucial data: linear/longitudinal for time related changes. Bar plots of specific demographic breakdowns
+**2) Plots breaking down crucial data: Linear/longitudinal for time related changes. Bar plots of specific demographic breakdowns.**
 
 ## Anticipated Challenges/Limitations
 

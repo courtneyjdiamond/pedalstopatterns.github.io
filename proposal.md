@@ -25,6 +25,10 @@ costs of biking negate any benefits gained by biking.
 
 ## Intended Final Products
 
+Our aims are detailed below. In brief, we intend to make an interactive
+website summarizing the findings based on our investigation into
+Citibike data and weather/air quality in NYC.
+
 ## Anticipated Data Sources
 
 We will use the publicly available CitiBike located at
@@ -82,7 +86,8 @@ We want to create visualizations of:
 
 **1) A map of CitiBike stations, indicating usage frequency**
 
-**2) lijlik**
+**2) Plots breaking down crucial data: Linear/longitudinal for time
+related changes. Bar plots of specific demographic breakdowns.**
 
 ## Anticipated Challenges/Limitations
 
