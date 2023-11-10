@@ -27,11 +27,17 @@ to location within NYC, time of year/seasons, weather, and air quality.
 
 ## Intended Final Products
 
+<<<<<<< HEAD
 Our aims are detailed below. In brief, we intend to make a website
 summarizing the findings based on our investigation into Citibike data
 and weather/air quality in NYC. This will include interactive
 visualizations that allow users to investigate their region, time, or
 weather of interest.
+=======
+Our aims are detailed below. In brief, we intend to make an interactive
+website summarizing the findings based on our investigation into
+Citibike data and weather/air quality in NYC.
+>>>>>>> ca8e5176a0307a09062fe776c6647f19e99b2949
 
 ## Anticipated Data Sources
 

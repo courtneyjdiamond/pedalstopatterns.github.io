@@ -21,7 +21,12 @@ From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months
 Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents and tourists alike to find cheaper and faster means of navigating the Big Apple. We, as young professionals/students in the city, want to know if turning to CitiBike is a viable alternative, or if the monetary, time, and weather-related costs or availability of biking negate any benefits gained by biking. We will explore CitiBike usage, aiming to understand usage patterns related to location within NYC, time of year/seasons, weather, and air quality. 
 
 ## Intended Final Products
+<<<<<<< HEAD
 Our aims are detailed below. In brief, we intend to make a  website summarizing the findings based on our investigation into Citibike data and weather/air quality in NYC. This will include interactive visualizations that allow users to investigate their region, time, or weather of interest.
+=======
+
+Our aims are detailed below. In brief, we intend to make an interactive website summarizing the findings based on our investigation into Citibike data and weather/air quality in NYC.
+>>>>>>> ca8e5176a0307a09062fe776c6647f19e99b2949
 
 ## Anticipated Data Sources
 
@@ -64,7 +69,11 @@ We want to create visualizations of:
 
 **1) A map of CitiBike stations, indicating usage frequency**
 
+<<<<<<< HEAD
 **2)  Plots breaking down crucial data: Linear/longitudinal for time related changes. Bar plots of specific demographic breakdowns.**
+=======
+**2) Plots breaking down crucial data: Linear/longitudinal for time related changes. Bar plots of specific demographic breakdowns.**
+>>>>>>> ca8e5176a0307a09062fe776c6647f19e99b2949
 
 ## Anticipated Challenges/Limitations
 
