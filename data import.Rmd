@@ -1,0 +1,30 @@
+---
+title: "P8105 Fall 2023 Final Project"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+Citibike Jan/2019 ~ Dec/2019
+```{r}
+citibike_df = 
+  tibble(
+    files = list.files("citibike/"),
+    path = str_c("citibike/", files)
+  ) |> 
+  mutate(data = map(path, read_csv)) |> 
+  unnest()
+```
+
+Tidy dataset 
+```{r}
+citibike = citibike_df |>
+  janitor::clean_names() |>
+  select(-files, -path) |>
+  mutate(gender = recode(gender,
+                         "0" = "Unknown",
+                         "1" = "Male",
+                         "2" = "Female"))
+```
