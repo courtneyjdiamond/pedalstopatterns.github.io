@@ -167,3 +167,21 @@ air_quality =
   air_quality |>
   filter(year == "2019")
 ```
+
+SDI Data and tidy
+
+``` r
+SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+  janitor::clean_names() |>
+  select(zcta5_fips, sdi_score)|>
+  rename(zip=zcta5_fips)
+```
+
+    ## Rows: 32989 Columns: 18
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (1): ZCTA5_FIPS
+    ## dbl (17): ZCTA5_population, SDI_score, PovertyLT100_FPL_score, Single_Parent...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.

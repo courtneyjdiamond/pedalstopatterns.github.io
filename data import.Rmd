@@ -47,3 +47,11 @@ air_quality =
   air_quality |>
   filter(year == "2019")
 ```
+
+SDI Data and tidy
+```{r}
+SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+  janitor::clean_names() |>
+  select(zcta5_fips, sdi_score)|>
+  rename(zip=zcta5_fips)
+```
