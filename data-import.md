@@ -136,3 +136,34 @@ citibike = citibike_df |>
                          "1" = "Male",
                          "2" = "Female"))
 ```
+
+Air Quality Data
+
+``` r
+air_df <- read_csv("air_quality/Air_Quality_20231126.csv")
+```
+
+    ## Rows: 16218 Columns: 12
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
+    ## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
+    ## lgl (1): Message
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+Tidy Air Quality Data
+
+``` r
+air_quality = air_df |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  )
+
+air_quality =
+  air_quality |>
+  filter(year == "2019")
+```

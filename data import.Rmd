@@ -28,3 +28,22 @@ citibike = citibike_df |>
                          "1" = "Male",
                          "2" = "Female"))
 ```
+
+Air Quality Data
+```{r}
+air_df <- read_csv("air_quality/Air_Quality_20231126.csv")
+```
+
+Tidy Air Quality Data
+```{r}
+air_quality = air_df |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  )
+
+air_quality =
+  air_quality |>
+  filter(year == "2019")
+```
