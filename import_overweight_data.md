@@ -4,7 +4,7 @@ Import Overweight Data
 
 - [Import Data](#import-data)
 - [Percentages over time](#percentages-over-time)
-- [Notes](#notes)
+- [Save and Notes](#save-and-notes)
 
 # Import Data
 
@@ -119,14 +119,30 @@ percent_change |>
     ## 7 Jamaica                         70.1         59.5         72.3
     ## 8 Chelsea-Village                 39.3         38.1         30.5
 
-# Notes
+# Save and Notes
+
+``` r
+data_2019 = data |>
+  filter(year == 2019)
+
+data_2019 |>
+  group_by(geo_type) |>
+  summarize(n_obs = n())
+```
+
+    ## # A tibble: 3 × 2
+    ##   geo_type n_obs
+    ##   <chr>    <int>
+    ## 1 Borough      5
+    ## 2 Citywide     1
+    ## 3 UHF34       34
+
+``` r
+write_csv(data_2019, "./data/overweight_data_clean.csv")
+```
 
 - Total of 34 specific geo_ids, 5 boroughs, and 1 citywide rate.  
 - Years range 2003 to 2020
 - Depending on what year we use for other data, can pull that year
   directly, or average over recent years. Rates for the most part are
   pretty consistent over time
-
-``` r
-write_csv(data, "./data/overweight_data_clean.csv")
-```
