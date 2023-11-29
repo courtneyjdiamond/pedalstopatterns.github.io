@@ -296,6 +296,15 @@ mutate(data = map(path, ~read_csv(.x, col_types = cols(
    &#39;start station id&#39; = col_double()
   )))) |&gt;
 unnest(cols = c(data))</code></pre>
+<pre><code>## Warning: There were 6 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `data = map(...)`.
+## Caused by warning:
+## ! One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <p>Tidy dataset: * recode gender * filter trip duration to more than 5
 minutes but less than 1 day * include trips that started in 2018 but
 ended in 2019 and trips that started in 2019 but ended in 2020 * create
@@ -461,6 +470,43 @@ view(joined_SDI_zip_neighborhood)</code></pre>
 
 view(joined_overweight_zip_neighborhood)</code></pre>
 <p>And finally, join them to the Citibike data!</p>
+<div id="join-zipcode-onto-citibike-data" class="section level1">
+<h1>Join Zipcode onto Citibike data</h1>
+<p>Load latitude/longitude to zip code crosswalk to merge start_zip and
+end_zip onto citibike_df</p>
+<pre class="r"><code>latlong_zip = read_csv(&#39;./data/citibike_latlong_zip.csv&#39;)</code></pre>
+<pre><code>## Rows: 1090 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (3): latitude, longitude, postcode
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>citibike_zip = citibike_df |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
+
+citibike_zip |&gt;
+  select(start_zipcode, start_station_longitude, start_station_latitude,
+         end_zipcode, end_station_longitude, end_station_longitude) |&gt;
+  head()</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   start_zipcode start_station_longitude start_station_latitude end_zipcode
+##           &lt;dbl&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;       &lt;dbl&gt;
+## 1         10012                   -74.0                   40.7       10036
+## 2         10001                   -74.0                   40.8       10014
+## 3         11216                   -74.0                   40.7       11233
+## 4         10022                   -74.0                   40.8       10022
+## 5         10037                   -74.0                   40.8       10023
+## 6         11238                   -74.0                   40.7       11238
+## # ℹ 1 more variable: end_station_longitude &lt;dbl&gt;</code></pre>
+</div>
 
 
 

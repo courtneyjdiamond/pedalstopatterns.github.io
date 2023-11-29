@@ -8,7 +8,7 @@ library(tidyverse)
 ```
 
 Citibike Jan/2019 ~ Dec/2019
-```{r import citibike, eval = FALSE}
+```{r import citibike}
 citibike <- 
  tibble(
  files = list.files("citibike/"),
@@ -28,7 +28,7 @@ Tidy dataset:
  * create an age variable
  * create a trip duration in minutes variable
  
-```{r tiday citibike, eval = FALSE}
+```{r tiday citibike}
 citibike_df <- citibike |>
   janitor::clean_names() |>
   select(-files, -path) |>
@@ -191,4 +191,29 @@ And finally, join them to the Citibike data!
 ```{r}
   
 ```
+
+
+# Join Zipcode onto Citibike data 
+Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df 
+
+```{r citibike_zip}
+latlong_zip = read_csv('./data/citibike_latlong_zip.csv')
+
+citibike_zip = citibike_df |>
+  left_join(latlong_zip, 
+            by = c("start_station_latitude" = "latitude",
+                   "start_station_longitude" = "longitude")) |>
+  rename("start_zipcode" = "postcode") |>
+  left_join(latlong_zip, 
+            by = c("end_station_latitude" = "latitude",
+                   "end_station_longitude" = "longitude")) |>
+  rename("end_zipcode" = "postcode") 
+
+citibike_zip |>
+  select(start_zipcode, start_station_longitude, start_station_latitude,
+         end_zipcode, end_station_longitude, end_station_longitude) |>
+  head()
+ 
+```
+
 
