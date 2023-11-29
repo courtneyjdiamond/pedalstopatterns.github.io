@@ -76,3 +76,21 @@ SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   select(zcta5_fips, sdi_score)|>
   rename(zip=zcta5_fips)
 ```
+
+Import UHF/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
+
+```{r}
+# install.packages("pdftables")
+# install.packages("pdftools")
+
+library(pdftables)
+library(pdftools)
+
+uhf_zip_df = 
+  pdf_text("data/zipcodetable.pdf")
+
+uhf_zip_df = uhf_zip_df[1] |> 
+  str_split("\n")
+
+```
+

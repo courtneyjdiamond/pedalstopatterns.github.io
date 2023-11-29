@@ -352,6 +352,19 @@ an age variable * create a trip duration in minutes variable</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Import UHF/ZipCode crosswalk (available from
+<code>https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf</code>)</p>
+<pre class="r"><code># install.packages(&quot;pdftables&quot;)
+# install.packages(&quot;pdftools&quot;)
+
+library(pdftables)
+library(pdftools)</code></pre>
+<pre><code>## Using poppler version 23.04.0</code></pre>
+<pre class="r"><code>uhf_zip_df = 
+  pdf_text(&quot;data/zipcodetable.pdf&quot;)
+
+uhf_zip_df = uhf_zip_df[1] |&gt; 
+  str_split(&quot;\n&quot;)</code></pre>
 
 
 
