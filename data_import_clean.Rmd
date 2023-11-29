@@ -1,0 +1,78 @@
+---
+title: "P8105 Fall 2023 Final Project"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+Citibike Jan/2019 ~ Dec/2019
+```{r import citibike, eval = FALSE}
+citibike <- 
+ tibble(
+ files = list.files("citibike/"),
+  path = str_c("citibike/", files)
+  ) |>
+mutate(data = map(path, ~read_csv(.x, col_types = cols(
+  'end station id' = col_double(),
+   'start station id' = col_double()
+  )))) |>
+unnest(cols = c(data))
+```
+
+Tidy dataset:
+ * recode gender
+ * filter trip duration to more than 5 minutes but less than 1 day
+ * include trips that started in 2018 but ended in 2019 and trips that started in 2019 but ended in 2020
+ * create an age variable
+ * create a trip duration in minutes variable
+ 
+```{r tiday citibike, eval = FALSE}
+citibike_df <- citibike |>
+  janitor::clean_names() |>
+  select(-files, -path) |>
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|>
+  mutate(gender = recode(gender,
+                         "0" = "Unknown",
+                         "1" = "Male",
+                         "2" = "Female"),
+        trip_duration_min = trip_duration_sec / 60,
+        age = 2019 - birth_year
+        ) |>
+  filter(
+    trip_duration_sec >= 300,
+    trip_duration_sec <= 86400,
+    as.Date(stop_time) >= as.Date("2019-01-01"),
+    as.Date(start_time) <= as.Date("2019-12-31")
+  )  |>
+  select(trip_duration_sec, trip_duration_min, everything())
+
+```
+
+
+Import air quality data 
+```{r air quality}
+air <- read_csv("air_quality/Air_Quality_20231126.csv") 
+```
+
+```{r air quality tidy}
+ air_quality_df =air |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |>
+  filter(year == "2019")
+```
+
+SDI Data and tidy
+```{r sdi}
+SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+  janitor::clean_names() |>
+  select(zcta5_fips, sdi_score)|>
+  rename(zip=zcta5_fips)
+```
