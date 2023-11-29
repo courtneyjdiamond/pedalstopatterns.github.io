@@ -1,22 +1,34 @@
 ---
-title: "From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months"
-date: "2023-11-28"
-output: html_document
-  toc: true
+title: "From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months of 2019"
+output: 
+  html_document:
+    toc: true
     toc_float: true
     theme: yeti
 ---
 
-## Introduction of project
+# About our Project:
+```{r library, include=FALSE}
+library(tidyverse)
+library(shiny)
+library(shinyjs)
+shinyjs::useShinyjs()
+```
+
+
+## Screencast 
+
+<link here to embed video>
 
 ## Team Members
-  - Jesus Luevano, jl5934<br>
-  - Haley Zylberberg, hmz2105<br>
-  - Hyun Jin Jung, hj2660<br>
   - Laura O'Carroll, lgo2107<br>
-  - Kayla Schiffer-Kane, khs2138<br>
   - Courtney Diamond, cjd2195<br>
-
+  - Hyun Jin Jung, hj2660<br>
+  - Jesus Luevano, jl5934<br>
+  - Kayla Schiffer-Kane, khs2138<br>
+  - Haley Zylberberg, hmz2105<br>
+  
+  
 ## Motivation
 Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. CitiBikes have had an impact in increasing access to biking as a viable alternative to other means of transportation. There is an added health benefit to the physical activity of biking. Bike usage also confers health related benefits on air quality. The utilization of CitiBikes, however, is dependent on factors such as availability of bike stations, bike lanes, and the cost of bike rides and membership. 
 
@@ -37,6 +49,74 @@ We, as young professionals/students in the city, want to know if turning to Citi
 
 [**Weather Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html) Lastly, for temperature-related trends, we will use data from the Global Historical Climatology Network - Daily (GHCN-Daily) dataset published by the National Centers for Environmental Information (NCEI). These data reflect those used in the rnoaa package, and include the weather station identifier, the date, latitude/longitude, maximum temperature, minimum temperature, and precipitation. 
 
-## Links to plots
+
+# Dataset exploration
+
+## Exploring Citibikes 
+
+We utilized the datasets from the above Citibank link, specifically downloading monthly datasets for NYC data from December 2018 - January 2020 (to encompass the entirety or rides within NYC in 2019, and to include those that began Dec 31st, 2018 into Jan 1st 2019, and that began Dec 31st, 2019 into Jan 1st 2020). 
+
+Data was imported and consolidated into one dataset, with filtering done to remove rides that were <5 minutes or >24hours in length. 
+
+```{r, Citibike dataset}
+
+```
+
+In addition we imported each of the sub-datasets:
+
+```{r, air quality dataset}
+
+```
+
+
+```{r, SDI dataset}
+
+```
+
+```{r, weight dataset}
+
+```
+
+
+```{r, weather_import, eval=FALSE}
+#This file was >1GB, so downlaoded and cleaned locally, uploaded to GitHub after filtering
+
+NY_Stations <- c("US1NYBX0025","US1NYKN0003", "US1NYKN0025", "US1NYNY0074", "US1NYQN0026", "US1NYQN0027", "USC00300958", "USC00300961",
+                 "US1NYQN0029", "US1NYQN0036", "US1NYQN0037", "US1NYRC0001", "US1NYRC0002", "US1NYRC0016",
+                 "USC00305796","USC00305798", "USC00305799", "USC00305804", "USC00305806", "USC00305816", 
+                 "US1NYRC0001", "US1NYRC0002", "US1NYRC0016")
+col_names_weather <- c("siteID", "date", "element","data_value", "measurement_flag", "quality_flag", "source_flag", "obs_time")
+
+weather.df <- read_csv(file = "/Users/JML/Desktop/2019.csv",
+                       col_names = col_names_weather 
+                       ) %>%
+  filter(siteID %in% NY_Stations)
+
+weather.df <- weather.df %>%
+  mutate(location = case_when(
+    siteID == "US1NYBX0025" | siteID == "USC00300961"  ~ "Bronx", 
+    siteID == "US1NYKN0003" | siteID == "US1NYKN0025" | siteID == "USC00300958" | siteID == "USC00305796" | siteID == "USC00305798" ~ "Brooklyn",
+    siteID == "US1NYNY0074" | siteID == "USC00305806" | siteID == "USC00305816" ~ "Manhattan",
+    siteID == "US1NYQN0026" | siteID == "US1NYQN0027" | siteID == "US1NYQN0029" | siteID == "US1NYQN0036" | siteID == "US1NYQN0037" | siteID == "USC00305799" | siteID == "USC00305804" ~ "Queens", 
+    siteID == "US1NYRC0001" | siteID == "US1NYRC0002" | siteID == "US1NYRC0016" ~ "Staten"
+  ))
+```
+
+
+<Link to page with exploratory analyses, plots for Citibank>
+
+
+## Exploring Subsets
+
+[SDI](SDI_Exploratory.html)
+
+[Air_Quality](SDI_Exploratory.html)
+
+[Weight](Weight_exploratory.html)
+
+[Weather](Weather_exploratory.html)
+
+
+# Modeling outcomes
 
 ** 

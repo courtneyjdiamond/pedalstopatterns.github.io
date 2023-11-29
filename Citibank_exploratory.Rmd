@@ -1,0 +1,18 @@
+---
+title: "Citibank Exploratoration"
+output: html_document
+---
+
+# Citibanks Dataset
+
+## Neighborhoods Analyses
+
+* Rides per neighborhood per month
+
+* Rides starting in each borough 
+
+* Rides ending in each borough
+
+* Most popular landmark stations, and rides by month
+
+* User demographics (subscriber vs customer, gender, birth years)

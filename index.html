@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months of 2019</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Citibank_exploratory.html">Citibikes</a>
+</li>
+<li>
+  <a href="AirQual_exploratory.html">Air Quality</a>
+</li>
+<li>
+  <a href="SDI_Exploratory.html">SDI</a>
+</li>
+<li>
+  <a href="Weight_exploratory.html">Weight</a>
+</li>
+<li>
+  <a href="Weather_exploratory.html">NOAA Weather</a>
+</li>
+<li>
+  <a href="mailto:&lt;you@youremail.com&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="index.html">
+    <span class="fa fa-solid fa-bicycle"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">From Pedals to Patterns: A P8105 Citibike
+Data Analysis Over 12 months of 2019</h1>
+
+</div>
+
+
+<div id="about-our-project" class="section level1">
+<h1>About our Project:</h1>
+<div id="screencast" class="section level2">
+<h2>Screencast</h2>
+<p><link here to embed video></p>
+</div>
+<div id="team-members" class="section level2">
+<h2>Team Members</h2>
+<ul>
+<li>Laura O’Carroll, lgo2107<br></li>
+<li>Courtney Diamond, cjd2195<br></li>
+<li>Hyun Jin Jung, hj2660<br></li>
+<li>Jesus Luevano, jl5934<br></li>
+<li>Kayla Schiffer-Kane, khs2138<br></li>
+<li>Haley Zylberberg, hmz2105<br></li>
+</ul>
+</div>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>Increasing transportation costs, congested streets, and subway delays
+across New York City are pressuring residents to find cheaper and faster
+means of navigating the Big Apple. CitiBikes have had an impact in
+increasing access to biking as a viable alternative to other means of
+transportation. There is an added health benefit to the physical
+activity of biking. Bike usage also confers health related benefits on
+air quality. The utilization of CitiBikes, however, is dependent on
+factors such as availability of bike stations, bike lanes, and the cost
+of bike rides and membership.</p>
+<p>We, as young professionals/students in the city, want to know if
+turning to CitiBike is a viable alternative. We also want to explore if
+there is disproportionate availability and utilization of CitiBikes
+across neighborhoods with varied social deprivation index that can
+exacerbate disparities in health status. To that end, we will explore
+CitiBike usage, aiming to understand usage patterns related to location
+within NYC, and its relation to social deprivation index, air quality,
+and health outcomes.</p>
+</div>
+<div id="sources-of-data" class="section level2">
+<h2>Sources of Data</h2>
+<p><a
+href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
+Data</strong></a> We will use the publicly available CitiBike. These
+datasets contain monthly logs of trips and record data elements such as
+the ride ID, the user’s status (subscriber or casual user), the trip
+start location and longitude/latitude coordinates, the trip end location
+and latitude/longitude coordinates, and the trip start/stop times and
+duration.</p>
+<ul>
+<li>The available data also vary by year. For example, 2023 contains
+data on mechanical versus electric break usage and whether the rider was
+a CitiBike member or not. Pending initial exploration of completion, we
+will determine feasibility of incorporating these different variables in
+our analysis.</li>
+</ul>
+<p><a
+href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
+Quality Data</strong></a> Additionally, we plan to investigate how
+weather trends impact Citibike ridership in the area using data from NYC
+Open Data, contributed by the Department of Hygiene and Mental Health.
+These data include the air quality indexes measured across boroughs in
+NYC.</p>
+<p><a
+href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"><strong>Social
+Deprivation Index</strong></a> Social deprivation index (SDI) is an
+effort in generating composite measures of socioeconomic factors across
+NYC by census tract. We will use these datasets to explore CitiBike
+availability and usage patterns across neighborhoods.</p>
+<p><a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&amp;subtopic_id=113"><strong>Overweight
+Data</strong></a> To provide an insight into health outcomes associated
+with factors such as physical acitvity aand socioeconomic factors, we
+will use NYC’s publicly available overweight health outcomes data, which
+is.</p>
+<p><a
+href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"><strong>Weather
+Data</strong></a> Lastly, for temperature-related trends, we will use
+data from the Global Historical Climatology Network - Daily (GHCN-Daily)
+dataset published by the National Centers for Environmental Information
+(NCEI). These data reflect those used in the rnoaa package, and include
+the weather station identifier, the date, latitude/longitude, maximum
+temperature, minimum temperature, and precipitation.</p>
+</div>
+</div>
+<div id="dataset-exploration" class="section level1">
+<h1>Dataset exploration</h1>
+<div id="exploring-citibikes" class="section level2">
+<h2>Exploring Citibikes</h2>
+<p>We utilized the datasets from the above Citibank link, specifically
+downloading monthly datasets for NYC data from December 2018 - January
+2020 (to encompass the entirety or rides within NYC in 2019, and to
+include those that began Dec 31st, 2018 into Jan 1st 2019, and that
+began Dec 31st, 2019 into Jan 1st 2020).</p>
+<p>Data was imported and consolidated into one dataset, with filtering
+done to remove rides that were &lt;5 minutes or &gt;24hours in
+length.</p>
+<p>In addition we imported each of the sub-datasets:</p>
+<pre class="r"><code>#This file was &gt;1GB, so downlaoded and cleaned locally, uploaded to GitHub after filtering
+
+NY_Stations &lt;- c(&quot;US1NYBX0025&quot;,&quot;US1NYKN0003&quot;, &quot;US1NYKN0025&quot;, &quot;US1NYNY0074&quot;, &quot;US1NYQN0026&quot;, &quot;US1NYQN0027&quot;, &quot;USC00300958&quot;, &quot;USC00300961&quot;,
+                 &quot;US1NYQN0029&quot;, &quot;US1NYQN0036&quot;, &quot;US1NYQN0037&quot;, &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;,
+                 &quot;USC00305796&quot;,&quot;USC00305798&quot;, &quot;USC00305799&quot;, &quot;USC00305804&quot;, &quot;USC00305806&quot;, &quot;USC00305816&quot;, 
+                 &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;)
+col_names_weather &lt;- c(&quot;siteID&quot;, &quot;date&quot;, &quot;element&quot;,&quot;data_value&quot;, &quot;measurement_flag&quot;, &quot;quality_flag&quot;, &quot;source_flag&quot;, &quot;obs_time&quot;)
+
+weather.df &lt;- read_csv(file = &quot;/Users/JML/Desktop/2019.csv&quot;,
+                       col_names = col_names_weather 
+                       ) %&gt;%
+  filter(siteID %in% NY_Stations)
+
+weather.df &lt;- weather.df %&gt;%
+  mutate(location = case_when(
+    siteID == &quot;US1NYBX0025&quot; | siteID == &quot;USC00300961&quot;  ~ &quot;Bronx&quot;, 
+    siteID == &quot;US1NYKN0003&quot; | siteID == &quot;US1NYKN0025&quot; | siteID == &quot;USC00300958&quot; | siteID == &quot;USC00305796&quot; | siteID == &quot;USC00305798&quot; ~ &quot;Brooklyn&quot;,
+    siteID == &quot;US1NYNY0074&quot; | siteID == &quot;USC00305806&quot; | siteID == &quot;USC00305816&quot; ~ &quot;Manhattan&quot;,
+    siteID == &quot;US1NYQN0026&quot; | siteID == &quot;US1NYQN0027&quot; | siteID == &quot;US1NYQN0029&quot; | siteID == &quot;US1NYQN0036&quot; | siteID == &quot;US1NYQN0037&quot; | siteID == &quot;USC00305799&quot; | siteID == &quot;USC00305804&quot; ~ &quot;Queens&quot;, 
+    siteID == &quot;US1NYRC0001&quot; | siteID == &quot;US1NYRC0002&quot; | siteID == &quot;US1NYRC0016&quot; ~ &quot;Staten&quot;
+  ))</code></pre>
+<p>&lt;Link to page with exploratory analyses, plots for
+Citibank&gt;</p>
+</div>
+<div id="exploring-subsets" class="section level2">
+<h2>Exploring Subsets</h2>
+<p><a href="SDI_Exploratory.html">SDI</a></p>
+<p><a href="SDI_Exploratory.html">Air_Quality</a></p>
+<p><a href="Weight_exploratory.html">Weight</a></p>
+<p><a href="Weather_exploratory.html">Weather</a></p>
+</div>
+</div>
+<div id="modeling-outcomes" class="section level1">
+<h1>Modeling outcomes</h1>
+<p>**</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
