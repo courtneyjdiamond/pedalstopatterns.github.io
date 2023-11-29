@@ -360,11 +360,57 @@ an age variable * create a trip duration in minutes variable</p>
 library(pdftables)
 library(pdftools)</code></pre>
 <pre><code>## Using poppler version 23.04.0</code></pre>
-<pre class="r"><code>uhf_zip_df = 
-  pdf_text(&quot;data/zipcodetable.pdf&quot;)
+<pre class="r"><code>library(magrittr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     set_names</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>uhf_zip = 
+  pdf_text(&quot;data/zipcodetable.pdf&quot;) |&gt; 
+  extract(1)
 
-uhf_zip_df = uhf_zip_df[1] |&gt; 
-  str_split(&quot;\n&quot;)</code></pre>
+uhf_zip_df =
+  uhf_zip |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_zip, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  filter(!row_number() %in% c(1, 2, 51)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  separate(data, into = c(&quot;UHF&quot;, &quot;rest&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  separate(col = &quot;rest&quot;, into = c(&quot;neighborhood&quot;, &quot;zip&quot;), sep = &quot;(?=\\s\\d)&quot;, extra = &quot;merge&quot;) |&gt; 
+  separate(col = &quot;zip&quot;, into = c(&quot;zip1&quot;, &quot;zip2&quot;, &quot;zip3&quot;, &quot;zip4&quot;, &quot;zip5&quot;, &quot;zip6&quot;, &quot;zip7&quot;, &quot;zip8&quot;, &quot;zip9&quot;), sep = &quot;,&quot;) |&gt; 
+  mutate(across(everything(), ~ str_trim(.x))) |&gt; 
+  mutate(across(c(&quot;zip1&quot;:&quot;zip9&quot;), ~ as.numeric(.x))) |&gt; 
+  mutate(UHF = as.numeric(UHF)) |&gt; 
+  pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
+  filter(!is.na(zip)) |&gt; 
+  select(!zip_name)</code></pre>
+<pre><code>## Warning: Expected 9 pieces. Missing pieces filled with `NA` in 41 rows [1, 2, 3, 4, 5,
+## 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
+<pre class="r"><code>uhf_zip_df</code></pre>
+<pre><code>## # A tibble: 176 × 3
+##      UHF neighborhood            zip
+##    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;
+##  1   101 Kingsbridge Riverdale 10463
+##  2   101 Kingsbridge Riverdale 10471
+##  3   102 Northeast Bronx       10466
+##  4   102 Northeast Bronx       10469
+##  5   102 Northeast Bronx       10470
+##  6   102 Northeast Bronx       10475
+##  7   103 Fordham Bronx Park    10458
+##  8   103 Fordham Bronx Park    10467
+##  9   103 Fordham Bronx Park    10468
+## 10   104 Pelham Throgs Neck    10461
+## # ℹ 166 more rows</code></pre>
 
 
 

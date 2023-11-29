@@ -85,12 +85,34 @@ Import UHF/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/dow
 
 library(pdftables)
 library(pdftools)
+library(magrittr)
 
-uhf_zip_df = 
-  pdf_text("data/zipcodetable.pdf")
+uhf_zip = 
+  pdf_text("data/zipcodetable.pdf") |> 
+  extract(1)
 
-uhf_zip_df = uhf_zip_df[1] |> 
-  str_split("\n")
+uhf_zip_df =
+  uhf_zip |> 
+  str_split("\n") |>
+  tibble() |> 
+  rename("data" = "str_split(uhf_zip, \"\\n\")") |> 
+  unnest("data") |> 
+  filter(data != "") |> 
+  filter(!row_number() %in% c(1, 2, 51)) |> 
+  filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |> 
+  mutate(data = str_squish(data)) |> 
+  mutate(data = str_remove_all(data, "-")) |> 
+  mutate(data = str_squish(data)) |> 
+  separate(data, into = c("UHF", "rest"), sep = "(?<=\\d\\s)") |> 
+  separate(col = "rest", into = c("neighborhood", "zip"), sep = "(?=\\s\\d)", extra = "merge") |> 
+  separate(col = "zip", into = c("zip1", "zip2", "zip3", "zip4", "zip5", "zip6", "zip7", "zip8", "zip9"), sep = ",") |> 
+  mutate(across(everything(), ~ str_trim(.x))) |> 
+  mutate(across(c("zip1":"zip9"), ~ as.numeric(.x))) |> 
+  mutate(UHF = as.numeric(UHF)) |> 
+  pivot_longer(c(zip1:zip9), names_to = "zip_name", values_to = "zip") |> 
+  filter(!is.na(zip)) |> 
+  select(!zip_name)
 
+uhf_zip_df
 ```
 
