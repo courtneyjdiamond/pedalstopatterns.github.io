@@ -50,6 +50,7 @@ citibike_df <- citibike |>
     as.Date(start_time) <= as.Date("2019-12-31")
   )  |>
   select(trip_duration_sec, trip_duration_min, everything())
+
 ```
 
 
