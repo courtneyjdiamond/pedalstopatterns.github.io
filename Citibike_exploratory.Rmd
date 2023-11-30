@@ -1,0 +1,59 @@
+---
+title: "Citibank Exploratoration"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+# Citibanks Dataset
+Jan/2019 ~ Dec/2019
+```{r import citibike}
+citibike <- 
+ tibble(
+ files = list.files("citibike/"),
+  path = str_c("citibike/", files)
+  ) |>
+mutate(data = map(path, ~read_csv(.x, col_types = cols(
+  'end station id' = col_double(),
+   'start station id' = col_double()
+  )))) |>
+unnest(cols = c(data))
+
+#tidy citibike dataset
+citibike_df <- citibike |>
+  janitor::clean_names() |>
+  select(-files, -path) |>
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|>
+  mutate(gender = recode(gender,
+                         "0" = "Unknown",
+                         "1" = "Male",
+                         "2" = "Female"),
+        trip_duration_min = trip_duration_sec / 60,
+        age = 2019 - birth_year
+        ) |>
+  filter(
+    trip_duration_sec >= 300,
+    trip_duration_sec <= 86400,
+    as.Date(stop_time) >= as.Date("2019-01-01"),
+    as.Date(start_time) <= as.Date("2019-12-31")
+  )  |>
+  select(trip_duration_sec, trip_duration_min, everything())
+```
+
+## Neighborhoods Analyses
+
+* Rides per neighborhood per month
+
+
+* Rides starting in each borough 
+
+* Rides ending in each borough
+
+* Most popular landmark stations, and rides by month
+
+* User demographics (subscriber vs customer, gender, birth years)
