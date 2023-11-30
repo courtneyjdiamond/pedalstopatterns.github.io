@@ -45,7 +45,7 @@ write_csv(weather.df, "weather_data.csv")
 
 ## Exploratory analyses
 
-```{r}
+```{r, eval= FALSE}
 weather.df <- read_csv("weather_NYC_2019/weather_data.csv") %>%
   mutate(date = lubridate::as_date(as.character(date), format = "%Y%m%d"),
          month = month(date),
@@ -63,9 +63,13 @@ weather.df <- read_csv("weather_NYC_2019/weather_data.csv") %>%
            "November" = "11",
            "December" = "12"
          )) 
+
+write_csv(weather.df, "weather_NYC_2019/weather_data.csv")
 ```
 
 ```{r}
+weather.df <- read_csv("weather_NYC_2019/weather_data.csv")
+
 weather.df %>%
   filter(element == "PRCP") %>%
   group_by(month_name, location) %>%
