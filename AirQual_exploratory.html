@@ -269,13 +269,13 @@ $(document).ready(function () {
   </a>
 </li>
 <li>
-  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
+  <a href="https://github.com/courtneyjdiamond/p8105_final_project">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="index.html">
+  <a href="https://citibikenyc.com/">
     <span class="fa fa-solid fa-bicycle"></span>
      
   </a>
@@ -294,8 +294,37 @@ $(document).ready(function () {
 </div>
 
 
+<p>To explore the impact of weather trends on Citibike ridership in New
+York City, we used <a
+href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r">Air
+Quality</a> dataset from the <a
+href="https://opendata.cityofnewyork.us/">NYC Open Data</a>, provided by
+the Department of Hygiene and Mental Health.</p>
+<p>This dataset includes air quality indexes measured across NYC
+boroughs. Our analysis aims to uncover relationships between air quality
+variations and Citibike ridership, offering insights into how
+environmental factors influence urban mobility patterns.</p>
 <div id="air-quality-exploratory-analyses" class="section level2">
 <h2>Air Quality Exploratory analyses</h2>
+<pre class="r"><code>#import data
+air &lt;- read_csv(&quot;air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
+<pre><code>## Rows: 16218 Columns: 12
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
+## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
+## lgl (1): Message
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>#Air Quality tidy
+air_quality_df =air |&gt;
+  janitor::clean_names() |&gt;
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |&gt;
+  filter(year == &quot;2019&quot;)</code></pre>
 </div>
 
 

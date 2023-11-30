@@ -2,5 +2,25 @@
 title: "AirQuality Dataset Exploratoration"
 output: html_document
 ---
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+To explore the impact of weather trends on Citibike ridership in New York City, we used [Air Quality](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) dataset from the [NYC Open Data](https://opendata.cityofnewyork.us/), provided by the Department of Hygiene and Mental Health. 
+
+This dataset includes air quality indexes measured across NYC boroughs. Our analysis aims to uncover relationships between air quality variations and Citibike ridership, offering insights into how environmental factors influence urban mobility patterns.
 
 ## Air Quality Exploratory analyses
+```{r}
+#import data
+air <- read_csv("air_quality/Air_Quality_20231126.csv") 
+
+#Air Quality tidy
+air_quality_df =air |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |>
+  filter(year == "2019")
+```
