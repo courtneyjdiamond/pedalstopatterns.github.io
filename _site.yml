@@ -16,7 +16,7 @@ navbar:
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
-      href: http://github.com/<YOUR_GH_NAME>/
+      href: https://github.com/courtneyjdiamond/p8105_final_project
     - icon: fa-solid fa-bicycle
       href: https://citibikenyc.com/
 output:
