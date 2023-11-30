@@ -296,6 +296,15 @@ mutate(data = map(path, ~read_csv(.x, col_types = cols(
    &#39;start station id&#39; = col_double()
   )))) |&gt;
 unnest(cols = c(data))</code></pre>
+<pre><code>## Warning: There were 6 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `data = map(...)`.
+## Caused by warning:
+## ! One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <p>Tidy dataset: * recode gender * filter trip duration to more than 5
 minutes but less than 1 day * include trips that started in 2018 but
 ended in 2019 and trips that started in 2019 but ended in 2020 * create
@@ -352,6 +361,152 @@ an age variable * create a trip duration in minutes variable</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Overweight data import:</p>
+<pre class="r"><code>overweight &lt;- read_csv(&quot;data/overweight_data_clean.csv&quot;)</code></pre>
+<pre><code>## Rows: 40 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): geo_type, geography
+## dbl (7): year, geo_id, geo_rank, number, percent, percent_low, percent_high
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Import UHF/ZipCode crosswalk (available from
+<code>https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf</code>)</p>
+<pre class="r"><code># install.packages(&quot;pdftables&quot;)
+# install.packages(&quot;pdftools&quot;)
+
+library(pdftables)
+library(pdftools)</code></pre>
+<pre><code>## Using poppler version 23.04.0</code></pre>
+<pre class="r"><code>library(magrittr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     set_names</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>uhf_zip = 
+  pdf_text(&quot;data/zipcodetable.pdf&quot;) |&gt; 
+  extract(1)
+
+uhf_zip_df =
+  uhf_zip |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_zip, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  filter(!row_number() %in% c(1, 2, 51)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  separate(data, into = c(&quot;uhf&quot;, &quot;rest&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  separate(col = &quot;rest&quot;, into = c(&quot;neighborhood&quot;, &quot;zip&quot;), sep = &quot;(?=\\s\\d)&quot;, extra = &quot;merge&quot;) |&gt; 
+  separate(col = &quot;zip&quot;, into = c(&quot;zip1&quot;, &quot;zip2&quot;, &quot;zip3&quot;, &quot;zip4&quot;, &quot;zip5&quot;, &quot;zip6&quot;, &quot;zip7&quot;, &quot;zip8&quot;, &quot;zip9&quot;), sep = &quot;,&quot;) |&gt; 
+  mutate(across(everything(), ~ str_trim(.x))) |&gt; 
+  mutate(across(c(&quot;zip1&quot;:&quot;zip9&quot;), ~ as.numeric(.x))) |&gt; 
+  mutate(uhf = as.numeric(uhf)) |&gt; 
+  pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
+  filter(!is.na(zip)) |&gt; 
+  select(!zip_name)</code></pre>
+<pre><code>## Warning: Expected 9 pieces. Missing pieces filled with `NA` in 41 rows [1, 2, 3, 4, 5,
+## 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
+<p>We also need to load in the UHF34 data to crosswalk to UHF42
+labels.</p>
+<pre class="r"><code>uhf_34 = 
+  pdf_text(&quot;data/uhf34.pdf&quot;)
+
+uhf_34_df =
+  uhf_34 |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_34, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 7, 14, 18, 21, 24, 27, 28, 31, 32, 34, 35, 39, 40, 42, 43, 44, 45, 47, 48, 52, 53, 57, 61:75)) |&gt; 
+  mutate(data = str_replace(data, &quot;Kingsbridge - Riverdale&quot;, &quot;101 Kingsbridge - Riverdale&quot;)) |&gt; 
+  mutate(data = str_replace(data, &quot;Northeast Bronx&quot;, &quot;102 Northeast Bronx&quot;)) |&gt; 
+  filter(!row_number() %in% c(1,2)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;),
+         data = str_squish(data), 
+         data = str_trim(data)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+$&quot;)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+\\s$&quot;)) |&gt;
+  separate(data, into = c(&quot;uhf34&quot;, &quot;neighborhood&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  mutate(uhf34 = as.numeric(str_trim(uhf34)),
+         neighborhood = str_trim(neighborhood)) |&gt; 
+  mutate(uhf2 = uhf34) |&gt; 
+  separate_wider_position(uhf2, widths = c(&quot;1_uhf&quot; = 3, &quot;2_uhf&quot; = 3, &quot;3_uhf&quot; = 3), too_few = &quot;align_start&quot;) |&gt; 
+  pivot_longer(c(&quot;1_uhf&quot;:&quot;3_uhf&quot;), names_to = &quot;uhf_name&quot;, values_to = &quot;uhf42&quot;) |&gt; 
+  select(!uhf_name) |&gt; 
+  mutate(uhf34 = as.numeric(uhf34),
+         uhf42 = as.numeric(uhf42))</code></pre>
+<p>Joining the two UHF tables!</p>
+<pre class="r"><code>joined_uhf_34_42 = 
+  uhf_zip_df |&gt; 
+  left_join(y = uhf_34_df, by = join_by(&quot;uhf&quot; == &quot;uhf42&quot;)) |&gt; 
+  rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
+         &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
+         &quot;uhf42&quot; = &quot;uhf&quot;)
+
+view(joined_uhf_34_42)</code></pre>
+<p>Now join the zip codes to SDI data.</p>
+<pre class="r"><code>joined_SDI_zip_neighborhood = 
+  SDI_df |&gt; 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |&gt; 
+  mutate(zip = as.numeric(zip)) |&gt; 
+  left_join(y = joined_uhf_34_42, by = &quot;zip&quot;)
+
+view(joined_SDI_zip_neighborhood)</code></pre>
+<p>And join them to the overweight data.</p>
+<pre class="r"><code>joined_overweight_zip_neighborhood = 
+  overweight |&gt; 
+  left_join(y = joined_uhf_34_42, by = join_by(&quot;geo_id&quot; == &quot;uhf34&quot;))
+
+view(joined_overweight_zip_neighborhood)</code></pre>
+<p>And finally, join them to the Citibike data!</p>
+<div id="join-zipcode-onto-citibike-data" class="section level1">
+<h1>Join Zipcode onto Citibike data</h1>
+<p>Load latitude/longitude to zip code crosswalk to merge start_zip and
+end_zip onto citibike_df</p>
+<pre class="r"><code>latlong_zip = read_csv(&#39;./data/citibike_latlong_zip.csv&#39;)</code></pre>
+<pre><code>## Rows: 1090 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (3): latitude, longitude, postcode
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>citibike_zip = citibike_df |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
+
+citibike_zip |&gt;
+  select(start_zipcode, start_station_longitude, start_station_latitude,
+         end_zipcode, end_station_longitude, end_station_longitude) |&gt;
+  head()</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   start_zipcode start_station_longitude start_station_latitude end_zipcode
+##           &lt;dbl&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;       &lt;dbl&gt;
+## 1         10012                   -74.0                   40.7       10036
+## 2         10001                   -74.0                   40.8       10014
+## 3         11216                   -74.0                   40.7       11233
+## 4         10022                   -74.0                   40.8       10022
+## 5         10037                   -74.0                   40.8       10023
+## 6         11238                   -74.0                   40.7       11238
+## # ℹ 1 more variable: end_station_longitude &lt;dbl&gt;</code></pre>
+</div>
 
 
 
