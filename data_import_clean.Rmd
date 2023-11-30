@@ -5,7 +5,11 @@ output: github_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(pdftools)
+library(magrittr)
 ```
+
+## Load and tidy the Citibike ridership data
 
 Citibike Jan/2019 ~ Dec/2019
 ```{r import citibike}
@@ -53,8 +57,8 @@ citibike_df <- citibike |>
 
 ```
 
+## Load and tidy the AQI data
 
-Import air quality data 
 ```{r air quality}
 air <- read_csv("air_quality/Air_Quality_20231126.csv") 
 ```
@@ -69,7 +73,8 @@ air <- read_csv("air_quality/Air_Quality_20231126.csv")
   filter(year == "2019")
 ```
 
-SDI Data and tidy
+## Load and tidy the SDI data
+
 ```{r sdi}
 SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
@@ -77,20 +82,16 @@ SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   rename(zip=zcta5_fips)
 ```
 
-Overweight data import:
+## Load the overweight data; initial import and tidying completed in [here] (import_overweight_data.html)
 ```{r}
 overweight <- read_csv("data/overweight_data_clean.csv")
 ```
 
 
-Import UHF/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
+## Import UHF42/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
 ```{r}
 # install.packages("pdftables")
 # install.packages("pdftools")
-
-library(pdftables)
-library(pdftools)
-library(magrittr)
 
 uhf_zip = 
   pdf_text("data/zipcodetable.pdf") |> 
@@ -119,7 +120,7 @@ uhf_zip_df =
   select(!zip_name)
 ```
 
-We also need to load in the UHF34 data to crosswalk to UHF42 labels. 
+## Import UHF34 / UHF 42 crosswalk
 ```{r}
 uhf_34 = 
   pdf_text("data/uhf34.pdf")
@@ -153,7 +154,7 @@ uhf_34_df =
   
 ```
 
-Joining the two UHF tables! 
+## Join UHF data
 ```{r}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
@@ -166,7 +167,7 @@ view(joined_uhf_34_42)
 ```
 
 
-Now join the zip codes to SDI data.
+## Join SDI data to UHF/Zip/Neighborhood data
 ```{r}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
@@ -177,7 +178,7 @@ joined_SDI_zip_neighborhood =
 view(joined_SDI_zip_neighborhood)
 ```
 
-And join them to the overweight data.
+## Join overweight data to UHF/Zip/Neighborhood data
 ```{r}
 joined_overweight_zip_neighborhood = 
   overweight |> 
@@ -186,20 +187,17 @@ joined_overweight_zip_neighborhood =
 view(joined_overweight_zip_neighborhood)
 ```
 
-And finally, join them to the Citibike data! 
+## Join Citibike data to UHF/Zip/Neighborhood data
 
-```{r}
-  
-```
+And finally, join the zipcodes/neighborhoods to the Citibike data! First, we need to convert the Citibike location data from latitude/longitude to zip code. We have done that in a separate script and are loading that file here first. 
 
-
-# Join Zipcode onto Citibike data 
-Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df 
+Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df. Then crosswalk to the UHF neighborhoods! 
 
 ```{r citibike_zip}
 latlong_zip = read_csv('./data/citibike_latlong_zip.csv')
 
-citibike_zip = citibike_df |>
+citibike_zip =
+  citibike_df |>
   left_join(latlong_zip, 
             by = c("start_station_latitude" = "latitude",
                    "start_station_longitude" = "longitude")) |>
@@ -209,11 +207,19 @@ citibike_zip = citibike_df |>
                    "end_station_longitude" = "longitude")) |>
   rename("end_zipcode" = "postcode") 
 
-citibike_zip |>
-  select(start_zipcode, start_station_longitude, start_station_latitude,
-         end_zipcode, end_station_longitude, end_station_longitude) |>
-  head()
- 
+citibike_zip_neighborhoods =
+  citibike_zip |>
+  left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by("start_zipcode" == "zip")) |> 
+  rename("start_uhf34_neighborhood" = "uhf34_neighborhood",
+         "start_uhf42_neighborhood" = "uhf42_neighborhood") |> 
+  left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by("end_zipcode" == "zip")) |> 
+  rename("end_uhf34_neighborhood" = "uhf34_neighborhood",
+         "end_uhf42_neighborhood" = "uhf42_neighborhood")
+
+head(citibike_zip_neighborhoods) |> 
+  knitr::kable()
 ```
 
 
