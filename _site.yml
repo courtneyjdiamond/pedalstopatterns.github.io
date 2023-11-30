@@ -18,7 +18,7 @@ navbar:
     - icon: fa-github fa-lg
       href: http://github.com/<YOUR_GH_NAME>/
     - icon: fa-solid fa-bicycle
-      href: index.html
+      href: https://citibikenyc.com/
 output:
   html_document:
     theme: cosmo
