@@ -296,6 +296,48 @@ $(document).ready(function () {
 
 <div id="citibanks-dataset" class="section level1">
 <h1>Citibanks Dataset</h1>
+<p>Jan/2019 ~ Dec/2019</p>
+<pre class="r"><code>citibike &lt;- 
+ tibble(
+ files = list.files(&quot;citibike/&quot;),
+  path = str_c(&quot;citibike/&quot;, files)
+  ) |&gt;
+mutate(data = map(path, ~read_csv(.x, col_types = cols(
+  &#39;end station id&#39; = col_double(),
+   &#39;start station id&#39; = col_double()
+  )))) |&gt;
+unnest(cols = c(data))</code></pre>
+<pre><code>## Warning: There were 5 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `data = map(...)`.
+## Caused by warning:
+## ! One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings.</code></pre>
+<pre class="r"><code>#tidy citibike dataset
+citibike_df &lt;- citibike |&gt;
+  janitor::clean_names() |&gt;
+  select(-files, -path) |&gt;
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|&gt;
+  mutate(gender = recode(gender,
+                         &quot;0&quot; = &quot;Unknown&quot;,
+                         &quot;1&quot; = &quot;Male&quot;,
+                         &quot;2&quot; = &quot;Female&quot;),
+        trip_duration_min = trip_duration_sec / 60,
+        age = 2019 - birth_year
+        ) |&gt;
+  filter(
+    trip_duration_sec &gt;= 300,
+    trip_duration_sec &lt;= 86400,
+    as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
+    as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
+  )  |&gt;
+  select(trip_duration_sec, trip_duration_min, everything())</code></pre>
 <div id="neighborhoods-analyses" class="section level2">
 <h2>Neighborhoods Analyses</h2>
 <ul>
