@@ -24,3 +24,10 @@ air_quality_df =air |>
   ) |>
   filter(year == "2019")
 ```
+
+```{r}
+air_quality_df %>%
+  group_by(geo_place_name, time_period, name) 
+  
+```
+
