@@ -116,11 +116,60 @@ air_quality_df |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
-Air Quality Comparison, UHF Neighborhoods Only
+Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
+```{r}
+air_particles =
+  air_zip_uhf |>
+  filter(name == "Fine particles (PM 2.5)")
+
+air_particles |>
+  filter(time_period == "Annual Average 2019") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue")  +
+  labs(title = "Air Quality Comparison, Fine Particles",
+       x = "Geographical Place",
+       y = "Data Value") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Air Quality Comparison, UHF Neighborhoods Only, Ozone
 ```{r}
 air_zip_uhf |>
+  filter(name == "Ozone (O3)") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Air Quality Comparison, Ozone Levels",
+       x = "Geographical Place",
+       y = "Data Value") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+
+
+
+Air Quality Comparison, UHF Neighborhoods Only, Highest 50 
+```{r}
+top_polluted  = 
+  air_zip_uhf |>
+  filter(time_period == "Annual Average 2019")
+
+top_polluted |>
+  filter(data_value > 8) |>
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
+  labs(title = "Air Quality Comparison: Highest Pollution Levels",
+       x = "Geographical Place",
+       y = "Data Value") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+air_zip_uhf |>
   group_by(zip) |>
-  ggplot(aes(x = reorder(zip, data_value), y = data_value)) +
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
   labs(title = "Air Quality Comparison",
@@ -128,7 +177,8 @@ air_zip_uhf |>
        y = "Data Value") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
-```
+
+
 
 The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant.
 ```{r}
