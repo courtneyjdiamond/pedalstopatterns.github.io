@@ -126,4 +126,3 @@ air_quality_df |>
        fill = "Pollutant") +
   theme_minimal()
 ```
-
