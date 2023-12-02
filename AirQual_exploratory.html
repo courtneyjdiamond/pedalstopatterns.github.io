@@ -348,6 +348,28 @@ air_quality_df =air |&gt;
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))</code></pre>
 <p><img src="AirQual_exploratory_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>outliers = air_quality_df |&gt;
+  group_by(geo_place_name) |&gt;
+  filter(data_value &gt; quantile(data_value, 0.75) + 1.5 * IQR(data_value) | data_value &lt; quantile(data_value, 0.25) - 1.5 * IQR(data_value))
+
+outliers |&gt;
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  geom_point(aes(color = factor(measure_info)), size = 3) +
+  geom_line(aes(group = interaction(name, measure_info), color = factor(measure_info)),
+            stat = &quot;summary&quot;, fun = &quot;mean&quot;, size = 1, linetype = &quot;dashed&quot;) +
+  facet_wrap(~ name + measure_info, scales = &quot;free_y&quot;, ncol = 3) +
+  labs(title = &quot;Outliers of the Air Quality&quot;,
+       x = &quot;Geographical Place&quot;,
+       y = &quot;Data Value&quot;,
+       color = &quot;Measure Info&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="AirQual_exploratory_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 
 

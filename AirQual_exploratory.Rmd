@@ -53,3 +53,22 @@ air_quality_df |>
 ```
 
 
+```{r}
+outliers = air_quality_df |>
+  group_by(geo_place_name) |>
+  filter(data_value > quantile(data_value, 0.75) + 1.5 * IQR(data_value) | data_value < quantile(data_value, 0.25) - 1.5 * IQR(data_value))
+
+outliers |>
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  geom_point(aes(color = factor(measure_info)), size = 3) +
+  geom_line(aes(group = interaction(name, measure_info), color = factor(measure_info)),
+            stat = "summary", fun = "mean", size = 1, linetype = "dashed") +
+  facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
+  labs(title = "Outliers of the Air Quality",
+       x = "Geographical Place",
+       y = "Data Value",
+       color = "Measure Info") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
