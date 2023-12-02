@@ -55,6 +55,45 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
   rename(year = time)
 ```
 
+```{r plot, eval = FALSE, include = FALSE}
+# Create the scatter plot with lines
+
+borough_ggplot =
+  tidy_weight |>
+  filter(geo_type == "Borough") |>
+ggplot(aes(x = year, y = percent, color = geography, group = geography)) +
+  geom_point() +  # Add points for each data point
+  geom_line() +   # Add lines to connect the same geography
+  labs(title = "Borough change over time, 2005 - 2020", x = "Year", y = "Percent")   # Add  labels
+
+print("borough_ggplot")
+ggsave("exploratory/weight_exploratory_files/borough_weight_average_over_time.pdf")
+
+```
+
+```{r percent_change }
+percent_change = tidy_weight |> 
+  select(geography, year, percent, number) |>
+  group_by(geography) |>
+  pivot_wider(names_from = year, 
+              values_from = c(percent,number)) |>
+  mutate(percent_diff19_20 = (percent_2020 - percent_2019)/ percent_2019 * 100) |>
+  mutate(percent_diff18_19 = (percent_2019 - percent_2018) /percent_2018 * 100) |>
+  select(geography, percent_diff18_19, percent_diff19_20, percent_2018, percent_2019, percent_2020)
+  
+
+```
+
+There are `r percent_change |> filter(abs(percent_diff18_19) > 5 | abs(percent_diff19_20) > 5) |> nrow()` areas with >5% change yoy between 2018, 2019, 2020. There are `r percent_change |> filter(abs(percent_diff18_19) > 10 | abs(percent_diff19_20) > 10) |> nrow()` areas with >10% change yoy between 2018, 2019, 2020. There are `r percent_change |> filter(abs(percent_diff18_19) > 15 | abs(percent_diff19_20) > 15) |> nrow()` areas with >15% change yoy between 2018, 2019, 2020. 
+
+Looking at areas with >15% 
+```{r}
+percent_change |>
+  filter(abs(percent_diff18_19) > 15 | abs(percent_diff19_20) > 15) |>
+  select(geography, percent_2018, percent_2019, percent_2020) |>
+  print()
+```
+
 # Save
 ```{r save_clean}
 data_2019 = tidy_weight |>
