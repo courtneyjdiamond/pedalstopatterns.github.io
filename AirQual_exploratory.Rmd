@@ -25,9 +25,31 @@ air_quality_df =air |>
   filter(year == "2019")
 ```
 
+Average Air Quality Index Across Time Periods
 ```{r}
-air_quality_df %>%
-  group_by(geo_place_name, time_period, name) 
-  
+air_quality_df |>
+  group_by(time_period) |>
+  summarise(avg_air_quality = mean(data_value)) |>
+  ggplot(aes(x = reorder(time_period, avg_air_quality), y = avg_air_quality)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Average Air Quality Index Across Time Periods",
+       x = "Time Period",
+       y = "Average Air Quality Index") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
+
+Air Quality Comparison
+```{r}
+air_quality_df |>
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
+  labs(title = "Air Quality Comparison",
+       x = "Geographical Place",
+       y = "Data Value") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
 

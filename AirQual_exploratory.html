@@ -309,7 +309,7 @@ environmental factors influence urban mobility patterns.</p>
 <pre class="r"><code>#import data
 air &lt;- read_csv(&quot;air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
 <pre><code>## Rows: 16218 Columns: 12
-## ── Column specification ──────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
 ## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
@@ -325,6 +325,29 @@ air_quality_df =air |&gt;
     year = year(start_date)
   ) |&gt;
   filter(year == &quot;2019&quot;)</code></pre>
+<p>Average Air Quality Index Across Time Periods</p>
+<pre class="r"><code>air_quality_df |&gt;
+  group_by(time_period) |&gt;
+  summarise(avg_air_quality = mean(data_value)) |&gt;
+  ggplot(aes(x = reorder(time_period, avg_air_quality), y = avg_air_quality)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;skyblue&quot;) +
+  labs(title = &quot;Average Air Quality Index Across Time Periods&quot;,
+       x = &quot;Time Period&quot;,
+       y = &quot;Average Air Quality Index&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))</code></pre>
+<p><img src="AirQual_exploratory_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Air Quality Comparison</p>
+<pre class="r"><code>air_quality_df |&gt;
+  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;skyblue&quot;) +
+  facet_wrap(~ name + measure_info, scales = &quot;free_y&quot;, ncol = 3) +
+  labs(title = &quot;Air Quality Comparison&quot;,
+       x = &quot;Geographical Place&quot;,
+       y = &quot;Data Value&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))</code></pre>
+<p><img src="AirQual_exploratory_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 
 
