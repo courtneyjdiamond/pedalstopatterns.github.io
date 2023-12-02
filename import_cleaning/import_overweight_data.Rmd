@@ -38,81 +38,33 @@ Data Source: [NYC Data Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta
   * Full table loaded for "Overweight and Obese Adults"
 
 ```{r import_data}
-data = read_csv('./data/nyc_overweight_or_obesity_adults.csv') |>
-  janitor::clean_names() |>
+data = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
+    janitor::clean_names()
+
+tidy_weight =
+  data |>
   mutate(number = gsub("\\*", "", number)) |>
   mutate(number = gsub(",", "", number)) |>
   mutate(number = as.numeric(number)) |>
   mutate(
-    percent = as.numeric(ifelse(grepl("\\*", percent),
-                                gsub("\\*.*$", "", percent),
-                                gsub("\\s*\\(.*", "", percent))),
     percent_low = as.numeric(gsub("^.*\\(\\s*", "", gsub("\\s*,.*$", "", percent))),
-    percent_high = as.numeric(gsub("^.*\\,\\s*", "", gsub("\\)$", "", percent)))
-  ) |>
+    percent_high = as.numeric(gsub("^.*\\,\\s*", "", gsub("\\)$", "", percent))),
+percent = as.numeric(ifelse(grepl("\\*", percent),
+                                gsub("\\*.*$", "", percent),
+                                gsub("\\s*\\(.*", "", percent)))) |>
   rename(year = time)
-
-head(data)
-skimr::skim(data)
 ```
 
-
-# Percentages over time
-
-```{r plot, eval = FALSE, include = FALSE}
-
-
-# Create the scatter plot with lines
-ggplot(data, aes(x = year, y = percent, color = geography, group = geography)) +
-  geom_point() +  # Add points for each data point
-  geom_line() +   # Add lines to connect the same geography
-  labs(x = "Year", y = "Percent")   # Add axis labels
-
-
-
-```
-
-
-```{r percent_change }
-percent_change = data |> 
-  select(geography, year, percent, number) |>
-  group_by(geography) |>
-  pivot_wider(names_from = year, 
-              values_from = c(percent,number)) |>
-  mutate(percent_diff19_20 = (percent_2020 - percent_2019)/ percent_2019 * 100) |>
-  mutate(percent_diff18_19 = (percent_2019 - percent_2018) /percent_2018 * 100) |>
-  select(geography, percent_diff18_19, percent_diff19_20, percent_2018, percent_2019, percent_2020)
-  
-
-```
-
-There are `r percent_change |> filter(abs(percent_diff18_19) > 5 | abs(percent_diff19_20) > 5) |> nrow()` areas with >5% change yoy between 2018, 2019, 2020. There are `r percent_change |> filter(abs(percent_diff18_19) > 10 | abs(percent_diff19_20) > 10) |> nrow()` areas with >10% change yoy between 2018, 2019, 2020. There are `r percent_change |> filter(abs(percent_diff18_19) > 15 | abs(percent_diff19_20) > 15) |> nrow()` areas with >15% change yoy between 2018, 2019, 2020. 
-
-Looking at cities with >15% 
-```{r}
-percent_change |>
-  filter(abs(percent_diff18_19) > 15 | abs(percent_diff19_20) > 15) |>
-  select(geography, percent_2018, percent_2019, percent_2020) |>
-  print()
-```
-
-
-# Save and Notes
+# Save
 ```{r save_clean}
-data_2019 = data |>
+data_2019 = tidy_weight |>
   filter(year == 2019)
 
-data_2019 |>
-  group_by(geo_type) |>
-  summarize(n_obs = n())
-
-write_csv(data_2019, "./data/overweight_data_clean.csv")
+write_csv(data_2019, "data/SDI_data/overweight_data_clean.csv")
 
 ```
 
-* Total of `r data |> filter(geo_type == 'UHF34') |> pull(geo_id) |> unique() |> length()` specific geo_ids, 5 boroughs, and 1 citywide rate.  
-* Years range `r data |> pull(year) |> min()` to `r data |> pull(year) |> max()` 
-* Depending on what year we use for other data, can pull that year directly, or average over recent years. Rates for the most part are pretty consistent over time 
+
 
 
 
