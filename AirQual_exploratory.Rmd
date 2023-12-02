@@ -52,23 +52,29 @@ air_quality_df |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
-
+The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant.
 ```{r}
-outliers = air_quality_df |>
-  group_by(geo_place_name) |>
-  filter(data_value > quantile(data_value, 0.75) + 1.5 * IQR(data_value) | data_value < quantile(data_value, 0.25) - 1.5 * IQR(data_value))
+air_quality_df |>
+  group_by(name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )
+```
 
-outliers |>
-  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
-  geom_point(aes(color = factor(measure_info)), size = 3) +
-  geom_line(aes(group = interaction(name, measure_info), color = factor(measure_info)),
-            stat = "summary", fun = "mean", size = 1, linetype = "dashed") +
-  facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
-  labs(title = "Outliers of the Air Quality",
-       x = "Geographical Place",
-       y = "Data Value",
-       color = "Measure Info") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+Distribution of Air Quality Pollutants
+```{r}
+air_quality_df |>
+  ggplot(aes(x = data_value, fill = name)) +
+  geom_histogram(binwidth = 1, position = "dodge", alpha = 0.7) +
+  facet_wrap(~ name, scales = "free") +
+  labs(title = "Distribution of Air Quality Pollutants",
+       x = "Data Value",
+       y = "Frequency",
+       fill = "Pollutant") +
+  theme_minimal()
 ```
 
