@@ -55,7 +55,7 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
   rename(year = time)
 ```
 
-```{r plot, eval = FALSE, include = FALSE}
+```{r plot}
 # Create the scatter plot with lines
 
 borough_ggplot =
@@ -66,7 +66,7 @@ ggplot(aes(x = year, y = percent, color = geography, group = geography)) +
   geom_line() +   # Add lines to connect the same geography
   labs(title = "Borough change over time, 2005 - 2020", x = "Year", y = "Percent")   # Add  labels
 
-print("borough_ggplot")
+print(borough_ggplot)
 ggsave("exploratory/weight_exploratory_files/borough_weight_average_over_time.pdf")
 
 ```
