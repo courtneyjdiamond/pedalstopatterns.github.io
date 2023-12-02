@@ -1,0 +1,179 @@
+P8105 Fall 2023 Final Project Proposal
+================
+
+## Proposed Title
+
+From Pedals to Patterns: A P8105 Citibike Data Analysis Over 12 months
+
+## Team Members
+
+- Jesus Luevano, jl5934<br>
+- Haley Zylberberg, hmz2105<br>
+- Hyun Jin Jung, hj2660<br>
+- Laura O’Carroll, lgo2107<br>
+- Kayla Schiffer-Kane, khs2138<br>
+- Courtney Diamond, cjd2195<br>
+
+## Motivation
+
+Increasing transportation costs, congested streets, and subway delays
+across New York City are pressuring residents to find cheaper and faster
+means of navigating the Big Apple. CitiBikes have had an impact in
+increasing access to biking as a viable alternative to other means of
+transportation. There is an added health benefit to the physical
+activity of biking. Bike usage also confers health related benefits on
+air quality. The utilization of CitiBikes, however, is dependent on
+factors such as availability of bike stations, bike lanes, and the cost
+of bike rides and membership.
+
+We, as young professionals/students in the city, want to know if turning
+to CitiBike is a viable alternative. We also want to explore if there is
+disproportionate availability and utilization of CitiBikes across
+neighborhoods with varied social deprivation index that can exacerbate
+disparities in health status. To that end, we will explore CitiBike
+usage, aiming to understand usage patterns related to location within
+NYC, and its relation to social deprivation index, air quality, and
+health outcomes.
+
+## Intended Final Products
+
+Our aims are detailed below. In brief, we intend to develop a website
+summarizing the findings of our investigation into Citibike data. This
+investigation will examine the interaction of availability and
+utilization of CitiBikes, socioeconomic and air quality variability
+across NYC neighborhoods, and the relation to health outcomes. This will
+include interactive visualizations that allow users to investigate their
+region of interest, and perhaps identify areas where further
+
+## Anticipated Data Sources
+
+[**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html) We
+will use the publicly available CitiBike. These datasets contain monthly
+logs of trips and record data elements such as the ride ID, the user’s
+status (subscriber or casual user), the trip start location and
+longitude/latitude coordinates, the trip end location and
+latitude/longitude coordinates, and the trip start/stop times and
+duration.
+
+- The available data also vary by year. For example, 2023 contains data
+  on mechanical versus electric break usage and whether the rider was a
+  CitiBike member or not. Pending initial exploration of completion, we
+  will determine feasibility of incorporating these different variables
+  in our analysis.
+
+[**Air Quality
+Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r)
+Additionally, we plan to investigate how weather trends impact Citibike
+ridership in the area using data from NYC Open Data, contributed by the
+Department of Hygiene and Mental Health. These data include the air
+quality indexes measured across boroughs in NYC.
+
+[**Social Deprivation
+Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html)
+Social deprivation index (SDI) is an effort in generating composite
+measures of socioeconomic factors across NYC by census tract. We will
+use these datasets to explore CitiBike availability and usage patterns
+across neighborhoods.
+
+[**Overweight
+Data**](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113)
+To provide an insight into health outcomes associated with factors such
+as physical acitvity aand socioeconomic factors, we will use NYC’s
+publicly available overweight health outcomes data, which is.
+
+[**Weather
+Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html)
+Lastly, for temperature-related trends, we will use data from the Global
+Historical Climatology Network - Daily (GHCN-Daily) dataset published by
+the National Centers for Environmental Information (NCEI). These data
+reflect those used in the rnoaa package, and include the weather station
+identifier, the date, latitude/longitude, maximum temperature, minimum
+temperature, and precipitation.
+
+## Planned Analyses and Visualizations
+
+We want to investigate:
+
+**1) Who uses CitiBikes?**
+
+- What is the ratio of recurrent subscriber : one-time customer
+  utilization? Are there trends that indicate tourism usage, such as
+  one-time usage around Holidays?
+  - Does this vary by time of day?
+
+  - Does this vary by time of year?
+
+  - What is the ratio of recurrent subscriber : one-time customer
+    utilization? Are there trends that indicate tourism usage, such as
+    one-time usage around Holidays?
+
+    - Does this vary by time of day?
+    - Does this vary by time of year?
+
+**2) When/how long is the average ride?**
+
+- How does this vary by subscriber/customer status?
+- How does usage vary by time of day, time of year, and weather quality?
+
+**3) Where are they leaving from and going toward?**
+
+- What are the most common origin/destination stations?
+- How do these vary by subscriber/customer status?
+- How does this vary by time of day, time of year, and weather quality?
+
+**4) What does it cost to use the CitiBikes, and how does this compare
+to rideshares or subways?**
+
+- Cost of subscription
+- Cost of single-usage
+- Cost of gear (for a commuter)
+
+**5) What are the impacts of bike availability and usage on air quality
+by SDI?**
+
+**6) What are the impacts of bike availability and usage on
+healthoutcomes by SDI?**
+
+## We want to create visualizations of:
+
+**1) A map of CitiBike stations, indicating usage frequency**
+
+**2) Plots breaking down crucial data: Linear/longitudinal for time
+related changes. Bar plots of specific demographic breakdowns.**
+
+## Anticipated Challenges/Limitations
+
+Each of our datasets may be subject to missing data and thus require
+determination of what to do with samples missing data (i.e. exclude or
+impute). Further, it is possible that over the 12 month span, the data
+format for each of these sources may have changed and thus availability
+of certain variables may change (e.g. the initial CitiBike datasets
+included gender and age of subscribers, but more recent months do not.)
+Lastly, as is standard when using multiple datasets, we will need to be
+careful when tidying such that we can integrate all datasets without
+running into any formatting issues.
+
+## Planned Timeline
+
+We anticipate adhering to the following timeline:
+
+**Week 1 (November 13 - 19)**
+
+- Repository setup
+- Data loading, tidying
+- Exploratory data analysis
+- Refinement of research questions
+
+**Week 2 (November 20 - 26)**
+
+- Data analysis
+- Generation of visualizations
+
+**Week 3 (November 27 - December 3)**
+
+- Webpage and screencast setup
+
+**Week 4 (December 4 - 9)**
+
+- Website finalization
+- Report write-up
