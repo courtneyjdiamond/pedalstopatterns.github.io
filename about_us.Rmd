@@ -7,3 +7,41 @@ output:
     theme: yeti
 css: styles.css
 ---
+ &nbsp;
+ ***
+ 
+# Laura O'Carroll
+
+[Learn more about Laura]
+
+ &nbsp;
+
+# Courtney Diamond
+
+[Learn more about Courtney]
+
+ &nbsp;
+
+# Hyun Jin Jung
+
+[Learn more about Hyun]
+
+ &nbsp;
+
+# Jesus Luevano
+
+[Learn more about Jesus]
+
+ &nbsp;
+
+# Kayla Schiffer-Kane
+
+[Learn more about Kayla]
+
+ &nbsp;
+
+# Haley Zylberberg
+
+Haley is a MS candidate. She is a also a third year Gastroenterology Fellow.
+
+[Learn more about Haley](https://haleyzylberberg.github.io/)
