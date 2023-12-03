@@ -7,9 +7,7 @@ output:
     theme: yeti
 css: styles.css
 ---
-<<<<<<< HEAD
 
-# Introduction & Motivation
 =======
   &nbsp;
 
@@ -72,4 +70,3 @@ Additional analysis: If you undertake formal statistical analyses, describe thes
 
 ## <span style='color: blue;'>Discussion</span>
 Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
->>>>>>> refs/remotes/origin/main
