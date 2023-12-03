@@ -7,5 +7,69 @@ output:
     theme: yeti
 css: styles.css
 ---
+<<<<<<< HEAD
 
 # Introduction & Motivation
+=======
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Motivation</span>
+
+Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, do all NYers have equal access to these bikes and to the health benefits biking confers.
+
+We, as public health students commuting to work and school in NYC, want to know if turning to CitiBike is a viable and equitable transportation alternative. We want to explore:
+
+  * Where and when citibikes are used throughout NYC?
+  * Who are these users? 
+  * Is there disproportionate availability of CitiBikes across neighborhoods, specifically in neighborhoods with higher social deprivation?
+  * Does disproportionate access exacerbate disparities in NYers health? 
+
+To that end, we will explore CitiBike usage, aiming to understand usage patterns related to location within NYC, and its relation to social deprivation index, air quality, and health outcomes. 
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Related Work</span>
+
+Anything that inspired you, such as a paper, a web site, or something we discussed in class.
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Initial Questions</span>
+
+What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Data</span>
+
+Data: Source, scraping method, cleaning, etc.
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Exploratory Analysis</span>
+Exploratory analysis: Visualizations, summaries, and exploratory statistical analyses. Justify the steps you took, and show any major changes to your ideas.
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Additional Analysis</span>
+Additional analysis: If you undertake formal statistical analyses, describe these in detail
+
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Discussion</span>
+Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
+>>>>>>> refs/remotes/origin/main
