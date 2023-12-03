@@ -1,0 +1,70 @@
+---
+title: "Weight dataset exploratoration"
+output: html_document
+---
+
+## Weight exploratory analysis
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+overweight <- read_csv("data/SDI_data/overweight_data_clean.csv")
+joined_uhf_34_42 <- read_csv("data/geocoding/joined_uhf_34_42.csv") 
+```
+
+Add zip codes to weight data. 
+
+```{r}
+joined_uhf_34_42 =
+joined_uhf_34_42 |>
+  select(zip, uhf34)
+
+weight_zipcodes =
+  left_join(overweight, y = (joined_uhf_34_42),
+            by = join_by("geo_id" == "uhf34")) 
+
+weight_zipcodes =
+  weight_zipcodes |>
+  filter(!duplicated(geography))
+```
+
+Percent by area name
+```{r}
+percent_obese =
+weight_zipcodes |>
+ggplot(aes(x = reorder(geography, -percent), y = percent,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
+
+print(percent_obese)
+
+
+```
+
+Percent by zipcode
+```{r}
+
+percent_obese_zip =
+weight_zipcodes |>
+  filter(zip != "NA") |>
+ggplot(aes(x = reorder(zip, -percent), y = percent,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(title = "Percent of adults classified as overweight or obese, by zipcode", x = "Location", y = "Percent")  
+
+print(percent_obese_zip)
+
+
+```
+
+
+
+
+
+

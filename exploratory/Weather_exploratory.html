@@ -11,12 +11,12 @@
 
 
 
-<title>From Pedals to Patterns: A P8105 Citibike Data Analysis</title>
+<title>NOAA Weather dataset exploratoration</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -29,9 +29,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -63,7 +60,6 @@ if (window.hljs) {
 
 
 
-<link rel="stylesheet" href="styles.css" type="text/css" />
 
 
 
@@ -225,69 +221,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -295,16 +228,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -325,16 +248,19 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="data_source.html">Data Sources</a>
+  <a href="Citibank_exploratory.html">Citibikes</a>
 </li>
 <li>
-  <a href="analysis.html">Analysis</a>
+  <a href="AirQual_exploratory.html">Air Quality</a>
 </li>
 <li>
-  <a href="project_report.html">Project Report</a>
+  <a href="SDI_Exploratory.html">SDI</a>
 </li>
 <li>
-  <a href="about_us.html">About Us</a>
+  <a href="Weight_exploratory.html">Weight</a>
+</li>
+<li>
+  <a href="Weather_exploratory.html">NOAA Weather</a>
 </li>
 <li>
   <a href="mailto:&lt;you@youremail.com&gt;">
@@ -343,13 +269,13 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="https://github.com/courtneyjdiamond/p8105_final_project">
+  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://citibikenyc.com/">
+  <a href="index.html">
     <span class="fa fa-solid fa-bicycle"></span>
      
   </a>
@@ -363,113 +289,114 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore"><span style="color: blue;">From Pedals to
-Patterns: A P8105 Citibike Data Analysis</span></h1>
+<h1 class="title toc-ignore">NOAA Weather dataset exploratoration</h1>
 
 </div>
 
 
-<style>
-  h1 {
-    text-align: center;
-     font-weight: bold;
-  }
-</style>
-<p> </p>
-<p><em>Exploring citibike trends throughout NYC in 2019</em></p>
-<p> </p>
-<p><img src="many_bike_pic.png" /></p>
-<p> </p>
-<hr />
-<div id="motivation-for-our-project" class="section level2">
-<h2><span style="color: blue;">Motivation for our Project</span></h2>
-<p>Increasing transportation costs, congested streets, and subway delays
-across New York City are pressuring residents to find cheaper and faster
-means of navigating the Big Apple. The introduction of <a
-href="https://citibikenyc.com/">Citibike</a> has had an impact in
-increasing access to biking as an alternative means of transportation.
-Biking also has the added benefit of promoting health! However, do all
-NYers have equal access to these bikes and to the health benefits biking
-confers.</p>
-<p>We, as public health students commuting to work and school in NYC,
-want to know if turning to CitiBike is a viable and equitable
-transportation alternative. We want to explore:</p>
-<ul>
-<li>Where and when citibikes are used throughout NYC?</li>
-<li>Who are these users?</li>
-<li>Is there disproportionate availability of CitiBikes across
-neighborhoods, specifically in neighborhoods with higher social
-deprivation?</li>
-<li>Does disproportionate access exacerbate disparities in NYers
-health?</li>
-</ul>
-<p>To that end, we will explore CitiBike usage, aiming to understand
-usage patterns related to location within NYC, and its relation to
-social deprivation index, air quality, and health outcomes.</p>
-<p> </p>
-<hr />
+<div id="weather-dataset-preparation" class="section level2">
+<h2>Weather dataset preparation</h2>
+<p>We sought to gather meteorological data from the National Centers for
+Environmental Information (NCEI), which is part of the National Oceanic
+and Atmospheric Administration (NOAA).</p>
+<p>The data was found on the <a
+href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html">NOAA</a>
+website, and we selected to downlaod the entirety of data for the year
+of 2019 as our starting database. The specific <a
+href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/by_year/2019.csv.gz">file</a></p>
+<p>We then used the terminal command <code>gunzip</code> to open the .gz
+file. Given the size of the file was &gt;1GB we processed it locally
+with the goal to filter based on sites that were within NYC.</p>
+<p>We found sites by reviewing the list of all of them <a
+href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt">sites</a>.
+The NYC sites were saved in a vector <code>NY_Stations</code> to then
+filter the database output.</p>
+<p>The initial file had no column headers, so we had to create headers
+and saved in <code>col_names_weather</code>.</p>
+<pre class="r"><code>NY_Stations &lt;- c(&quot;US1NYBX0025&quot;,&quot;US1NYKN0003&quot;, &quot;US1NYKN0025&quot;, &quot;US1NYNY0074&quot;, &quot;US1NYQN0026&quot;, &quot;US1NYQN0027&quot;, &quot;USC00300958&quot;, &quot;USC00300961&quot;,
+                 &quot;US1NYQN0029&quot;, &quot;US1NYQN0036&quot;, &quot;US1NYQN0037&quot;, &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;,
+                 &quot;USC00305796&quot;,&quot;USC00305798&quot;, &quot;USC00305799&quot;, &quot;USC00305804&quot;, &quot;USC00305806&quot;, &quot;USC00305816&quot;, 
+                 &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;)
+col_names_weather &lt;- c(&quot;siteID&quot;, &quot;date&quot;, &quot;element&quot;,&quot;data_value&quot;, &quot;measurement_flag&quot;, &quot;quality_flag&quot;, &quot;source_flag&quot;, &quot;obs_time&quot;)
+
+weather.df &lt;- read_csv(file = &quot;/Users/JML/Desktop/2019.csv&quot;,
+                       col_names = col_names_weather 
+                       ) %&gt;%
+  filter(siteID %in% NY_Stations)
+
+weather.df &lt;- weather.df %&gt;%
+  mutate(location = case_when(
+    siteID == &quot;US1NYBX0025&quot; | siteID == &quot;USC00300961&quot;  ~ &quot;Bronx&quot;, 
+    siteID == &quot;US1NYKN0003&quot; | siteID == &quot;US1NYKN0025&quot; | siteID == &quot;USC00300958&quot; | siteID == &quot;USC00305796&quot; | siteID == &quot;USC00305798&quot; ~ &quot;Brooklyn&quot;,
+    siteID == &quot;US1NYNY0074&quot; | siteID == &quot;USC00305806&quot; | siteID == &quot;USC00305816&quot; ~ &quot;Manhattan&quot;,
+    siteID == &quot;US1NYQN0026&quot; | siteID == &quot;US1NYQN0027&quot; | siteID == &quot;US1NYQN0029&quot; | siteID == &quot;US1NYQN0036&quot; | siteID == &quot;US1NYQN0037&quot; | siteID == &quot;USC00305799&quot; | siteID == &quot;USC00305804&quot; ~ &quot;Queens&quot;, 
+    siteID == &quot;US1NYRC0001&quot; | siteID == &quot;US1NYRC0002&quot; | siteID == &quot;US1NYRC0016&quot; ~ &quot;Staten&quot;
+  ))
+
+write_csv(weather.df, &quot;weather_data.csv&quot;)</code></pre>
 </div>
-<div id="screencast" class="section level2">
-<h2><span style="color: blue;">Screencast</span></h2>
-<p> </p>
-<p><link here to embed video>  </p>
-<hr />
-</div>
-<div id="website-details" class="section level2">
-<h2><span style="color: blue;">Website Details</span></h2>
-<p><em>Data</em>:</p>
-<ul>
-<li>A description of the data sources including:
-<ul>
-<li>Description of variables</li>
-<li>Data cleaning methods</li>
-</ul></li>
-</ul>
-<p><em>Analysis</em>:</p>
-<ul>
-<li>A description of the analyses:
-<ul>
-<li>Citibike use
-<ul>
-<li>Where is citbike used?</li>
-<li>When is citibike used?</li>
-<li>Who uses citibike?  </li>
-</ul></li>
-<li>Health Outcomes
-<ul>
-<li></li>
-</ul></li>
-</ul>
- </li>
-</ul>
-<p><em>Project Report</em>:</p>
-<ul>
-<li><p>A thorough description of the project.</p>
-<p> </p></li>
-</ul>
-<p><em>About Us</em>:</p>
-<ul>
-<li><p>More about us!</p>
-<p> </p></li>
-</ul>
-<hr />
-</div>
-<div id="team-members" class="section level2">
-<h2><span style="color: blue;">Team Members</span></h2>
-<ul>
-<li>Laura O’Carroll, lgo2107<br></li>
-<li>Courtney Diamond, cjd2195<br></li>
-<li>Hyun Jin Jung, hj2660<br></li>
-<li>Jesus Luevano, jl5934<br></li>
-<li>Kayla Schiffer-Kane, khs2138<br></li>
-<li>Haley Zylberberg, hmz2105<br></li>
-</ul>
+<div id="exploratory-analyses" class="section level2">
+<h2>Exploratory analyses</h2>
+<pre class="r"><code>weather.df &lt;- read_csv(&quot;weather_NYC_2019/weather_data.csv&quot;) %&gt;%
+  mutate(date = lubridate::as_date(as.character(date), format = &quot;%Y%m%d&quot;),
+         month = month(date),
+         month_name = fct_recode(as.factor(month),
+           &quot;January&quot; = &quot;1&quot;,
+           &quot;Feburary&quot; = &quot;2&quot;,
+           &quot;March&quot; = &quot;3&quot;,
+           &quot;April&quot; = &quot;4&quot;,
+           &quot;May&quot; = &quot;5&quot;,
+           &quot;June&quot; = &quot;6&quot;,
+           &quot;July&quot; = &quot;7&quot;,
+           &quot;August&quot; = &quot;8&quot;,
+           &quot;September&quot; = &quot;9&quot;,
+           &quot;October&quot; = &quot;10&quot;,
+           &quot;November&quot; = &quot;11&quot;,
+           &quot;December&quot; = &quot;12&quot;
+         )) </code></pre>
+<pre><code>## Rows: 3178 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (6): siteID, element, quality_flag, source_flag, obs_time, location
+## dbl (2): date, data_value
+## lgl (1): measurement_flag
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>weather.df %&gt;%
+  filter(element == &quot;PRCP&quot;) %&gt;%
+  group_by(month_name, location) %&gt;%
+  summarize(mean_prcp = mean(data_value)) %&gt;%
+  ggplot(aes(x = month_name, y = mean_prcp, group = location)) +
+  geom_line(aes(color = location)) + 
+  labs(
+    title = &quot;Mean preciptitation by month in each NYC Borough&quot;,
+    x = &quot;Month&quot;,
+    y = &quot;Mean Precipitation (in)&quot;
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;month_name&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="Weather_exploratory_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>weather.df %&gt;%
+  filter(element == &quot;SNOW&quot;) %&gt;%
+  group_by(month_name, location) %&gt;%
+  summarize(mean_prcp = mean(data_value)) %&gt;%
+  ggplot(aes(x = month_name, y = mean_prcp, group = location)) +
+  geom_line(aes(color = location)) + 
+  labs(
+    title = &quot;Mean snowfall by month in each NYC Borough&quot;,
+    x = &quot;Month&quot;,
+    y = &quot;Mean snowfall (in)&quot;
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;month_name&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="Weather_exploratory_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -502,35 +429,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

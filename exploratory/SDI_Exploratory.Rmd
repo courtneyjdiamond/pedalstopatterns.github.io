@@ -1,0 +1,75 @@
+---
+title: "SDI Exploratoration"
+output: html_document
+---
+
+## SDI Exploratory anlyses
+
+We sough to gather data from the Social deprivation index (SDI) is an effort in generating composite measures of socioeconomic factors across NYC by census tract. We will use these datasets to explore CitiBike availability and usage patterns across neighborhoods.
+
+The data was found on the [SDI](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html) website. From there we downloaded the `rgcsdi-2015-2019-zcta.csv` file and imported it as below.
+
+```{r, include = FALSE}
+library(tidyverse)
+```
+
+
+```{r, eval = TRUE}
+SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+  janitor::clean_names() |>
+  select(zcta5_fips, sdi_score)|>
+  rename(zip=zcta5_fips)
+```
+
+
+We then joined the UFH data to map neighborhoods on to zip codes. 
+```{r, eval = FALSE}
+joined_SDI_zip_neighborhood = 
+  SDI_df |> 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
+  mutate(zip = as.numeric(zip)) |> 
+  left_join(y = joined_uhf_34_42, by = "zip")
+
+view(joined_SDI_zip_neighborhood)
+```
+
+This output variables: `zip, sdi_score, uhf42, uhf42_neighborhood, uhf34, uhf34_neighborhood`.
+
+```{r}
+joined_SDI_zip_neighborhood %>% 
+  group_by(zip) %>%
+  summarize(mean_SDI = mean(sdi_score)) %>%
+  ggplot(aes(x = as.factor(zip), y = mean_SDI)) +
+  geom_histogram(stat = "identity") + 
+  labs(
+    title = "SDI score by Zip code",
+    x = "Zip code",
+    y = "SDI score"
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+joined_SDI_zip_neighborhood %>% 
+  group_by(uhf34_neighborhood) %>%
+  summarize(mean_SDI = mean(sdi_score)) %>%
+  ggplot(aes(x = as.factor(uhf34_neighborhood), y = mean_SDI)) +
+  geom_bar(stat = "identity") + 
+  labs(
+    title = "Mean SDI score by Neighborhood",
+    x = "Neighborhood",
+    y = "Mean SDI score"
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+joined_SDI_zip_neighborhood %>% 
+  group_by(uhf42_neighborhood) %>%
+  summarize(mean_SDI = mean(sdi_score)) %>%
+  ggplot(aes(x = as.factor(uhf42_neighborhood), y = mean_SDI)) +
+  geom_bar(stat = "identity") + 
+  labs(
+    title = "Mean SDI score by Neighborhood",
+    x = "Neighborhood",
+    y = "Mean SDI score"
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+

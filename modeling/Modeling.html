@@ -11,12 +11,12 @@
 
 
 
-<title>From Pedals to Patterns: A P8105 Citibike Data Analysis</title>
+<title>Modeling</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -29,9 +29,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -63,7 +60,6 @@ if (window.hljs) {
 
 
 
-<link rel="stylesheet" href="styles.css" type="text/css" />
 
 
 
@@ -225,69 +221,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -295,16 +228,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -325,16 +248,19 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="data_source.html">Data Sources</a>
+  <a href="Citibank_exploratory.html">Citibikes</a>
 </li>
 <li>
-  <a href="analysis.html">Analysis</a>
+  <a href="AirQual_exploratory.html">Air Quality</a>
 </li>
 <li>
-  <a href="project_report.html">Project Report</a>
+  <a href="SDI_Exploratory.html">SDI</a>
 </li>
 <li>
-  <a href="about_us.html">About Us</a>
+  <a href="Weight_exploratory.html">Weight</a>
+</li>
+<li>
+  <a href="Weather_exploratory.html">NOAA Weather</a>
 </li>
 <li>
   <a href="mailto:&lt;you@youremail.com&gt;">
@@ -343,13 +269,13 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="https://github.com/courtneyjdiamond/p8105_final_project">
+  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://citibikenyc.com/">
+  <a href="index.html">
     <span class="fa fa-solid fa-bicycle"></span>
      
   </a>
@@ -363,113 +289,16 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore"><span style="color: blue;">From Pedals to
-Patterns: A P8105 Citibike Data Analysis</span></h1>
+<h1 class="title toc-ignore">Modeling</h1>
 
 </div>
 
 
-<style>
-  h1 {
-    text-align: center;
-     font-weight: bold;
-  }
-</style>
-<p> </p>
-<p><em>Exploring citibike trends throughout NYC in 2019</em></p>
-<p> </p>
-<p><img src="many_bike_pic.png" /></p>
-<p> </p>
-<hr />
-<div id="motivation-for-our-project" class="section level2">
-<h2><span style="color: blue;">Motivation for our Project</span></h2>
-<p>Increasing transportation costs, congested streets, and subway delays
-across New York City are pressuring residents to find cheaper and faster
-means of navigating the Big Apple. The introduction of <a
-href="https://citibikenyc.com/">Citibike</a> has had an impact in
-increasing access to biking as an alternative means of transportation.
-Biking also has the added benefit of promoting health! However, do all
-NYers have equal access to these bikes and to the health benefits biking
-confers.</p>
-<p>We, as public health students commuting to work and school in NYC,
-want to know if turning to CitiBike is a viable and equitable
-transportation alternative. We want to explore:</p>
-<ul>
-<li>Where and when citibikes are used throughout NYC?</li>
-<li>Who are these users?</li>
-<li>Is there disproportionate availability of CitiBikes across
-neighborhoods, specifically in neighborhoods with higher social
-deprivation?</li>
-<li>Does disproportionate access exacerbate disparities in NYers
-health?</li>
-</ul>
-<p>To that end, we will explore CitiBike usage, aiming to understand
-usage patterns related to location within NYC, and its relation to
-social deprivation index, air quality, and health outcomes.</p>
-<p> </p>
-<hr />
-</div>
-<div id="screencast" class="section level2">
-<h2><span style="color: blue;">Screencast</span></h2>
-<p> </p>
-<p><link here to embed video>  </p>
-<hr />
-</div>
-<div id="website-details" class="section level2">
-<h2><span style="color: blue;">Website Details</span></h2>
-<p><em>Data</em>:</p>
-<ul>
-<li>A description of the data sources including:
-<ul>
-<li>Description of variables</li>
-<li>Data cleaning methods</li>
-</ul></li>
-</ul>
-<p><em>Analysis</em>:</p>
-<ul>
-<li>A description of the analyses:
-<ul>
-<li>Citibike use
-<ul>
-<li>Where is citbike used?</li>
-<li>When is citibike used?</li>
-<li>Who uses citibike?  </li>
-</ul></li>
-<li>Health Outcomes
-<ul>
-<li></li>
-</ul></li>
-</ul>
- </li>
-</ul>
-<p><em>Project Report</em>:</p>
-<ul>
-<li><p>A thorough description of the project.</p>
-<p> </p></li>
-</ul>
-<p><em>About Us</em>:</p>
-<ul>
-<li><p>More about us!</p>
-<p> </p></li>
-</ul>
-<hr />
-</div>
-<div id="team-members" class="section level2">
-<h2><span style="color: blue;">Team Members</span></h2>
-<ul>
-<li>Laura O’Carroll, lgo2107<br></li>
-<li>Courtney Diamond, cjd2195<br></li>
-<li>Hyun Jin Jung, hj2660<br></li>
-<li>Jesus Luevano, jl5934<br></li>
-<li>Kayla Schiffer-Kane, khs2138<br></li>
-<li>Haley Zylberberg, hmz2105<br></li>
-</ul>
-</div>
+<p>To better characterize and understand the relationships between our
+data, we sought to create models:</p>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -502,35 +331,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

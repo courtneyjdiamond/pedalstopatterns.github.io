@@ -1,0 +1,36 @@
+---
+title: "<span style='color: blue;'>Analysis</span>"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+css: styles.css
+---
+
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+
+***
+
+ &nbsp;
+
+# <span style='color: blue;'>Exploration</span>
+
+## Exploring Citibikes 
+
+
+## Exploring Subsets
+
+
+ &nbsp;
+ 
+ ***
+
+# <span style='color: blue;'>Modeling Outcomes</span>
+
+[Models](Modeling.html)
+** 

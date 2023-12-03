@@ -1,0 +1,88 @@
+---
+title: "Weather_import"
+author: "Jesus Luevano"
+date: "2023-11-28"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+Goal to import weather data from NCEI NOAA for 2019, https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html
+
+Download from https://www.ncei.noaa.gov/pub/data/ghcn/daily/by_year/2019.csv.gz 
+
+Use terminal, gunzip to open
+
+Locally import and process, then upload smaller file for ease of use on Github
+
+               
+###Data from https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt
+US1NYBX0025  40.8599  -73.8457   14.9 NY BRONX 1.5 NE  
+US1NYKN0003  40.6194  -73.9859    7.9 NY BROOKLYN 2.4 SW                             
+US1NYKN0025  40.6846  -73.9867    5.5 NY BROOKLYN 3.1 NW
+US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N 
+USC00300958  40.6892  -73.9550   15.2 NY BROOKLYN                                    
+USC00300961  40.8372  -73.8497   11.9 NY BRONX  
+
+US1NYQN0026  40.7544  -73.8882   18.0 NY JACKSON HEIGHTS 0.3 WSW                     
+US1NYQN0027  40.7781  -73.8106   18.0 NY QUEENS 3.4 NNW                              
+US1NYQN0029  40.7482  -73.7654   24.7 NY QUEENS 2.1 NE                               
+US1NYQN0036  40.6719  -73.8450    6.7 NY QUEENS 4.7 SW                               
+US1NYQN0037  40.7800  -73.8103   19.8 NY QUEENS 3.7 N                                
+US1NYRC0001  40.5421  -74.1476   10.7 NY STATEN ISLAND 4.5 SSE                       
+US1NYRC0002  40.5674  -74.1327   21.9 NY STATEN ISLAND 1.4 SE                        
+US1NYRC0016  40.6157  -74.1456   11.3 NY STATEN ISLAND 2.6 N 
+
+USC00305796  40.5939  -73.9808    6.1 NY NY AVE V BROOKLYN 
+USC00305798  40.6000  -73.9667    6.1 NY NEW YORK BENSONHURST                        
+USC00305799  40.8667  -73.8833   27.1 NY NEW YORK BOTANICAL GRD                      
+USC00305804  40.7333  -73.9333    3.0 NY NEW YORK LAUREL HILL                        
+USC00305806  40.8500  -73.9167   54.9 NY NEW YORK UNIV ST                            
+USC00305816  40.7000  -74.0167    3.0 NY NEW YORK WB CITY  
+
+The "year".csv files contain all daily and station elements found in GHCN daily for the given year.  These 
+files are updated daily for the entire period of record.
+
+The following information serves as a definition of each field in one line of data covering one station-day. 
+Each field described below is separated by a comma ( , ) and follows the order below:
+
+ID = 11 character station identification code
+YEAR/MONTH/DAY = 8 character date in YYYYMMDD format (e.g. 19860529 = May 29, 1986)
+ELEMENT = 4 character indicator of element type 
+DATA VALUE = 5 character data value for ELEMENT 
+M-FLAG = 1 character Measurement Flag 
+Q-FLAG = 1 character Quality Flag 
+S-FLAG = 1 character Source Flag 
+OBS-TIME = 4-character time of observation in hour-minute format (i.e. 0700 =7:00 am)
+
+See section III of the GHCN-Daily readme.txt file (ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt)
+for an explanation of ELEMENT codes and their units as well as the M-FLAG, Q-FLAG and S-FLAG.
+
+The OBS-TIME field is populated with the observation times contained in NOAA/NCEI's HOMR station history database.  
+
+
+```{r}
+
+NY_Stations <- c("US1NYBX0025","US1NYKN0003", "US1NYKN0025", "US1NYNY0074", "US1NYQN0026", "US1NYQN0027", "USC00300958", "USC00300961",
+                 "US1NYQN0029", "US1NYQN0036", "US1NYQN0037", "US1NYRC0001", "US1NYRC0002", "US1NYRC0016",
+                 "USC00305796","USC00305798", "USC00305799", "USC00305804", "USC00305806", "USC00305816", 
+                 "US1NYRC0001", "US1NYRC0002", "US1NYRC0016")
+col_names_weather <- c("siteID", "date", "element","data_value", "measurement_flag", "quality_flag", "source_flag", "obs_time")
+
+weather.df <- read_csv(file = "/Users/JML/Desktop/2019.csv",
+                       col_names = col_names_weather 
+                       ) %>%
+  filter(siteID %in% NY_Stations)
+
+weather.df <- weather.df %>%
+  mutate(location = case_when(
+    siteID == "US1NYBX0025" | siteID == "USC00300961"  ~ "Bronx", 
+    siteID == "US1NYKN0003" | siteID == "US1NYKN0025" | siteID == "USC00300958" | siteID == "USC00305796" | siteID == "USC00305798" ~ "Brooklyn",
+    siteID == "US1NYNY0074" | siteID == "USC00305806" | siteID == "USC00305816" ~ "Manhattan",
+    siteID == "US1NYQN0026" | siteID == "US1NYQN0027" | siteID == "US1NYQN0029" | siteID == "US1NYQN0036" | siteID == "US1NYQN0037" | siteID == "USC00305799" | siteID == "USC00305804" ~ "Queens", 
+    siteID == "US1NYRC0001" | siteID == "US1NYRC0002" | siteID == "US1NYRC0016" ~ "Staten"
+  ))
+```
+
