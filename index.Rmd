@@ -41,7 +41,7 @@ To that end, we will explore CitiBike usage, aiming to understand usage patterns
 
 &nbsp;
 
-```{r library, include=FALSE}
+```{r library, include = FALSE}
 library(tidyverse)
 library(shiny)
 library(shinyjs)

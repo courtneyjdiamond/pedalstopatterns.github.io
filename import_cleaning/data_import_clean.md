@@ -77,7 +77,22 @@ SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
 ## Load the overweight data; initial import and tidying completed in \[here\] (import_overweight_data.html)
 
 ``` r
-overweight <- read_csv("data/SDI_data/overweight_data_clean.csv")
+overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
+    janitor::clean_names()
+
+overweight_df =
+ overweight |>
+  mutate(number = gsub("\\*", "", number)) |>
+  mutate(number = gsub(",", "", number)) |>
+  mutate(number = as.numeric(number)) |>
+  mutate(
+    percent_low = as.numeric(gsub("^.*\\(\\s*", "", gsub("\\s*,.*$", "", percent))),
+    percent_high = as.numeric(gsub("^.*\\,\\s*", "", gsub("\\)$", "", percent))),
+percent = as.numeric(ifelse(grepl("\\*", percent),
+                                gsub("\\*.*$", "", percent),
+                                gsub("\\s*\\(.*", "", percent)))) |>
+  rename(year = time)|>
+  filter (year == 2019)
 ```
 
 ## Import UHF42/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
@@ -172,7 +187,7 @@ joined_SDI_zip_neighborhood =
 
 ``` r
 joined_overweight_zip_neighborhood = 
-  overweight |> 
+  overweight_df |> 
   left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34"))
 ```
 
@@ -213,4 +228,8 @@ citibike_zip_neighborhoods =
 
 head(citibike_zip_neighborhoods) |> 
   knitr::kable()
+```
+
+``` r
+sample = citibike_zip_neighborhoods |>  slice(1)
 ```

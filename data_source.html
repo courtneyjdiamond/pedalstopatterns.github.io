@@ -11,7 +11,7 @@
 
 
 
-<title>Sources of Data</title>
+<title>Data Sources and Overview</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -363,7 +363,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Sources of Data</h1>
+<h1 class="title toc-ignore"><span style="color: blue;">Data Sources and
+Overview</span></h1>
 
 </div>
 
@@ -373,48 +374,309 @@ div.tocify {
      font-weight: bold;
   }
 </style>
+<p> </p>
+<div id="data-sources" class="section level2">
+<h2><span style="color: blue;">Data Sources</span></h2>
+<p> </p>
 <p><a
 href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
-Data</strong></a> We will use the publicly available CitiBike. These
-datasets contain monthly logs of trips and record data elements such as
-the ride ID, the user’s status (subscriber or casual user), the trip
-start location and longitude/latitude coordinates, the trip end location
-and latitude/longitude coordinates, and the trip start/stop times and
-duration.</p>
-<ul>
-<li>The available data also vary by year. For example, 2023 contains
-data on mechanical versus electric break usage and whether the rider was
-a CitiBike member or not. Pending initial exploration of completion, we
-will determine feasibility of incorporating these different variables in
-our analysis.</li>
-</ul>
-<p><a
-href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
-Quality Data</strong></a> Additionally, we plan to investigate how
-weather trends impact Citibike ridership in the area using data from NYC
-Open Data, contributed by the Department of Hygiene and Mental Health.
-These data include the air quality indexes measured across boroughs in
-NYC.</p>
+Data</strong></a>: These datasets contain monthly logs of trip,
+including ride ID, the user’s status (subscriber or casual user), trip
+start/end longitude/latitude coordinates, and the trip start/stop times
+and duration.</p>
 <p><a
 href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"><strong>Social
-Deprivation Index</strong></a> Social deprivation index (SDI) is an
-effort in generating composite measures of socioeconomic factors across
-NYC by census tract. We will use these datasets to explore CitiBike
-availability and usage patterns across neighborhoods.</p>
+Deprivation Index</strong></a>: The social deprivation index (SDI) is an
+effort to generate a scoring system of socioeconomic factors using US
+census data from the American Community Survey. The final SDI is a
+composite measure of percent living in poverty, percent with less than
+12 years of education, percent single-parent households, the percentage
+living in rented housing units, the percentage living in the overcrowded
+housing unit, percent of households without a car, and percentage
+nonemployed adults under 65 years of age. For more details please see
+the webpage link.</p>
 <p><a
 href="https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&amp;subtopic_id=113"><strong>Overweight
-Data</strong></a> To provide an insight into health outcomes associated
-with factors such as physical acitvity aand socioeconomic factors, we
-will use NYC’s publicly available overweight health outcomes data, which
-is.</p>
+Data</strong></a>: This dataset contains publicly available data from
+NYC regarding the percent of people who are overweight per area.</p>
+<p><a
+href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
+Quality Index Data</strong></a>: These data originated from NYC Open
+Data, contributed by the Department of Hygiene and Mental Health and
+include air quality indexes measured across boroughs in NYC.</p>
 <p><a
 href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"><strong>Weather
-Data</strong></a> Lastly, for temperature-related trends, we will use
-data from the Global Historical Climatology Network - Daily (GHCN-Daily)
-dataset published by the National Centers for Environmental Information
-(NCEI). These data reflect those used in the rnoaa package, and include
-the weather station identifier, the date, latitude/longitude, maximum
-temperature, minimum temperature, and precipitation.</p>
+Data</strong></a>: This data is from the Global Historical Climatology
+Network - Daily (GHCN-Daily) dataset published by the National Centers
+for Environmental Information (NCEI) and include the weather station
+identifier, the date, latitude/longitude, maximum temperature, minimum
+temperature, and precipitation.</p>
+<p> </p>
+</div>
+<div id="individual-data-imports-and-cleaning" class="section level2">
+<h2><span style="color: blue;">Individual Data Imports and
+Cleaning</span></h2>
+<p> </p>
+<div id="citibike" class="section level3">
+<h3><em>Citibike</em></h3>
+<p> </p>
+<div id="data-import" class="section level5">
+<h5>Data Import</h5>
+<p>The citibike data was a collection of csv files that we downloaded
+and merged. We were specifically interested in 2019 as this was when SDI
+scores were available.</p>
+<pre class="r"><code>citibike = 
+  tibble(
+    files = list.files(&quot;citibike&quot;),
+    path = str_c(&quot;citibike/&quot;, files)
+  ) |&gt;
+  mutate(data = map(path, ~read_csv(.x, col_types = cols(
+    &#39;end station id&#39; = col_double(),
+    &#39;start station id&#39; = col_double()
+  )))) |&gt;
+  unnest(cols = c(data))</code></pre>
+<pre class="r"><code>head(citibike) |&gt; 
+  knitr::kable</code></pre>
+<p>(Will not include actual code for now as I cannot figure out how to
+knit)</p>
+<p>The citibike dataframe includes r nrow(citibike) trips and r
+ncol(citibike) variables. The variables in the dataframe are r
+names(citibike).</p>
+<p> </p>
+</div>
+<div id="data-cleaning" class="section level5">
+<h5>Data Cleaning</h5>
+<p>The cleaning of the citibike data included the following steps:</p>
+<ul>
+<li>Recoding gender from numeric to text</li>
+<li>Filtering trip duration to more than 5 minutes but less than 1 day
+in order to capture true trips taken</li>
+<li>Including trips that started in 2018 but ended in 2019 and trips
+that started in 2019 but ended in 2020, so as to include all trips taken
+in 2019</li>
+<li>Creating an age at time of trip variable from birth year</li>
+<li>Creating a trip duration in minutes (as opposed to seconds)
+variable</li>
+</ul>
+<pre class="r"><code>citibike_df &lt;- citibike |&gt;
+  janitor::clean_names() |&gt;
+  select(-files, -path) |&gt;
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|&gt;
+  mutate(gender = recode(gender,
+                         &quot;0&quot; = &quot;Unknown&quot;,
+                         &quot;1&quot; = &quot;Male&quot;,
+                         &quot;2&quot; = &quot;Female&quot;),
+        trip_duration_min = trip_duration_sec / 60,
+        age = 2019 - birth_year
+        ) |&gt;
+  filter(
+    trip_duration_sec &gt;= 300,
+    trip_duration_sec &lt;= 86400,
+    as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
+    as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
+  )  |&gt;
+  select(trip_duration_sec, trip_duration_min, everything())</code></pre>
+<p>The table below displays the citibike tidied data.</p>
+<pre class="r"><code>citibike_df |&gt;
+  head() |&gt;
+  knitr::kable()</code></pre>
+<p>The citibike dataframe includes r nrow(citibike_df) trips and r
+ncol(citibike_df) variables. The variables in the dataframe are r
+names(citibike_df).</p>
+<p> </p>
+</div>
+</div>
+<div id="social-deprivation-index" class="section level3">
+<h3><em>Social Deprivation Index</em></h3>
+<p> </p>
+<div id="data-import-and-cleaning" class="section level5">
+<h5>Data Import and Cleaning</h5>
+<p>The SDI dataset was a csv. We renamed the zip code variable to be
+more intuitive. As we were only interested in the entirety of the SDI
+score, we filtered the data to include zip code and sdi_score only.</p>
+<ul>
+<li>It is important to note that the higher the SDI score the higher the
+social deprivation in that area.</li>
+</ul>
+<pre class="r"><code>SDI_df &lt;- read_csv(&quot;data/SDI_data/rgcsdi-2015-2019-zcta.csv&quot;) |&gt;
+  janitor::clean_names() |&gt;
+  select(zcta5_fips, sdi_score)|&gt;
+  rename(zip=zcta5_fips)</code></pre>
+<p>This table shows the zip codes with the least social deprivation (ie
+the lowest SDI score).</p>
+<pre class="r"><code>SDI_df |&gt;
+  arrange(sdi_score) |&gt;  
+  head(5) |&gt;
+  knitr::kable()</code></pre>
+<p> </p>
+</div>
+</div>
+<div id="overweight-data" class="section level3">
+<h3><em>Overweight Data</em></h3>
+<p> </p>
+<div id="data-import-1" class="section level5">
+<h5>Data Import</h5>
+<p>The overweight data was a csv files that we downloaded and merged. We
+were specifically interested in 2019 as this was when SDI scores were
+available.</p>
+<pre class="r"><code>overweight = read_csv(&#39;./data/SDI_data/nyc_overweight_or_obesity_adults.csv&#39;) |&gt;
+    janitor::clean_names()</code></pre>
+<p>The overweight dataframe includes r nrow(overweight) trips and r
+ncol(overweight) variables. The variables in the dataframe are r
+names(overweight).</p>
+<p> </p>
+</div>
+<div id="data-cleaning-1" class="section level5">
+<h5>Data Cleaning</h5>
+<p>The cleaning of the overweight data included the following steps:</p>
+<ul>
+<li>Converting percent from a character variable to a numeric
+variable</li>
+<li>Separating out the high and low confidence intervals of percent</li>
+<li>Renaming time to year</li>
+<li>Filtering data to 2019</li>
+</ul>
+<pre class="r"><code>overweight_df =
+ overweight |&gt;
+  mutate(number = gsub(&quot;\\*&quot;, &quot;&quot;, number)) |&gt;
+  mutate(number = gsub(&quot;,&quot;, &quot;&quot;, number)) |&gt;
+  mutate(number = as.numeric(number)) |&gt;
+  mutate(
+    percent_low = as.numeric(gsub(&quot;^.*\\(\\s*&quot;, &quot;&quot;, gsub(&quot;\\s*,.*$&quot;, &quot;&quot;, percent))),
+    percent_high = as.numeric(gsub(&quot;^.*\\,\\s*&quot;, &quot;&quot;, gsub(&quot;\\)$&quot;, &quot;&quot;, percent))),
+percent = as.numeric(ifelse(grepl(&quot;\\*&quot;, percent),
+                                gsub(&quot;\\*.*$&quot;, &quot;&quot;, percent),
+                                gsub(&quot;\\s*\\(.*&quot;, &quot;&quot;, percent)))) |&gt;
+  rename(year = time)|&gt;
+  filter (year == 2019)</code></pre>
+<p>The table below displays the overweight tidied data.</p>
+<pre class="r"><code>overweight_df |&gt;
+  head() |&gt;
+  knitr::kable()</code></pre>
+<p>The overweight dataframe now includes r nrow(overweight_df) trips and
+r ncol(overweight_df) variables. The variables in the dataframe are r
+names(overweight_df).</p>
+</div>
+</div>
+<div id="air-quality-index" class="section level3">
+<h3><em>Air Quality Index</em></h3>
+<p> </p>
+<div id="data-import-2" class="section level5">
+<h5>Data Import</h5>
+<p>The air quality data was a csv files.</p>
+<pre class="r"><code>air &lt;- read_csv(&quot;data/air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
+<p>The air dataframe includes r nrow(air) trips and r ncol(air)
+variables. The variables in the dataframe are r names(air).</p>
+<p> </p>
+</div>
+<div id="data-cleaning-2" class="section level5">
+<h5>Data Cleaning</h5>
+<p>The cleaning of the air quality index data included the following
+steps:</p>
+<ul>
+<li>Separating out year</li>
+<li>Filtering data to 2019</li>
+</ul>
+<pre class="r"><code> air_quality_df =air |&gt;
+  janitor::clean_names() |&gt;
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |&gt;
+  filter(year == &quot;2019&quot;)</code></pre>
+<p>The table below displays the air quality tidied data.</p>
+<pre class="r"><code> air_quality_df |&gt;
+  head() |&gt;
+  knitr::kable()</code></pre>
+<p>The air quality dataframe now includes r nrow( air_quality_df) trips
+and r ncol( air_quality_df) variables. The variables in the dataframe
+are r names( air_quality_df).</p>
+</div>
+</div>
+</div>
+<div id="data-merging-by-nyc-neighborhood" class="section level2">
+<h2><span style="color: blue;">Data Merging by NYC
+Neighborhood</span></h2>
+<p>Next we needed to merge the citibike dataframe with each individual
+variable dataframe by NYC neighborhood. However each dataframe has a
+different location variable, for example some had latititude longitude
+data, while others had zip codes, and neighborhoods.</p>
+<p>To do this, we needed to first combine United Hospital (UHF) 42 codes
+to zip codes, as the overweight dataframe included UHF 42 codes. * For
+more information about the background behind UHF codes, please see <a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><strong>here</strong></a>.</p>
+<p>We found a table that mapped UFH 42 codes to zip codes from a NYC gov
+<a
+href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
+We imported this table and tidied it into a dataframe.</p>
+<pre class="r"><code># install.packages(&quot;pdftables&quot;)
+# install.packages(&quot;pdftools&quot;)
+
+uhf_zip = 
+  pdf_text(&quot;data/geocoding/zipcodetable.pdf&quot;) |&gt; 
+  extract(1)
+
+uhf_zip_df =
+  uhf_zip |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_zip, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  filter(!row_number() %in% c(1, 2, 51)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  separate(data, into = c(&quot;uhf&quot;, &quot;rest&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  separate(col = &quot;rest&quot;, into = c(&quot;neighborhood&quot;, &quot;zip&quot;), sep = &quot;(?=\\s\\d)&quot;, extra = &quot;merge&quot;) |&gt; 
+  separate(col = &quot;zip&quot;, into = c(&quot;zip1&quot;, &quot;zip2&quot;, &quot;zip3&quot;, &quot;zip4&quot;, &quot;zip5&quot;, &quot;zip6&quot;, &quot;zip7&quot;, &quot;zip8&quot;, &quot;zip9&quot;), sep = &quot;,&quot;) |&gt; 
+  mutate(across(everything(), ~ str_trim(.x))) |&gt; 
+  mutate(across(c(&quot;zip1&quot;:&quot;zip9&quot;), ~ as.numeric(.x))) |&gt; 
+  mutate(uhf = as.numeric(uhf)) |&gt; 
+  pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
+  filter(!is.na(zip)) |&gt; 
+  select(!zip_name)</code></pre>
+<pre class="r"><code>uhf_34 = 
+  pdf_text(&quot;data/geocoding/uhf34.pdf&quot;)
+
+uhf_34_df =
+  uhf_34 |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_34, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 7, 14, 18, 21, 24, 27, 28, 31, 32, 34, 35, 39, 40, 42, 43, 44, 45, 47, 48, 52, 53, 57, 61:75)) |&gt; 
+  mutate(data = str_replace(data, &quot;Kingsbridge - Riverdale&quot;, &quot;101 Kingsbridge - Riverdale&quot;)) |&gt; 
+  mutate(data = str_replace(data, &quot;Northeast Bronx&quot;, &quot;102 Northeast Bronx&quot;)) |&gt; 
+  filter(!row_number() %in% c(1,2)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;),
+         data = str_squish(data), 
+         data = str_trim(data)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+$&quot;)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+\\s$&quot;)) |&gt;
+  separate(data, into = c(&quot;uhf34&quot;, &quot;neighborhood&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  mutate(uhf34 = as.numeric(str_trim(uhf34)),
+         neighborhood = str_trim(neighborhood)) |&gt; 
+  mutate(uhf2 = uhf34) |&gt; 
+  separate_wider_position(uhf2, widths = c(&quot;1_uhf&quot; = 3, &quot;2_uhf&quot; = 3, &quot;3_uhf&quot; = 3), too_few = &quot;align_start&quot;) |&gt; 
+  pivot_longer(c(&quot;1_uhf&quot;:&quot;3_uhf&quot;), names_to = &quot;uhf_name&quot;, values_to = &quot;uhf42&quot;) |&gt; 
+  select(!uhf_name) |&gt; 
+  mutate(uhf34 = as.numeric(uhf34),
+         uhf42 = as.numeric(uhf42))</code></pre>
+<p>Lastly</p>
+<pre class="r"><code>joined_uhf_34_42 = 
+  uhf_zip_df |&gt; 
+  left_join(y = uhf_34_df, by = join_by(&quot;uhf&quot; == &quot;uhf42&quot;)) |&gt; 
+  rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
+         &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
+         &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
+</div>
 
 
 
