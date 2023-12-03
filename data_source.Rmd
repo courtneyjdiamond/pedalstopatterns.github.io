@@ -37,8 +37,6 @@ shinyjs::useShinyjs()
 
 [**Air Quality Index Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r): These data originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC.
 
-[**Weather Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html): This data is from the Global Historical Climatology Network - Daily (GHCN-Daily) dataset published by the National Centers for Environmental Information (NCEI) and include the weather station identifier, the date, latitude/longitude, maximum temperature, minimum temperature, and precipitation. 
-
   &nbsp;
 
 ***
@@ -70,8 +68,9 @@ citibike =
 ```
 
 ```{r show first few rows of uncleaned citibike data, eval = FALSE}
-head(citibike) |> 
-  knitr::kable
+citibike |>
+  head() |>
+  knitr::kable()
 ```
 
 (Will not include actual code for now as I cannot figure out how to knit)

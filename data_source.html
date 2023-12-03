@@ -405,13 +405,6 @@ href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>A
 Quality Index Data</strong></a>: These data originated from NYC Open
 Data, contributed by the Department of Hygiene and Mental Health and
 include air quality indexes measured across boroughs in NYC.</p>
-<p><a
-href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"><strong>Weather
-Data</strong></a>: This data is from the Global Historical Climatology
-Network - Daily (GHCN-Daily) dataset published by the National Centers
-for Environmental Information (NCEI) and include the weather station
-identifier, the date, latitude/longitude, maximum temperature, minimum
-temperature, and precipitation.</p>
 <p> </p>
 <hr />
 </div>
@@ -437,8 +430,9 @@ scores were available.</p>
     &#39;start station id&#39; = col_double()
   )))) |&gt;
   unnest(cols = c(data))</code></pre>
-<pre class="r"><code>head(citibike) |&gt; 
-  knitr::kable</code></pre>
+<pre class="r"><code>citibike |&gt;
+  head() |&gt;
+  knitr::kable()</code></pre>
 <p>(Will not include actual code for now as I cannot figure out how to
 knit)</p>
 <p>The citibike dataframe includes r nrow(citibike) trips and r
