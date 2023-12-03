@@ -1,5 +1,5 @@
 ---
-title: "From Pedals to Patterns: A P8105 Citibike Data Analysis"
+title: "<span style='color: blue;'>From Pedals to Patterns: A P8105 Citibike Data Analysis</span>"
 output: 
   html_document:
     toc: true
@@ -15,6 +15,32 @@ css: styles.css
   }
 </style>
 
+  &nbsp;
+  
+*Exploring citibike trends throughout NYC in 2019*
+
+  &nbsp;
+  
+![](many_bike_pic.png)
+
+  &nbsp;
+  
+***
+
+## <span style="color: blue;">Motivation for our Project</span>
+Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, do all NYers have equal access to these bikes and to the health benefits biking confers.
+
+We, as public health students commuting to work and school in NYC, want to know if turning to CitiBike is a viable and equitable transportation alternative. We want to explore:
+
+  * Where and when citibikes are used throughout NYC?
+  * Who are these users? 
+  * Is there disproportionate availability of CitiBikes across neighborhoods, specifically in neighborhoods with higher social deprivation?
+  * Does disproportionate access exacerbate disparities in NYers health? 
+
+To that end, we will explore CitiBike usage, aiming to understand usage patterns related to location within NYC, and its relation to social deprivation index, air quality, and health outcomes. 
+
+&nbsp;
+
 ```{r library, include=FALSE}
 library(tidyverse)
 library(shiny)
@@ -23,24 +49,48 @@ shinyjs::useShinyjs()
 ```
 
 ***
+## <span style="color: blue;">Screencast</span>
 
-## Screencast 
-
+  &nbsp;
+  
 <link here to embed video>
   &nbsp;
+  
+***
 
-## Team Members
+## <span style="color: blue;">Website Details</span>
+  
+*Data*:
+
+* A description of the data sources including:
+  * Description of variables
+  * Data cleaning methods
+
+
+*Analysis*:
+
+* Citibike use
+  * Where is citbike used?
+  * When is citibike used?
+  * Who uses citibike?
+  
+    &nbsp;
+    
+* Health Outcomes
+  * 
+
+  &nbsp;
+  
+
+***
+  
+## <span style="color: blue;">Team Members</span>
   - Laura O'Carroll, lgo2107<br>
   - Courtney Diamond, cjd2195<br>
   - Hyun Jin Jung, hj2660<br>
   - Jesus Luevano, jl5934<br>
   - Kayla Schiffer-Kane, khs2138<br>
   - Haley Zylberberg, hmz2105<br> 
-  &nbsp;
 
-## Motivation
-Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. CitiBikes have had an impact in increasing access to biking as a viable alternative to other means of transportation. There is an added health benefit to the physical activity of biking. Bike usage also confers health related benefits on air quality. The utilization of CitiBikes, however, is dependent on factors such as availability of bike stations, bike lanes, and the cost of bike rides and membership. 
-
-We, as young professionals/students in the city, want to know if turning to CitiBike is a viable alternative. We also want to explore if there is disproportionate availability and utilization of CitiBikes across neighborhoods with varied social deprivation index that can exacerbate disparities in health status. To that end, we will explore CitiBike usage, aiming to understand usage patterns related to location within NYC, and its relation to social deprivation index, air quality, and health outcomes. &nbsp;
 
 
