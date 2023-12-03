@@ -1,8 +1,0 @@
----
-title: "Modeling"
-output: html_document
----
-
-To better characterize and understand the relationships between our data, we sought to create models:
-
-

@@ -1,0 +1,109 @@
+---
+title: "Latitude/Longitude to Zip Code"
+date: "`r Sys.Date()`"
+output: 
+  github_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE
+)
+
+library(tidyverse)
+library(tidygeocoder)
+```
+
+# Load Citibike Data - Same as data_import_clean.Rmd
+```{r}
+citibike <- 
+  tibble(
+    files = list.files("data/citibike/"),
+    path = str_c("data/citibike/", files)
+  ) |>
+  mutate(data = map(path, ~read_csv(.x, col_types = cols(
+    'end station id' = col_double(),
+    'start station id' = col_double()
+  )))) |>
+  unnest(cols = c(data))
+
+
+
+
+citibike_df <- citibike |>
+  janitor::clean_names() |>
+  select(-files, -path) |>
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|>
+  mutate(gender = recode(gender,
+                         "0" = "Unknown",
+                         "1" = "Male",
+                         "2" = "Female"),
+         trip_duration_min = trip_duration_sec / 60,
+         age = 2019 - birth_year
+  ) |>
+  filter(
+    trip_duration_sec >= 300,
+    trip_duration_sec <= 86400,
+    as.Date(stop_time) >= as.Date("2019-01-01"),
+    as.Date(start_time) <= as.Date("2019-12-31")
+  )  |>
+  select(trip_duration_sec, trip_duration_min, everything())
+
+```
+
+# Subsetting citibike for testing
+```{r, eval = FALSE}
+citibike_df = citibike_df |>
+  head(n=10)
+```
+
+# Extract Latitude/Longitude pairs from Citibike 
+```{r get_latlong}
+citibike_start = citibike_df |>
+  janitor::clean_names() |>
+  select(start_station_latitude, start_station_longitude) |>
+  rename(latitude = start_station_latitude, longitude = start_station_longitude) |>
+  unique() # 1110
+
+citibike_end  = citibike_df |>
+  janitor::clean_names() |>
+  select(end_station_latitude, end_station_longitude) |>
+  rename(latitude = end_station_latitude, longitude = end_station_longitude) |>
+  unique() 
+
+lat_long = rbind(citibike_start, citibike_end) |>
+  unique()
+
+```
+
+# Convert Lat Long to Zip
+```{r convert_to_zip}
+latlong_zip = lat_long |>
+  reverse_geocode(lat = latitude, long = longitude, 
+                  method = 'osm', full_results = TRUE) |>  
+  select(latitude, longitude, postcode)
+
+write_csv(latlong_zip, "./data/geocoding/citibike_latlong_zip.csv")
+```
+
+
+# Merge Zipcode onto Citibike Data
+
+```{r}
+citibike_zip = citibike_df |>
+  left_join(latlong_zip, 
+            by = c("start_station_latitude" = "latitude",
+                   "start_station_longitude" = "longitude")) |>
+  rename("start_zipcode" = "postcode") |>
+  left_join(latlong_zip, 
+            by = c("end_station_latitude" = "latitude",
+                   "end_station_longitude" = "longitude")) |>
+  rename("end_zipcode" = "postcode") 
+ 
+```
+
