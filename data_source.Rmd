@@ -52,11 +52,11 @@ shinyjs::useShinyjs()
 The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available.
 
 
-```{r import citibike, eval= FALSE}
+```{r import citibike}
 citibike = 
   tibble(
-    files = list.files("citibike"),
-    path = str_c("citibike/", files)
+    files = list.files("./citibike"),
+    path = str_c("./citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),

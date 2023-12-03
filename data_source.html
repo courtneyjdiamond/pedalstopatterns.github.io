@@ -427,14 +427,23 @@ and merged. We were specifically interested in 2019 as this was when SDI
 scores were available.</p>
 <pre class="r"><code>citibike = 
   tibble(
-    files = list.files(&quot;citibike&quot;),
-    path = str_c(&quot;citibike/&quot;, files)
+    files = list.files(&quot;./citibike&quot;),
+    path = str_c(&quot;./citibike/&quot;, files)
   ) |&gt;
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     &#39;end station id&#39; = col_double(),
     &#39;start station id&#39; = col_double()
   )))) |&gt;
   unnest(cols = c(data))</code></pre>
+<pre><code>## Warning: There were 6 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `data = map(...)`.
+## Caused by warning:
+## ! One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <pre class="r"><code>head(citibike) |&gt; 
   knitr::kable</code></pre>
 <p>(Will not include actual code for now as I cannot figure out how to
