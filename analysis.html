@@ -363,7 +363,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Analysis</h1>
+<h1 class="title toc-ignore"><span
+style="color: blue;">Analysis</span></h1>
 
 </div>
 
@@ -373,53 +374,21 @@ div.tocify {
      font-weight: bold;
   }
 </style>
+<hr />
+<p> </p>
 <div id="exploration" class="section level1">
-<h1>Exploration</h1>
+<h1><span style="color: blue;">Exploration</span></h1>
 <div id="exploring-citibikes" class="section level2">
 <h2>Exploring Citibikes</h2>
-<p>We utilized the datasets from the above Citibank link, specifically
-downloading monthly datasets for NYC data from December 2018 - January
-2020 (to encompass the entirety or rides within NYC in 2019, and to
-include those that began Dec 31st, 2018 into Jan 1st 2019, and that
-began Dec 31st, 2019 into Jan 1st 2020).</p>
-<p>Data was imported and consolidated into one dataset, with filtering
-done to remove rides that were &lt;5 minutes or &gt;24hours in
-length.</p>
-<p>In addition we imported each of the sub-datasets:</p>
-<pre class="r"><code>#This file was &gt;1GB, so downlaoded and cleaned locally, uploaded to GitHub after filtering
-
-NY_Stations &lt;- c(&quot;US1NYBX0025&quot;,&quot;US1NYKN0003&quot;, &quot;US1NYKN0025&quot;, &quot;US1NYNY0074&quot;, &quot;US1NYQN0026&quot;, &quot;US1NYQN0027&quot;, &quot;USC00300958&quot;, &quot;USC00300961&quot;,
-                 &quot;US1NYQN0029&quot;, &quot;US1NYQN0036&quot;, &quot;US1NYQN0037&quot;, &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;,
-                 &quot;USC00305796&quot;,&quot;USC00305798&quot;, &quot;USC00305799&quot;, &quot;USC00305804&quot;, &quot;USC00305806&quot;, &quot;USC00305816&quot;, 
-                 &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;)
-col_names_weather &lt;- c(&quot;siteID&quot;, &quot;date&quot;, &quot;element&quot;,&quot;data_value&quot;, &quot;measurement_flag&quot;, &quot;quality_flag&quot;, &quot;source_flag&quot;, &quot;obs_time&quot;)
-
-weather.df &lt;- read_csv(file = &quot;/Users/JML/Desktop/2019.csv&quot;,
-                       col_names = col_names_weather 
-                       ) %&gt;%
-  filter(siteID %in% NY_Stations)
-
-weather.df &lt;- weather.df %&gt;%
-  mutate(location = case_when(
-    siteID == &quot;US1NYBX0025&quot; | siteID == &quot;USC00300961&quot;  ~ &quot;Bronx&quot;, 
-    siteID == &quot;US1NYKN0003&quot; | siteID == &quot;US1NYKN0025&quot; | siteID == &quot;USC00300958&quot; | siteID == &quot;USC00305796&quot; | siteID == &quot;USC00305798&quot; ~ &quot;Brooklyn&quot;,
-    siteID == &quot;US1NYNY0074&quot; | siteID == &quot;USC00305806&quot; | siteID == &quot;USC00305816&quot; ~ &quot;Manhattan&quot;,
-    siteID == &quot;US1NYQN0026&quot; | siteID == &quot;US1NYQN0027&quot; | siteID == &quot;US1NYQN0029&quot; | siteID == &quot;US1NYQN0036&quot; | siteID == &quot;US1NYQN0037&quot; | siteID == &quot;USC00305799&quot; | siteID == &quot;USC00305804&quot; ~ &quot;Queens&quot;, 
-    siteID == &quot;US1NYRC0001&quot; | siteID == &quot;US1NYRC0002&quot; | siteID == &quot;US1NYRC0016&quot; ~ &quot;Staten&quot;
-  ))</code></pre>
-<p>&lt;Link to page with exploratory analyses, plots for
-Citibank&gt;</p>
 </div>
 <div id="exploring-subsets" class="section level2">
 <h2>Exploring Subsets</h2>
-<p><a href="SDI_Exploratory.html">SDI</a></p>
-<p><a href="SDI_Exploratory.html">Air_Quality</a></p>
-<p><a href="Weight_exploratory.html">Weight</a></p>
-<p><a href="Weather_exploratory.html">Weather</a></p>
+<p> </p>
+<hr />
 </div>
 </div>
 <div id="modeling-outcomes" class="section level1">
-<h1>Modeling outcomes</h1>
+<h1><span style="color: blue;">Modeling Outcomes</span></h1>
 <p><a href="Modeling.html">Models</a> **</p>
 </div>
 
