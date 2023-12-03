@@ -375,6 +375,7 @@ Overview</span></h1>
   }
 </style>
 <p> </p>
+<hr />
 <div id="data-sources" class="section level2">
 <h2><span style="color: blue;">Data Sources</span></h2>
 <p> </p>
@@ -412,6 +413,7 @@ for Environmental Information (NCEI) and include the weather station
 identifier, the date, latitude/longitude, maximum temperature, minimum
 temperature, and precipitation.</p>
 <p> </p>
+<hr />
 </div>
 <div id="individual-data-imports-and-cleaning" class="section level2">
 <h2><span style="color: blue;">Individual Data Imports and
@@ -594,24 +596,31 @@ steps:</p>
 <p>The air quality dataframe now includes r nrow( air_quality_df) trips
 and r ncol( air_quality_df) variables. The variables in the dataframe
 are r names( air_quality_df).</p>
+<hr />
 </div>
 </div>
 </div>
 <div id="data-merging-by-nyc-neighborhood" class="section level2">
 <h2><span style="color: blue;">Data Merging by NYC
 Neighborhood</span></h2>
-<p>Next we needed to merge the citibike dataframe with each individual
-variable dataframe by NYC neighborhood. However each dataframe has a
-different location variable, for example some had latititude longitude
-data, while others had zip codes, and neighborhoods.</p>
-<p>To do this, we needed to first combine United Hospital (UHF) 42 codes
-to zip codes, as the overweight dataframe included UHF 42 codes. * For
-more information about the background behind UHF codes, please see <a
-href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><strong>here</strong></a>.</p>
-<p>We found a table that mapped UFH 42 codes to zip codes from a NYC gov
-<a
+<p>Our end goal was to merge data by neighborhood. We decided to use
+United Hospital (UHF) 42 codes which consist of 34 adjoining zip codes
+with similar characteristics compiled by NYC Gov. We decideded to use
+UFH 34 instead of other versions as UFH 34 had the least number of
+neighborhoods (contains the largest area per neighborhood)</p>
+<ul>
+<li>For more information about the background behind UHF codes, please
+see <a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><strong>here</strong></a>.</li>
+</ul>
+<p>To do this, we did the following:</p>
+<ol style="list-style-type: decimal">
+<li>First we combined United Hospital (UHF) 42 codes to zip codes, as
+the overweight dataframe included UHF 42 codes. We found a table that
+mapped UFH 42 codes to zip codes from a NYC gov <a
 href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
-We imported this table and tidied it into a dataframe.</p>
+We imported this table and tidied it into a dataframe.</li>
+</ol>
 <pre class="r"><code># install.packages(&quot;pdftables&quot;)
 # install.packages(&quot;pdftools&quot;)
 
@@ -640,6 +649,10 @@ uhf_zip_df =
   pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
   filter(!is.na(zip)) |&gt; 
   select(!zip_name)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>We imported and cleaned a dataframe that converted UFH 34 to zip
+code.</li>
+</ol>
 <pre class="r"><code>uhf_34 = 
   pdf_text(&quot;data/geocoding/uhf34.pdf&quot;)
 
@@ -669,13 +682,21 @@ uhf_34_df =
   select(!uhf_name) |&gt; 
   mutate(uhf34 = as.numeric(uhf34),
          uhf42 = as.numeric(uhf42))</code></pre>
-<p>Lastly</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Lastly we combined UFH 42 and UFH 34 dataframes.</li>
+</ol>
 <pre class="r"><code>joined_uhf_34_42 = 
   uhf_zip_df |&gt; 
   left_join(y = uhf_34_df, by = join_by(&quot;uhf&quot; == &quot;uhf42&quot;)) |&gt; 
   rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
          &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
+<hr />
+</div>
+<div id="creating-one-final-dataframe" class="section level2">
+<h2><span style="color: blue;">Creating One Final Dataframe</span></h2>
+<p>Next we needed to merge the neighborhood crosswalk dataframe with the
+citibike dataframe and each individual variable dataframe.</p>
 </div>
 
 

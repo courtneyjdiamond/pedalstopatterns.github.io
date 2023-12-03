@@ -23,6 +23,8 @@ library(shinyjs)
 shinyjs::useShinyjs()
 ```  
   
+  ***
+  
 ## <span style='color: blue;'>Data Sources</span>
 
  &nbsp;
@@ -38,6 +40,8 @@ shinyjs::useShinyjs()
 [**Weather Data**](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html): This data is from the Global Historical Climatology Network - Daily (GHCN-Daily) dataset published by the National Centers for Environmental Information (NCEI) and include the weather station identifier, the date, latitude/longitude, maximum temperature, minimum temperature, and precipitation. 
 
   &nbsp;
+
+***
 
 ## <span style='color: blue;'>Individual Data Imports and Cleaning</span>
 
@@ -246,14 +250,18 @@ The table below displays the air quality tidied data.
 
 The air quality dataframe now includes r nrow( air_quality_df) trips and r ncol( air_quality_df) variables. The variables in the dataframe are r names( air_quality_df).
 
+***
+
 ## <span style='color: blue;'>Data Merging by NYC Neighborhood</span>
 
-Next we needed to merge the citibike dataframe with each individual variable dataframe by NYC neighborhood. However each dataframe has a different location variable, for example some had latititude longitude data, while others had zip codes, and neighborhoods. 
+Our end goal was to merge data by neighborhood. We decided to use United Hospital (UHF) 42 codes which consist of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We decideded to use UFH 34 instead of other versions as UFH 34 had the least number of neighborhoods (contains the largest area per neighborhood)
 
-To do this, we needed to first combine United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes.
- * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
- 
-We found a table that mapped UFH 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). We imported this table and tidied it into a dataframe.
+  * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
+
+
+To do this, we did the following:
+
+1. First we combined United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UFH 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). We imported this table and tidied it into a dataframe.
 
 ```{r import and tidy UFH42 pdf, eval = FALSE}
 # install.packages("pdftables")
@@ -286,6 +294,7 @@ uhf_zip_df =
   select(!zip_name)
 ```
 
+2. We imported and cleaned a dataframe that converted UFH 34 to zip code.
 
 ```{r import and tidy UFH 34 pdf, eval = FALSE}
 uhf_34 = 
@@ -320,7 +329,8 @@ uhf_34_df =
   
 ```
 
-Lastly
+3. Lastly we combined UFH 42 and UFH 34 dataframes.
+
 ```{r, eval = FALSE}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
@@ -330,3 +340,8 @@ joined_uhf_34_42 =
          "uhf42" = "uhf")
 ```
 
+***
+
+## <span style='color: blue;'>Creating One Final Dataframe</span>
+
+Next we needed to merge the neighborhood crosswalk dataframe with the citibike dataframe and each individual variable dataframe. 
