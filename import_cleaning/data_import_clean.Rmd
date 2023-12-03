@@ -13,18 +13,18 @@ library(magrittr)
 
 Citibike Jan/2019 ~ Dec/2019
 
-# Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura 
-```{r import citibike}
-citibike <- 
- tibble(
- files = list.files("data/citibike/"),
-  path = str_c("data/citibike/", files)
+# Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura (Response from HZ, see below)
+```{r import citibike, eval = FALSE}
+citibike = 
+  tibble(
+    files = list.files("citibike"),
+    path = str_c("citibike/", files)
   ) |>
-mutate(data = map(path, ~read_csv(.x, col_types = cols(
-  'end station id' = col_double(),
-   'start station id' = col_double()
+  mutate(data = map(path, ~read_csv(.x, col_types = cols(
+    'end station id' = col_double(),
+    'start station id' = col_double()
   )))) |>
-unnest(cols = c(data))
+  unnest(cols = c(data))
 ```
 
 Tidy dataset:
@@ -34,7 +34,7 @@ Tidy dataset:
  * create an age variable
  * create a trip duration in minutes variable
  
-```{r tiday citibike}
+```{r tidy citibike, eval = FALSE}
 citibike_df <- citibike |>
   janitor::clean_names() |>
   select(-files, -path) |>
@@ -61,11 +61,11 @@ citibike_df <- citibike |>
 
 ## Load and tidy the AQI data
 
-```{r air quality}
+```{r air quality, eval = FALSE}
 air <- read_csv("data/air_quality/Air_Quality_20231126.csv") 
 ```
 
-```{r air quality tidy}
+```{r air quality tidy, eval = FALSE}
  air_quality_df =air |>
   janitor::clean_names() |>
   mutate(
@@ -77,7 +77,7 @@ air <- read_csv("data/air_quality/Air_Quality_20231126.csv")
 
 ## Load and tidy the SDI data
 
-```{r sdi}
+```{r sdi, eval = FALSE}
 SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
@@ -85,13 +85,13 @@ SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
 ```
 
 ## Load the overweight data; initial import and tidying completed in [here] (import_overweight_data.html)
-```{r}
+```{r, eval = FALSE}
 overweight <- read_csv("data/SDI_data/overweight_data_clean.csv")
 ```
 
 
 ## Import UHF42/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
-```{r}
+```{r, eval = FALSE}
 # install.packages("pdftables")
 # install.packages("pdftools")
 
@@ -123,7 +123,7 @@ uhf_zip_df =
 ```
 
 ## Import UHF34 / UHF 42 crosswalk
-```{r}
+```{r, eval = FALSE}
 uhf_34 = 
   pdf_text("data/geocoding/uhf34.pdf")
 
@@ -157,7 +157,7 @@ uhf_34_df =
 ```
 
 ## Join UHF data
-```{r}
+```{r, eval = FALSE}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
   left_join(y = uhf_34_df, by = join_by("uhf" == "uhf42")) |> 
@@ -168,7 +168,7 @@ joined_uhf_34_42 =
 
 
 ## Join SDI data to UHF/Zip/Neighborhood data
-```{r}
+```{r, eval = FALSE}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
   filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
@@ -177,7 +177,7 @@ joined_SDI_zip_neighborhood =
 ```
 
 ## Join overweight data to UHF/Zip/Neighborhood data
-```{r}
+```{r, eval = FALSE}
 joined_overweight_zip_neighborhood = 
   overweight |> 
   left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34"))
@@ -189,7 +189,7 @@ And finally, join the zipcodes/neighborhoods to the Citibike data! First, we nee
 
 Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df. Then crosswalk to the UHF neighborhoods! 
 
-```{r citibike_zip}
+```{r citibike_zip, eval = FALSE}
 latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
 
 citibike_zip =
