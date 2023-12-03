@@ -11,7 +11,7 @@
 
 
 
-<title>From Pedals to Patterns: A P8105 Citibike Data Analysis</title>
+<title>Sources of Data</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -363,54 +363,58 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">From Pedals to Patterns: A P8105 Citibike
-Data Analysis</h1>
+<h1 class="title toc-ignore">Sources of Data</h1>
 
 </div>
 
 
 <style>
   h1 {
-    text-align: center;
      font-weight: bold;
   }
 </style>
-<hr />
-<div id="screencast" class="section level2">
-<h2>Screencast</h2>
-<p><link here to embed video>  </p>
-</div>
-<div id="team-members" class="section level2">
-<h2>Team Members</h2>
+<p><a
+href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
+Data</strong></a> We will use the publicly available CitiBike. These
+datasets contain monthly logs of trips and record data elements such as
+the ride ID, the user’s status (subscriber or casual user), the trip
+start location and longitude/latitude coordinates, the trip end location
+and latitude/longitude coordinates, and the trip start/stop times and
+duration.</p>
 <ul>
-<li>Laura O’Carroll, lgo2107<br></li>
-<li>Courtney Diamond, cjd2195<br></li>
-<li>Hyun Jin Jung, hj2660<br></li>
-<li>Jesus Luevano, jl5934<br></li>
-<li>Kayla Schiffer-Kane, khs2138<br></li>
-<li>Haley Zylberberg, hmz2105<br>  </li>
+<li>The available data also vary by year. For example, 2023 contains
+data on mechanical versus electric break usage and whether the rider was
+a CitiBike member or not. Pending initial exploration of completion, we
+will determine feasibility of incorporating these different variables in
+our analysis.</li>
 </ul>
-</div>
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
-<p>Increasing transportation costs, congested streets, and subway delays
-across New York City are pressuring residents to find cheaper and faster
-means of navigating the Big Apple. CitiBikes have had an impact in
-increasing access to biking as a viable alternative to other means of
-transportation. There is an added health benefit to the physical
-activity of biking. Bike usage also confers health related benefits on
-air quality. The utilization of CitiBikes, however, is dependent on
-factors such as availability of bike stations, bike lanes, and the cost
-of bike rides and membership.</p>
-<p>We, as young professionals/students in the city, want to know if
-turning to CitiBike is a viable alternative. We also want to explore if
-there is disproportionate availability and utilization of CitiBikes
-across neighborhoods with varied social deprivation index that can
-exacerbate disparities in health status. To that end, we will explore
-CitiBike usage, aiming to understand usage patterns related to location
-within NYC, and its relation to social deprivation index, air quality,
-and health outcomes.  </p>
-</div>
+<p><a
+href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
+Quality Data</strong></a> Additionally, we plan to investigate how
+weather trends impact Citibike ridership in the area using data from NYC
+Open Data, contributed by the Department of Hygiene and Mental Health.
+These data include the air quality indexes measured across boroughs in
+NYC.</p>
+<p><a
+href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"><strong>Social
+Deprivation Index</strong></a> Social deprivation index (SDI) is an
+effort in generating composite measures of socioeconomic factors across
+NYC by census tract. We will use these datasets to explore CitiBike
+availability and usage patterns across neighborhoods.</p>
+<p><a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&amp;subtopic_id=113"><strong>Overweight
+Data</strong></a> To provide an insight into health outcomes associated
+with factors such as physical acitvity aand socioeconomic factors, we
+will use NYC’s publicly available overweight health outcomes data, which
+is.</p>
+<p><a
+href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"><strong>Weather
+Data</strong></a> Lastly, for temperature-related trends, we will use
+data from the Global Historical Climatology Network - Daily (GHCN-Daily)
+dataset published by the National Centers for Environmental Information
+(NCEI). These data reflect those used in the rnoaa package, and include
+the weather station identifier, the date, latitude/longitude, maximum
+temperature, minimum temperature, and precipitation.</p>
 
 
 

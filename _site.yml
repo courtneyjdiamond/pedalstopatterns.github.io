@@ -3,16 +3,14 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "Citibikes"
-      href: Citibank_exploratory.html
-    - text: "Air Quality"
-      href: AirQual_exploratory.html
-    - text: "SDI"
-      href: SDI_Exploratory.html
-    - text: "Weight"
-      href: Weight_exploratory.html
-    - text: "NOAA Weather"
-      href: Weather_exploratory.html
+    - text: "Data Sources"
+      href: data_source.html
+    - text: "Analysis"
+      href: analysis.html
+    - text: "Project Report"
+      href: project_report.html
+    - text: "About Us"
+      href: about_us.html
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg

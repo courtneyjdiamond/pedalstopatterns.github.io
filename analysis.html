@@ -11,7 +11,7 @@
 
 
 
-<title>From Pedals to Patterns: A P8105 Citibike Data Analysis</title>
+<title>Analysis</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -363,53 +363,64 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">From Pedals to Patterns: A P8105 Citibike
-Data Analysis</h1>
+<h1 class="title toc-ignore">Analysis</h1>
 
 </div>
 
 
 <style>
   h1 {
-    text-align: center;
      font-weight: bold;
   }
 </style>
-<hr />
-<div id="screencast" class="section level2">
-<h2>Screencast</h2>
-<p><link here to embed video>  </p>
+<div id="exploration" class="section level1">
+<h1>Exploration</h1>
+<div id="exploring-citibikes" class="section level2">
+<h2>Exploring Citibikes</h2>
+<p>We utilized the datasets from the above Citibank link, specifically
+downloading monthly datasets for NYC data from December 2018 - January
+2020 (to encompass the entirety or rides within NYC in 2019, and to
+include those that began Dec 31st, 2018 into Jan 1st 2019, and that
+began Dec 31st, 2019 into Jan 1st 2020).</p>
+<p>Data was imported and consolidated into one dataset, with filtering
+done to remove rides that were &lt;5 minutes or &gt;24hours in
+length.</p>
+<p>In addition we imported each of the sub-datasets:</p>
+<pre class="r"><code>#This file was &gt;1GB, so downlaoded and cleaned locally, uploaded to GitHub after filtering
+
+NY_Stations &lt;- c(&quot;US1NYBX0025&quot;,&quot;US1NYKN0003&quot;, &quot;US1NYKN0025&quot;, &quot;US1NYNY0074&quot;, &quot;US1NYQN0026&quot;, &quot;US1NYQN0027&quot;, &quot;USC00300958&quot;, &quot;USC00300961&quot;,
+                 &quot;US1NYQN0029&quot;, &quot;US1NYQN0036&quot;, &quot;US1NYQN0037&quot;, &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;,
+                 &quot;USC00305796&quot;,&quot;USC00305798&quot;, &quot;USC00305799&quot;, &quot;USC00305804&quot;, &quot;USC00305806&quot;, &quot;USC00305816&quot;, 
+                 &quot;US1NYRC0001&quot;, &quot;US1NYRC0002&quot;, &quot;US1NYRC0016&quot;)
+col_names_weather &lt;- c(&quot;siteID&quot;, &quot;date&quot;, &quot;element&quot;,&quot;data_value&quot;, &quot;measurement_flag&quot;, &quot;quality_flag&quot;, &quot;source_flag&quot;, &quot;obs_time&quot;)
+
+weather.df &lt;- read_csv(file = &quot;/Users/JML/Desktop/2019.csv&quot;,
+                       col_names = col_names_weather 
+                       ) %&gt;%
+  filter(siteID %in% NY_Stations)
+
+weather.df &lt;- weather.df %&gt;%
+  mutate(location = case_when(
+    siteID == &quot;US1NYBX0025&quot; | siteID == &quot;USC00300961&quot;  ~ &quot;Bronx&quot;, 
+    siteID == &quot;US1NYKN0003&quot; | siteID == &quot;US1NYKN0025&quot; | siteID == &quot;USC00300958&quot; | siteID == &quot;USC00305796&quot; | siteID == &quot;USC00305798&quot; ~ &quot;Brooklyn&quot;,
+    siteID == &quot;US1NYNY0074&quot; | siteID == &quot;USC00305806&quot; | siteID == &quot;USC00305816&quot; ~ &quot;Manhattan&quot;,
+    siteID == &quot;US1NYQN0026&quot; | siteID == &quot;US1NYQN0027&quot; | siteID == &quot;US1NYQN0029&quot; | siteID == &quot;US1NYQN0036&quot; | siteID == &quot;US1NYQN0037&quot; | siteID == &quot;USC00305799&quot; | siteID == &quot;USC00305804&quot; ~ &quot;Queens&quot;, 
+    siteID == &quot;US1NYRC0001&quot; | siteID == &quot;US1NYRC0002&quot; | siteID == &quot;US1NYRC0016&quot; ~ &quot;Staten&quot;
+  ))</code></pre>
+<p>&lt;Link to page with exploratory analyses, plots for
+Citibank&gt;</p>
 </div>
-<div id="team-members" class="section level2">
-<h2>Team Members</h2>
-<ul>
-<li>Laura O’Carroll, lgo2107<br></li>
-<li>Courtney Diamond, cjd2195<br></li>
-<li>Hyun Jin Jung, hj2660<br></li>
-<li>Jesus Luevano, jl5934<br></li>
-<li>Kayla Schiffer-Kane, khs2138<br></li>
-<li>Haley Zylberberg, hmz2105<br>  </li>
-</ul>
+<div id="exploring-subsets" class="section level2">
+<h2>Exploring Subsets</h2>
+<p><a href="SDI_Exploratory.html">SDI</a></p>
+<p><a href="SDI_Exploratory.html">Air_Quality</a></p>
+<p><a href="Weight_exploratory.html">Weight</a></p>
+<p><a href="Weather_exploratory.html">Weather</a></p>
 </div>
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
-<p>Increasing transportation costs, congested streets, and subway delays
-across New York City are pressuring residents to find cheaper and faster
-means of navigating the Big Apple. CitiBikes have had an impact in
-increasing access to biking as a viable alternative to other means of
-transportation. There is an added health benefit to the physical
-activity of biking. Bike usage also confers health related benefits on
-air quality. The utilization of CitiBikes, however, is dependent on
-factors such as availability of bike stations, bike lanes, and the cost
-of bike rides and membership.</p>
-<p>We, as young professionals/students in the city, want to know if
-turning to CitiBike is a viable alternative. We also want to explore if
-there is disproportionate availability and utilization of CitiBikes
-across neighborhoods with varied social deprivation index that can
-exacerbate disparities in health status. To that end, we will explore
-CitiBike usage, aiming to understand usage patterns related to location
-within NYC, and its relation to social deprivation index, air quality,
-and health outcomes.  </p>
+</div>
+<div id="modeling-outcomes" class="section level1">
+<h1>Modeling outcomes</h1>
+<p><a href="Modeling.html">Models</a> **</p>
 </div>
 
 
