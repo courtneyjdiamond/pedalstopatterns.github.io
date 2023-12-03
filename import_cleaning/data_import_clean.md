@@ -14,10 +14,16 @@ P8105 Fall 2023 Final Project
   - [Join UHF data](#join-uhf-data)
   - [Join SDI data to UHF/Zip/Neighborhood
     data](#join-sdi-data-to-uhfzipneighborhood-data)
-  - [Join overweight data to UHF/Zip/Neighborhood
+  - [Join Overweight data to UHF/Zip/Neighborhood
     data](#join-overweight-data-to-uhfzipneighborhood-data)
   - [Join Citibike data to UHF/Zip/Neighborhood
     data](#join-citibike-data-to-uhfzipneighborhood-data)
+  - [Merge Citibike, SDI, Overweight
+    Data](#merge-citibike-sdi-overweight-data)
+    - [Merge SDI and Overweight data](#merge-sdi-and-overweight-data)
+    - [Merge SDI and Overweight data onto
+      citibike](#merge-sdi-and-overweight-data-onto-citibike)
+  - [Citibike - Missing zips](#citibike---missing-zips)
 
 # Load and tidy the Citibike ridership data
 
@@ -125,7 +131,7 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
   rename(year = time) |>
   filter (year == 2019)
 
-write_csv(overweight_df, "data/SDI_data/overweight_data_clean.csv")
+#write_csv(overweight_df, "data/SDI_data/overweight_data_clean.csv")
 ```
 
 # Incorporate Geocoding
@@ -223,12 +229,13 @@ joined_SDI_zip_neighborhood =
   left_join(y = joined_uhf_34_42, by = "zip")
 ```
 
-## Join overweight data to UHF/Zip/Neighborhood data
+## Join Overweight data to UHF/Zip/Neighborhood data
 
 ``` r
 joined_overweight_zip_neighborhood = 
   overweight_df |> 
-  left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34"))
+  left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34")) |>
+  rename(percent_overweight = percent)
 ```
 
 ## Join Citibike data to UHF/Zip/Neighborhood data
@@ -270,6 +277,73 @@ head(citibike_zip_neighborhoods) |>
   knitr::kable()
 ```
 
+## Merge Citibike, SDI, Overweight Data
+
+### Merge SDI and Overweight data
+
+There are rows in the overweight data without zipcode that refer instead
+to borough and city-wide overweight percentages. These are excluded from
+joining on SDI/citibike data, which function by zipcode more granular
+than borough
+
+``` r
+sdi_overweight = 
+  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
+                   by.x = c("zip", "uhf42", "uhf42_neighborhood"),
+                   by.y = c("zip", "uhf42", "uhf42_neighborhood"),
+                   all.x = TRUE)  |>
+  select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
+         "sdi_score","percent_overweight") |>
+  rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
+  filter(!is.na(sdi_overweight$zip)) 
+```
+
+### Merge SDI and Overweight data onto citibike
+
 ``` r
 sample = citibike_zip_neighborhoods |>  slice(1)
+citibike_zip_neighborhood_test = head(citibike_zip_neighborhoods, n = 5000)
+
+colnames(joined_overweight_zip_neighborhood)
+colnames(joined_SDI_zip_neighborhood)
+
+citibike_df =
+  citibike_zip_neighborhoods |>
+  left_join(y = sdi_overweight,
+            by = join_by("start_zipcode" == "zip")) |>
+  rename("start_sdi_score" = "sdi_score",
+         "start_percent_overweight" = "percent_overweight") 
+
+citibike_df = citibike_df |>
+  left_join(y = sdi_overweight,
+            by = join_by("end_zipcode" == "zip")) |>
+  rename("end_sdi_score" = "sdi_score",
+         "end_percent_overweight" = "percent_overweight") 
+
+citibike_df = citibike_df |>
+  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
+         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
+         -uhf42.x, - uhf42_neighborhood.x)
+
+write_csv(citibike_df, file = './citibike/citibike_clean.csv')
+```
+
+## Citibike - Missing zips
+
+``` r
+missing_startzip = citibike_df |>
+  filter(is.na(start_zipcode)) 
+
+missing_startzip |>
+  group_by(start_station_name, start_station_latitude, start_station_longitude) |>
+  summarize(n = n())
+
+missing_endzip = citibike_df |>
+  filter(is.na(end_zipcode)) 
+
+missing_endzip |>
+  group_by(end_station_name, end_station_latitude, end_station_longitude) |>
+  summarize(n = n())
+
+There are `r nrow(missing_startzip)` entries missing start zip and `rnrow(missing_endzip)` missing end zip. 
 ```
