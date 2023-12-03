@@ -1,0 +1,9 @@
+---
+title: "<span style='color: blue;'>Project Report</span>"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+css: styles.css
+---

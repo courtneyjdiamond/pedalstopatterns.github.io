@@ -1,5 +1,5 @@
 ---
-title: "Analysis"
+title: "<span style='color: blue;'>Analysis</span>"
 output: 
   html_document:
     toc: true
@@ -14,75 +14,23 @@ css: styles.css
   }
 </style>
 
+***
 
-# Exploration
+ &nbsp;
+
+# <span style='color: blue;'>Exploration</span>
 
 ## Exploring Citibikes 
-
-We utilized the datasets from the above Citibank link, specifically downloading monthly datasets for NYC data from December 2018 - January 2020 (to encompass the entirety or rides within NYC in 2019, and to include those that began Dec 31st, 2018 into Jan 1st 2019, and that began Dec 31st, 2019 into Jan 1st 2020). 
-
-Data was imported and consolidated into one dataset, with filtering done to remove rides that were <5 minutes or >24hours in length. 
-
-```{r, Citibike dataset}
-
-```
-
-In addition we imported each of the sub-datasets:
-
-```{r, air quality dataset}
-
-```
-
-
-```{r, SDI dataset}
-
-```
-
-```{r, weight dataset}
-
-```
-
-
-```{r, weather_import, eval=FALSE}
-#This file was >1GB, so downlaoded and cleaned locally, uploaded to GitHub after filtering
-
-NY_Stations <- c("US1NYBX0025","US1NYKN0003", "US1NYKN0025", "US1NYNY0074", "US1NYQN0026", "US1NYQN0027", "USC00300958", "USC00300961",
-                 "US1NYQN0029", "US1NYQN0036", "US1NYQN0037", "US1NYRC0001", "US1NYRC0002", "US1NYRC0016",
-                 "USC00305796","USC00305798", "USC00305799", "USC00305804", "USC00305806", "USC00305816", 
-                 "US1NYRC0001", "US1NYRC0002", "US1NYRC0016")
-col_names_weather <- c("siteID", "date", "element","data_value", "measurement_flag", "quality_flag", "source_flag", "obs_time")
-
-weather.df <- read_csv(file = "/Users/JML/Desktop/2019.csv",
-                       col_names = col_names_weather 
-                       ) %>%
-  filter(siteID %in% NY_Stations)
-
-weather.df <- weather.df %>%
-  mutate(location = case_when(
-    siteID == "US1NYBX0025" | siteID == "USC00300961"  ~ "Bronx", 
-    siteID == "US1NYKN0003" | siteID == "US1NYKN0025" | siteID == "USC00300958" | siteID == "USC00305796" | siteID == "USC00305798" ~ "Brooklyn",
-    siteID == "US1NYNY0074" | siteID == "USC00305806" | siteID == "USC00305816" ~ "Manhattan",
-    siteID == "US1NYQN0026" | siteID == "US1NYQN0027" | siteID == "US1NYQN0029" | siteID == "US1NYQN0036" | siteID == "US1NYQN0037" | siteID == "USC00305799" | siteID == "USC00305804" ~ "Queens", 
-    siteID == "US1NYRC0001" | siteID == "US1NYRC0002" | siteID == "US1NYRC0016" ~ "Staten"
-  ))
-```
-
-
-<Link to page with exploratory analyses, plots for Citibank>
 
 
 ## Exploring Subsets
 
-[SDI](SDI_Exploratory.html)
 
-[Air_Quality](SDI_Exploratory.html)
+ &nbsp;
+ 
+ ***
 
-[Weight](Weight_exploratory.html)
-
-[Weather](Weather_exploratory.html)
-
-
-# Modeling outcomes
+# <span style='color: blue;'>Modeling Outcomes</span>
 
 [Models](Modeling.html)
 ** 

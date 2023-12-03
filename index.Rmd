@@ -69,17 +69,28 @@ shinyjs::useShinyjs()
 
 *Analysis*:
 
-* Citibike use
-  * Where is citbike used?
-  * When is citibike used?
-  * Who uses citibike?
+* A description of the analyses:
+  * Citibike use
+    * Where is citbike used?
+    * When is citibike used?
+    * Who uses citibike?
     &nbsp;
-    
-* Health Outcomes
-  * 
+  * Health Outcomes
+    * 
 
   &nbsp;
   
+*Project Report*:
+
+* A thorough description of the project.
+
+  &nbsp;
+
+*About Us*:
+
+* More about us!
+
+  &nbsp;
 
 ***
   
