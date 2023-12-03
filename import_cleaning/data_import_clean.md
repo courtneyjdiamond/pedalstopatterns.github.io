@@ -35,8 +35,8 @@ Citibike Jan/2019 ~ Dec/2019
 ``` r
 citibike = 
   tibble(
-    files = list.files("citibike"),
-    path = str_c("citibike/", files)
+    files = list.files("./citibike"),
+    path = str_c("./citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
@@ -323,7 +323,7 @@ citibike_df = citibike_df |>
 citibike_df = citibike_df |>
   select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
          -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
-         -uhf42.x, - uhf42_neighborhood.x)
+         -uhf42.x, -uhf42_neighborhood.x)
 
 write_csv(citibike_df, file = './citibike/citibike_clean.csv')
 ```
