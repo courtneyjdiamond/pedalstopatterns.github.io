@@ -73,7 +73,6 @@ shinyjs::useShinyjs()
   * Where is citbike used?
   * When is citibike used?
   * Who uses citibike?
-  
     &nbsp;
     
 * Health Outcomes
