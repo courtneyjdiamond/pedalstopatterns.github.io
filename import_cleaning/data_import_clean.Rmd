@@ -1,6 +1,8 @@
 ---
 title: "P8105 Fall 2023 Final Project"
-output: github_document
+output: 
+  github_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -9,11 +11,11 @@ library(pdftools)
 library(magrittr)
 ```
 
-## Load and tidy the Citibike ridership data
+# Load and tidy the Citibike ridership data
 
 Citibike Jan/2019 ~ Dec/2019
 
-# Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura (Response from HZ, see below)
+**Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura (Response from HZ, see below)**
 ```{r import citibike, eval = FALSE}
 citibike = 
   tibble(
@@ -28,6 +30,7 @@ citibike =
 ```
 
 Tidy dataset:
+
  * recode gender
  * filter trip duration to more than 5 minutes but less than 1 day
  * include trips that started in 2018 but ended in 2019 and trips that started in 2019 but ended in 2020
@@ -59,6 +62,7 @@ citibike_df <- citibike |>
 
 ```
 
+# Other Data Sets 
 ## Load and tidy the AQI data
 
 ```{r air quality, eval = FALSE}
@@ -84,7 +88,13 @@ SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   rename(zip=zcta5_fips)
 ```
 
-## Load the overweight data; initial import and tidying completed in [here] (import_overweight_data.html)
+## Load the Overweight data 
+
+Data Source: [NYC Data Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta/data-explorer/overweight/?id=2061#display=summary) 
+
+  * Data accessed: `11/27/2023` 
+  * Full table loaded for "Overweight and Obese Adults"
+  
 ```{r, eval = FALSE}
 overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
     janitor::clean_names()
@@ -100,11 +110,18 @@ overweight_df =
 percent = as.numeric(ifelse(grepl("\\*", percent),
                                 gsub("\\*.*$", "", percent),
                                 gsub("\\s*\\(.*", "", percent)))) |>
-  rename(year = time)|>
+  rename(year = time) |>
   filter (year == 2019)
+
+write_csv(overweight_df, "data/SDI_data/overweight_data_clean.csv")
+
 ```
 
-## Import UHF42/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
+# Incorporate Geocoding
+
+## Import UHF42/ZipCode crosswalk 
+
+Data source:  `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`
 ```{r, eval = FALSE}
 # install.packages("pdftables")
 # install.packages("pdftools")
@@ -169,6 +186,8 @@ uhf_34_df =
          uhf42 = as.numeric(uhf42))
   
 ```
+
+# Merging Datasets 
 
 ## Join UHF data
 ```{r, eval = FALSE}

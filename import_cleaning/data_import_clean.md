@@ -1,11 +1,30 @@
 P8105 Fall 2023 Final Project
 ================
 
-## Load and tidy the Citibike ridership data
+- [Load and tidy the Citibike ridership
+  data](#load-and-tidy-the-citibike-ridership-data)
+- [Other Data Sets](#other-data-sets)
+  - [Load and tidy the AQI data](#load-and-tidy-the-aqi-data)
+  - [Load and tidy the SDI data](#load-and-tidy-the-sdi-data)
+  - [Load the Overweight data](#load-the-overweight-data)
+- [Incorporate Geocoding](#incorporate-geocoding)
+  - [Import UHF42/ZipCode crosswalk](#import-uhf42zipcode-crosswalk)
+  - [Import UHF34 / UHF 42 crosswalk](#import-uhf34--uhf-42-crosswalk)
+- [Merging Datasets](#merging-datasets)
+  - [Join UHF data](#join-uhf-data)
+  - [Join SDI data to UHF/Zip/Neighborhood
+    data](#join-sdi-data-to-uhfzipneighborhood-data)
+  - [Join overweight data to UHF/Zip/Neighborhood
+    data](#join-overweight-data-to-uhfzipneighborhood-data)
+  - [Join Citibike data to UHF/Zip/Neighborhood
+    data](#join-citibike-data-to-uhfzipneighborhood-data)
+
+# Load and tidy the Citibike ridership data
 
 Citibike Jan/2019 ~ Dec/2019
 
-# Note to group: should it actually be Dec/2018 - Jan/2020? – Laura (Response from HZ, see below)
+**Note to group: should it actually be Dec/2018 - Jan/2020? – Laura
+(Response from HZ, see below)**
 
 ``` r
 citibike = 
@@ -20,10 +39,14 @@ citibike =
   unnest(cols = c(data))
 ```
 
-Tidy dataset: \* recode gender \* filter trip duration to more than 5
-minutes but less than 1 day \* include trips that started in 2018 but
-ended in 2019 and trips that started in 2019 but ended in 2020 \* create
-an age variable \* create a trip duration in minutes variable
+Tidy dataset:
+
+- recode gender
+- filter trip duration to more than 5 minutes but less than 1 day
+- include trips that started in 2018 but ended in 2019 and trips that
+  started in 2019 but ended in 2020
+- create an age variable
+- create a trip duration in minutes variable
 
 ``` r
 citibike_df <- citibike |>
@@ -48,6 +71,8 @@ citibike_df <- citibike |>
   )  |>
   select(trip_duration_sec, trip_duration_min, everything())
 ```
+
+# Other Data Sets
 
 ## Load and tidy the AQI data
 
@@ -74,7 +99,13 @@ SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   rename(zip=zcta5_fips)
 ```
 
-## Load the overweight data; initial import and tidying completed in \[here\] (import_overweight_data.html)
+## Load the Overweight data
+
+Data Source: [NYC Data
+Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta/data-explorer/overweight/?id=2061#display=summary)
+
+- Data accessed: `11/27/2023`
+- Full table loaded for “Overweight and Obese Adults”
 
 ``` r
 overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
@@ -91,11 +122,18 @@ overweight_df =
 percent = as.numeric(ifelse(grepl("\\*", percent),
                                 gsub("\\*.*$", "", percent),
                                 gsub("\\s*\\(.*", "", percent)))) |>
-  rename(year = time)|>
+  rename(year = time) |>
   filter (year == 2019)
+
+write_csv(overweight_df, "data/SDI_data/overweight_data_clean.csv")
 ```
 
-## Import UHF42/ZipCode crosswalk (available from `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`)
+# Incorporate Geocoding
+
+## Import UHF42/ZipCode crosswalk
+
+Data source:
+`https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`
 
 ``` r
 # install.packages("pdftables")
@@ -161,6 +199,8 @@ uhf_34_df =
   mutate(uhf34 = as.numeric(uhf34),
          uhf42 = as.numeric(uhf42))
 ```
+
+# Merging Datasets
 
 ## Join UHF data
 
