@@ -1339,8 +1339,14 @@ neighborhood.</p>
 </ol>
 <ul>
 <li>First, we need to convert the Citibike location data from
-latitude/longitude to zip code.<br />
-</li>
+latitude/longitude to zip code.
+<ul>
+<li>This was done using a package <a
+href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>.
+Here, we import the latitude/longitude to zipcode crosswalk we
+generated. The full code with details of how that was created <a
+href="latlong_to_zip.html">can be found here</a>.</li>
+</ul></li>
 <li>Then crosswalk to the UHF neighborhoods.</li>
 </ul>
 <pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)
