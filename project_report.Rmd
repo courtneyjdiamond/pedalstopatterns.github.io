@@ -1,5 +1,5 @@
 ---
-title: "<span style='color: blue;'>Project Report</span>"
+title: "<span style='color: blue;'>Project Report: From Pedals to Patterns: A P8105 Citibike Data Analysis</span>"
 output: 
   html_document:
     toc: true
@@ -7,13 +7,16 @@ output:
     theme: yeti
 css: styles.css
 ---
+<style>
+  h1 {
+    text-align: center;
+     font-weight: bold;
+  }
+</style>
 
-=======
   &nbsp;
 
 ***
-
-## <span style='color: blue;'>From Pedals to Patterns: A P8105 Citibike Data Analysis</span>
 
 ## <span style='color: blue;'>Team Members</span>
   - Laura O'Carroll, lgo2107<br>
@@ -22,6 +25,10 @@ css: styles.css
   - Jesus Luevano, jl5934<br>
   - Kayla Schiffer-Kane, khs2138<br>
   - Haley Zylberberg, hmz2105<br> 
+  
+    &nbsp;
+
+***
 
 ## <span style='color: blue;'>Motivation</span>
 
@@ -39,7 +46,6 @@ By delving into these dimensions, we aim to understand how CitiBike intersects w
   &nbsp;
 
 ***
-
 ## <span style='color: blue;'>Related Work</span>
 
 After spending time on the airbnb data sources in class, we were particularly interested in exploring an NYC related source of data. As we are public health students and our group also includes healthcare professionals our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
