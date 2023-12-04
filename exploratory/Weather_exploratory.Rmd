@@ -16,6 +16,7 @@ The initial file had no column headers, so we had to create headers and saved in
 
 ```{r, include = FALSE}
 library(tidyverse)
+library(here)
 ```
 
 
@@ -46,7 +47,7 @@ write_csv(weather.df, "weather_data.csv")
 ## Exploratory analyses
 
 ```{r, eval= FALSE}
-weather.df <- read_csv("weather_NYC_2019/weather_data.csv") %>%
+weather.df <- read_csv(here("weather_NYC_2019/weather_data.csv")) %>%
   mutate(date = lubridate::as_date(as.character(date), format = "%Y%m%d"),
          month = month(date),
          month_name = fct_recode(as.factor(month),
@@ -68,7 +69,7 @@ write_csv(weather.df, "weather_NYC_2019/weather_data.csv")
 ```
 
 ```{r}
-weather.df <- read_csv("weather_NYC_2019/weather_data.csv")
+weather.df <- read_csv(here("data/weather/weather_data.csv"))
 
 weather.df %>%
   filter(element == "PRCP") %>%
