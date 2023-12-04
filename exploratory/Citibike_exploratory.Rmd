@@ -165,3 +165,30 @@ ggplot(rides_by_month, aes(x = month, y = n_rides)) +
 ```
 
 * User demographics (subscriber vs customer, gender, birth years)
+```{r}
+# Count the number of rides for each user type
+user_type_counts <- citibike_zip_neighborhoods %>%
+  group_by(user_type) %>%
+  summarise(n_rides = n())
+
+# Plot the user type distribution
+ggplot(user_type_counts, aes(x = user_type, y = n_rides, fill = user_type)) +
+  geom_bar(stat = "identity") +
+  labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
+
+# Count the number of rides for each gender
+gender_counts <- citibike_zip_neighborhoods %>%
+  group_by(gender) %>%
+  summarise(n_rides = n())
+
+# Plot the gender distribution
+ggplot(gender_counts, aes(x = gender, y = n_rides, fill = gender)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
+
+# Plot a histogram of birth years
+ggplot(citibike_zip_neighborhoods, aes(x = birth_year)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(x = "Birth Year", y = "Number of Rides", title = "Birth Years Distribution")
+```
+
