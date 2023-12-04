@@ -266,9 +266,8 @@ sdi_overweight =
   select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
          "sdi_score","percent_overweight") |>
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
-  filter(!is.na(sdi_overweight$zip)) 
+  filter(!is.na(zip)) 
 
-  
 ```
 
 ### Merge SDI and Overweight data onto citibike
