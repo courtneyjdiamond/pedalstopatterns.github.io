@@ -6,3 +6,44 @@ output: html_document
 To better characterize and understand the relationships between our data, we sought to create models:
 
 
+
+## Citibike + health metrics modeling
+
+Our exploratory analyses noted some interesting trends in the Citibike data for NYC (in particular ***), as well as in the health metrics (___). 
+
+As such, we sought to devise models that assessed the relationships between 1) rides taken in a zip code ___, and how predictor variables (stations available, SDI score, percentage overweight, and AQI values of ***) influenced that. 
+
+We created several models, first looking at the values without 
+
+
+```{r}
+citibike.df = read_csv(here("/citibike/citibike_clean.csv"))
+
+model = lm(stations ~ )
+
+citibike.df %>%
+  modelr::add_residuals(model) %>%
+  modelr::add_predictions(model) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = ,
+       x = ,
+       y = )
+```
+
+```{r}
+cv_df = 
+  crossv_mc(citibike.df, 100) 
+
+cv_df = 
+  cv_df |> 
+  mutate(
+    fit_mine  = map(train, \(df) lm(bwt ~ fincome + delwt + momage, data = df)), 
+    fit_main  = map(train, \(df) lm(bwt ~ blength + gaweeks, data = df)), 
+    fit_alt  = map(train, \(df) lm(bwt ~ bhead + blength + sex + bhead*blength + bhead*sex + blength*sex + bhead*blength*sex, data = df))) |>  
+  mutate(
+    rmse_mine = map2_dbl(fit_mine, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_main = map2_dbl(fit_main, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_alt = map2_dbl(fit_alt, test, \(mod, df) rmse(model = mod, data = df)))
+```
+
