@@ -11,19 +11,32 @@ The data was found on the [SDI](https://www.graham-center.org/maps-data-tools/so
 
 ```{r, include = FALSE}
 library(tidyverse)
+library(here)
 ```
 
 
 ```{r, eval = TRUE}
-SDI_df <- read_csv("SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+SDI_df <- read_csv(here("data/SDI_data/rgcsdi-2015-2019-zcta.csv")) |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
   rename(zip=zcta5_fips)
+
+joined_uhf_34_42 = read_csv(here("data/geocoding/joined_uhf_34_42.csv"))
+```
+
+
+## Join SDI data to UHF/Zip/Neighborhood data
+```{r, eval = TRUE}
+joined_SDI_zip_neighborhood = 
+  SDI_df |> 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
+  mutate(zip = as.numeric(zip)) |> 
+  left_join(y = joined_uhf_34_42, by = "zip")
 ```
 
 
 We then joined the UFH data to map neighborhoods on to zip codes. 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
   filter(zip %in% pull(joined_uhf_34_42, zip)) |> 

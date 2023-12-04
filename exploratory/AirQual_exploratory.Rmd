@@ -4,6 +4,7 @@ output: html_document
 ---
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(here)
 ```
 
 To explore the impact of weather trends on Citibike ridership in New York City, we used [Air Quality](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) dataset from the [NYC Open Data](https://opendata.cityofnewyork.us/), provided by the Department of Hygiene and Mental Health. 
@@ -13,8 +14,8 @@ This dataset includes air quality indexes measured across NYC boroughs. Our anal
 ## Air Quality Exploratory analyses
 ```{r}
 #import data
-air <- read_csv("data/air_quality/Air_Quality_20231126.csv") 
-joined_uhf_34_42 <- read_csv("data/geocoding/joined_uhf_34_42.csv") 
+air <- read_csv(here("data/air_quality/Air_Quality_20231126.csv")) 
+joined_uhf_34_42 <- read_csv(here("data/geocoding/joined_uhf_34_42.csv")) 
 
 #Air Quality tidy
 air_quality_df = air |>

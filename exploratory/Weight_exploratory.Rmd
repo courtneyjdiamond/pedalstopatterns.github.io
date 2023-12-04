@@ -8,11 +8,12 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(here)
 ```
 
 ```{r}
-overweight <- read_csv("data/SDI_data/overweight_data_clean.csv")
-joined_uhf_34_42 <- read_csv("data/geocoding/joined_uhf_34_42.csv") 
+overweight <- read_csv(here("data/SDI_data/overweight_data_clean.csv"))
+joined_uhf_34_42 <- read_csv(here("data/geocoding/joined_uhf_34_42.csv"))
 ```
 
 Add zip codes to weight data. 
