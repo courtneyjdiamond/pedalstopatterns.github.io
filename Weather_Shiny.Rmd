@@ -1,0 +1,85 @@
+---
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(viridis)
+library(plotly)
+library(here)
+library(shiny)
+library(shinyjs)
+
+weather.df <- read_csv(here("data/weather/weather_data.csv"))
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+element_vec = weather.df %>% pull(element) %>% unique()
+
+selectInput(
+  inputId = "element_choice",
+  label = h3("Select element"),
+  choices = element_vec,
+  selected = "PRCP"
+)
+
+borough_vec = weather.df %>% pull(location) %>% unique()
+
+radioButtons(
+  inputId = "borough_choice",
+  label = h3("Select a Borough"),
+  choices = borough_vec,
+  selected = "Brooklyn"
+)
+
+month_vec = weather.df %>% pull(month_name) %>% unique()
+
+#selectInput(  inputId = "month",  label = h3("Select a month"),  choices = month_vec,  select = "January")
+```
+
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+#renderText({input[["borough_choice"]]})
+renderPlotly({
+  weather.df %>%
+  filter(
+    element == input[["element_choice"]],
+    location == input[["borough_choice"]],
+    #month_name == input[["month"]]
+  ) %>%
+  plot_ly(x = ~month, y = ~data_value, type = "bar", mode = "markers", color = ~location)
+})
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+#renderText({
+ # input[["price_range"]]
+#})
+```
+
+### Chart C
+
+```{r}
+
+```

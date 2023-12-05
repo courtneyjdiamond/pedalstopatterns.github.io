@@ -73,9 +73,9 @@ weather.df <- read_csv(here("data/weather/weather_data.csv"))
 
 weather.df %>%
   filter(element == "PRCP") %>%
-  group_by(month_name, location) %>%
+  group_by(month, location) %>%
   summarize(mean_prcp = mean(data_value)) %>%
-  ggplot(aes(x = month_name, y = mean_prcp, group = location)) +
+  ggplot(aes(x = month, y = mean_prcp, group = location)) +
   geom_line(aes(color = location)) + 
   labs(
     title = "Mean preciptitation by month in each NYC Borough",
@@ -89,9 +89,9 @@ weather.df %>%
 ```{r}
 weather.df %>%
   filter(element == "SNOW") %>%
-  group_by(month_name, location) %>%
+  group_by(month, location) %>%
   summarize(mean_prcp = mean(data_value)) %>%
-  ggplot(aes(x = month_name, y = mean_prcp, group = location)) +
+  ggplot(aes(x = month, y = mean_prcp, group = location)) +
   geom_line(aes(color = location)) + 
   labs(
     title = "Mean snowfall by month in each NYC Borough",
