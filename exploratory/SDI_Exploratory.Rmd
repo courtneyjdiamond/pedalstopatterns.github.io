@@ -44,6 +44,9 @@ joined_SDI_zip_neighborhood =
   left_join(y = joined_uhf_34_42, by = "zip")
 
 view(joined_SDI_zip_neighborhood)
+
+#write output for ease of use in other files
+write_csv(joined_SDI_zip_neighborhood, here("data/SDI_data/SD_Zip_ufh.csv"))
 ```
 
 This output variables: `zip, sdi_score, uhf42, uhf42_neighborhood, uhf34, uhf34_neighborhood`.

@@ -73,6 +73,10 @@ filter(!duplicated(unique_id))
 air_zip_uhf = 
   bind_rows(air_zip_neighborhoods_34, air_zip_neighborhoods_42)
 
+# save output for ease in other files
+write_csv(air_zip_uhf, here("data/air_quality/air_zip_uhf.csv"))
+
+
 ```
 
 Average Air Quality Index Across Time Periods
