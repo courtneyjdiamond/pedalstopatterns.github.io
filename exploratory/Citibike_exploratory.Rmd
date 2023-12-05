@@ -29,7 +29,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 Only run the below chunk if running local, not knitting: 
 ```{r local_filepath, eval = FALSE}
-mypath = 'INPUTHERE/p8105_final_project' # LOCATION OF p8105_final_orject locally
+mypath = 'C:/Users/16175/Desktop/pedalstopatterns.github.io.git'  # Replace with your actual path
 path = paste0(mypath, '/exploratory')
 setwd(path)
 ```
@@ -48,6 +48,7 @@ mutate(data = map(path, ~read_csv(.x, col_types = cols(
    'start station id' = col_double()
   )))) |>
 unnest(cols = c(data))
+
 
 #tidy citibike dataset
 citibike_df <- citibike |>
@@ -110,15 +111,16 @@ head(citibike_zip_neighborhoods)
 * Rides per start neighborhood per month
 ```{r neighborhood_month}
 neighborhood_month = citibike_zip_neighborhoods |>
-  mutate(month = month(start_time)) |>
+  mutate(month = as.factor(month(start_time))) |>
   group_by(start_uhf34_neighborhood, month) |>
   summarize(n_rides = n())
 
 neighborhood_month |> 
-  ggplot(aes(x = month, y = n_rides, color = start_uhf34_neighborhood)) +
-  geom_point() +                  # Add points for each observation
-  geom_line() +                   # Add lines to connect points
-  labs(x = "Month", y = "n_rides") # Label the axes
+  ggplot(aes(x = month, y = n_rides, color = start_uhf34_neighborhood, group = start_uhf34_neighborhood)) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Month", y = "Number of Rides")
 ```
 
 
@@ -134,5 +136,59 @@ neighborhood_month |>
 * Rides ending in each borough
 
 * Most popular landmark stations, and rides by month
+```{r}
+# Count the number of rides for each start station
+popular_stations <- citibike_zip_neighborhoods %>%
+  group_by(start_station_name) %>%
+  summarise(n_rides = n()) %>%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Landmark Stations") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Count the number of rides for each month
+rides_by_month <- citibike_zip_neighborhoods %>%
+  mutate(month = format(start_time, "%Y-%m")) %>%
+  group_by(month) %>%
+  summarise(n_rides = n())
+
+# Plot the number of rides by month
+ggplot(rides_by_month, aes(x = month, y = n_rides)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month", y = "Number of Rides", title = "Number of Rides by Month") +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 * User demographics (subscriber vs customer, gender, birth years)
+```{r}
+# Count the number of rides for each user type
+user_type_counts <- citibike_zip_neighborhoods %>%
+  group_by(user_type) %>%
+  summarise(n_rides = n())
+
+# Plot the user type distribution
+ggplot(user_type_counts, aes(x = user_type, y = n_rides, fill = user_type)) +
+  geom_bar(stat = "identity") +
+  labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
+
+# Count the number of rides for each gender
+gender_counts <- citibike_zip_neighborhoods %>%
+  group_by(gender) %>%
+  summarise(n_rides = n())
+
+# Plot the gender distribution
+ggplot(gender_counts, aes(x = gender, y = n_rides, fill = gender)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
+
+# Plot a histogram of birth years
+ggplot(citibike_zip_neighborhoods, aes(x = birth_year)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(x = "Birth Year", y = "Number of Rides", title = "Birth Years Distribution")
+```
+
