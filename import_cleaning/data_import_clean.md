@@ -40,21 +40,15 @@ Citibike Jan/2019 ~ Dec/2019
 ``` r
 citibike = 
   tibble(
-    files = list.files("./citibike"),
-    path = str_c("./citibike/", files)
+    files = list.files("../citibike"),
+    path = str_c("../citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
     'start station id' = col_double()
   )))) |>
   unnest(cols = c(data))
-
-head(citibike) |>
-  knitr::kable()
 ```
-
-| files | path | data |
-|:------|:-----|:-----|
 
 Tidy dataset:
 
@@ -464,12 +458,18 @@ missing_enduhf = citibike_zip_neighborhoods |>
   rename(zipcode = end_zipcode)
 
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
+
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
 ```
 
-There are r missing_startuhf \|\> pull(n) \|\> sum() entries whose start
-zipcode do not have an associated uhf34, and r missing_enduhf \|\>
-pull(n) \|\> sum() entries whose end zipcode do not have an associated
-uhf34.
+There are 1963674 entries whose start zipcode do not have an associated
+uhf34, and 1989338 entries whose end zipcode do not have an associated
+uhf34. Manual validation showed these zipcodes are business zipcodes,
+where a zipcode refers to a small domain of a business. While these can
+be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to
+simply omit them, as we still retain a substantial dataset size. The
+resulting dataset has 3579463 entries.
 
 # Final Dataset: Merge Citibike, SDI, Overweight, and AQ
 
@@ -549,14 +549,14 @@ head(citibike_df) |>
   knitr::kable()
 ```
 
-| bikeid | user_type  | gender  | age | start_time          | stop_time           | start_station_id | start_station_name         | start_zipcode | start_uhf34_neighborhood           | end_station_id | end_station_name         | end_zipcode | end_uhf34_neighborhood           | start_sdi_score | start_percent_overweight | start_aq | end_sdi_score | end_percent_overweight | end_aq |
-|-------:|:-----------|:--------|----:|:--------------------|:--------------------|-----------------:|:---------------------------|--------------:|:-----------------------------------|---------------:|:-------------------------|------------:|:---------------------------------|----------------:|-------------------------:|---------:|--------------:|-----------------------:|-------:|
-|  19573 | Customer   | Female  |  19 | 2018-12-31 12:42:23 | 2019-01-01 06:06:47 |             3427 | Lafayette St & Jersey St   |         10012 | Chelsea Village                    |            529 | W 42 St & 8 Ave          |       10036 | Chelsea Village                  |              60 |                     38.1 |    10.02 |            69 |                   38.1 |  10.02 |
-|  16996 | Subscriber | Female  |  66 | 2018-12-31 13:21:55 | 2019-01-01 13:20:39 |              458 | 11 Ave & W 27 St           |         10001 | Chelsea Village                    |            127 | Barrow St & Hudson St    |       10014 | Chelsea Village                  |              70 |                     38.1 |    10.02 |            37 |                   38.1 |  10.02 |
-|  15420 | Customer   | Unknown |  50 | 2018-12-31 16:54:58 | 2019-01-01 14:32:11 |             3055 | Greene Ave & Nostrand Ave  |         11216 | Bedford Stuyvesant Crown Heights   |            437 | Macon St & Nostrand Ave  |       11233 | Bedford Stuyvesant Crown Heights |              83 |                     62.9 |     6.61 |            97 |                   62.9 |   6.61 |
-|  28349 | Subscriber | Female  |  53 | 2018-12-31 17:37:05 | 2019-01-01 08:13:33 |             3457 | E 58 St & Madison Ave      |         10022 | Upper East Side Gramercy           |           3457 | E 58 St & Madison Ave    |       10022 | Upper East Side Gramercy         |              26 |                     36.5 |     8.98 |            26 |                   36.5 |   8.98 |
-|  14710 | Subscriber | Female  |  24 | 2018-12-31 18:00:44 | 2019-01-01 15:12:14 |             3521 | Lenox Ave & W 111 St       |         10037 | Central Harlem Morningside Heights |           3164 | Columbus Ave & W 72 St   |       10023 | Upper West Side                  |              97 |                     68.7 |     7.00 |            43 |                   43.4 |   7.38 |
-|  16935 | Customer   | Male    |  32 | 2018-12-31 18:40:45 | 2019-01-01 08:52:56 |             3581 | Underhill Ave & Lincoln Pl |         11238 | Bedford Stuyvesant Crown Heights   |           3576 | Park Pl & Vanderbilt Ave |       11238 | Bedford Stuyvesant Crown Heights |              70 |                     62.9 |     6.61 |            70 |                   62.9 |   6.61 |
+| bikeid | user_type  | gender  | age | start_time          | stop_time           | start_station_id | start_station_name           | start_zipcode | start_uhf34_neighborhood | end_station_id | end_station_name                  | end_zipcode | end_uhf34_neighborhood             | start_sdi_score | start_percent_overweight | start_aq | end_sdi_score | end_percent_overweight | end_aq |
+|-------:|:-----------|:--------|----:|:--------------------|:--------------------|-----------------:|:-----------------------------|--------------:|:-------------------------|---------------:|:----------------------------------|------------:|:-----------------------------------|----------------:|-------------------------:|---------:|--------------:|-----------------------:|-------:|
+|  16390 | Customer   | Unknown |  50 | 2018-12-31 23:55:44 | 2019-01-01 00:38:15 |             3320 | Central Park West & W 100 St |         10025 | Upper West Side          |           2006 | Central Park S & 6 Ave            |       10105 | NA                                 |              74 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  30818 | Customer   | Unknown |  50 | 2018-12-31 23:58:29 | 2019-01-01 00:44:27 |             3320 | Central Park West & W 100 St |         10025 | Upper West Side          |            281 | Grand Army Plaza & Central Park S |       10153 | NA                                 |              74 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  27451 | Subscriber | Male    |  32 | 2019-01-01 00:06:03 | 2019-01-01 00:15:55 |             3171 | Amsterdam Ave & W 82 St      |         10024 | Upper West Side          |           3154 | E 77 St & 3 Ave                   |       10075 | NA                                 |              41 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  31801 | Subscriber | Male    |  38 | 2019-01-01 00:18:45 | 2019-01-01 00:27:10 |             3132 | E 59 St & Madison Ave        |         10022 | Upper East Side Gramercy |            359 | E 47 St & Park Ave                |       10172 | NA                                 |              26 |                     36.5 |     8.98 |            NA |                     NA |     NA |
+|  24895 | Subscriber | Male    |  21 | 2019-01-01 00:21:25 | 2019-01-01 00:31:42 |             3159 | W 67 St & Broadway           |         10023 | Upper West Side          |           3142 | 1 Ave & E 62 St                   |       10065 | NA                                 |              43 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  30089 | Subscriber | Male    |  23 | 2019-01-01 00:21:42 | 2019-01-01 00:30:40 |             3231 | E 67 St & Park Ave           |         10065 | NA                       |            519 | Pershing Square North             |       10037 | Central Harlem Morningside Heights |              NA |                       NA |       NA |            97 |                   68.7 |      7 |
 
 ``` r
 #write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
