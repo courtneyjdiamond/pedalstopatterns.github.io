@@ -29,7 +29,7 @@ Citibike Jan/2019 ~ Dec/2019
 **Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura (Response from HZ, see below)**
 
 
-```{r import citibike, eval=FALSE}
+```{r import citibike}
 citibike = 
   tibble(
     files = list.files("../citibike"),
@@ -50,7 +50,7 @@ Tidy dataset:
  * create an age variable
  * create a trip duration in minutes variable
  
-```{r tidy citibike, eval=FALSE}
+```{r tidy citibike}
 citibike_df <- citibike |>
   janitor::clean_names() |>
   select(-files, -path) |>
@@ -83,7 +83,7 @@ head(citibike_df) |>
 # Other Data Sets 
 ## Load and tidy the AQI data
 
-```{r air_quality, eval=FALSE}
+```{r air_quality}
 air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
   janitor::clean_names() |>
   mutate(
@@ -95,7 +95,7 @@ air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
 
 ## Load and tidy the SDI data
 
-```{r sdi_import, eval=FALSE}
+```{r sdi_import}
 SDI_df <- read_csv("../data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
@@ -112,7 +112,7 @@ Data Source: [NYC Data Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta
   * Data accessed: `11/27/2023` 
   * Full table loaded for "Overweight and Obese Adults"
   
-```{r overweight_import, eval=FALSE}
+```{r overweight_import}
 #overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
 #    janitor::clean_names()
 overweight_df =
@@ -141,7 +141,7 @@ head(overweight_df) |>
 ## Import UHF42/ZipCode crosswalk 
 
 Data source:  `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`
-```{r uhf_zip, eval=FALSE}
+```{r uhf_zip}
 uhf_zip = 
   pdf_text("../data/geocoding/zipcodetable.pdf") |> 
   extract(1)
@@ -170,7 +170,7 @@ uhf_zip_df =
 ```
 
 ## Import UHF34 / UHF 42 crosswalk
-```{r uhf, eval=FALSE}
+```{r uhf}
 uhf_34 = 
   pdf_text("../data/geocoding/uhf34.pdf")
 
@@ -206,7 +206,7 @@ uhf_34_df =
 # Merging Datasets 
 
 ## Join UHF data
-```{r uhf34_42, eval=FALSE}
+```{r uhf34_42}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
   left_join(y = uhf_34_df, by = join_by("uhf" == "uhf42")) |> 
@@ -218,7 +218,7 @@ joined_uhf_34_42 =
 
 
 ## Join SDI data to UHF/Zip/Neighborhood data
-```{r SDI_zip, eval=FALSE}
+```{r SDI_zip}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
   filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
@@ -227,7 +227,7 @@ joined_SDI_zip_neighborhood =
 ```
 
 ## Join Overweight data to UHF/Zip/Neighborhood data
-```{r overweight_zip, eval=FALSE}
+```{r overweight_zip}
 joined_overweight_zip_neighborhood = 
   overweight_df |> 
   left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34")) |>
@@ -241,7 +241,7 @@ And finally, join the zipcodes/neighborhoods to the Citibike data! First, we nee
 
 Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df. Then crosswalk to the UHF neighborhoods! 
 
-```{r citibike_zip, eval=FALSE}
+```{r citibike_zip}
 latlong_zip = read_csv('../data/geocoding/citibike_latlong_zip.csv')
 
 citibike_zip =
@@ -261,7 +261,7 @@ remove(citibike_df)
 
 
 ### Manually add missing zipcodes
-```{r missing_zip, eval=FALSE}
+```{r missing_zip}
 citibike_zip |>
   filter(is.na(start_zipcode)) |>
   group_by(start_station_name, start_station_latitude, start_station_longitude) |>
@@ -277,7 +277,7 @@ citibike_zip |>
 There are r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_code)) |> nrow() entries missing either the start or end zipcode.
 
 
-```{r manual_zip, eval=FALSE}
+```{r manual_zip}
 citibike_zip = citibike_zip |>
   mutate(start_zipcode = case_when(start_station_name == "Broadway & W 32 St" ~ 10001,
                                start_station_name == "Cooper Square & Astor Pl" ~ 10003,
@@ -307,7 +307,7 @@ citibike_zip |>
 
 ```
 
-```{r citibike_neighborhoods, eval=FALSE}
+```{r citibike_neighborhoods}
 citibike_zip_neighborhoods =
   citibike_zip |>
   left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
@@ -325,7 +325,7 @@ remove(citibike_zip)
 #  knitr::kable()
 ```
 
-```{r missing_uhf, eval=FALSE}
+```{r missing_uhf}
 missing_startuhf = citibike_zip_neighborhoods |>
   filter(is.na(start_uhf34_neighborhood)) |>
   group_by(start_zipcode) |>
@@ -349,7 +349,7 @@ There are r missing_startuhf |> pull(n) |> sum() entries whose start zipcode do 
 ### Merge SDI and Overweight data 
 There are rows in the overweight data without zipcode that refer instead to borough and city-wide overweight percentages. These are excluded from joining on SDI/citibike data, which function by zipcode more granular than borough
 
-```{r join_SDI_overweight, eval=FALSE}
+```{r join_SDI_overweight}
 sdi_overweight = 
   merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
                    by.x = c("zip", "uhf42", "uhf42_neighborhood"),
@@ -367,7 +367,7 @@ remove(overweight_df)
 ```
 
 ### Merge SDI and Overweight data onto citibike
-```{r SDI_Overweight_join, eval=FALSE}
+```{r SDI_Overweight_join}
 citibike_df =
   citibike_zip_neighborhoods |>
   left_join(y = sdi_overweight,
@@ -400,7 +400,7 @@ head(citibike_df) |>
 
 ### Merge AQ data onto citibike
 
-```{r AQ_join, eval=FALSE} 
+```{r AQ_join} 
 #Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
 air_quality_df =   
   air_quality_df |>
