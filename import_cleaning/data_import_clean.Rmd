@@ -91,6 +91,16 @@ air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
     year = year(start_date)
   ) |>
   filter(year == "2019")
+
+#Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
+air_quality_df =   
+  air_quality_df |>
+  filter(geo_type_name == "UHF34") |>
+  filter(time_period == "Annual Average 2019") |>
+  filter(name == "Fine particles (PM 2.5)")
+
+head(air_quality_df) |>
+  knitr::kable()
 ```
 
 ## Load and tidy the SDI data
@@ -203,7 +213,7 @@ uhf_34_df =
   
 ```
 
-# Merging Datasets 
+# Incorporate UHF34 to All Datasets 
 
 ## Join UHF data
 ```{r uhf34_42}
@@ -234,6 +244,19 @@ joined_overweight_zip_neighborhood =
   rename(percent_overweight = percent)
 
 ```
+
+## Join Air quality to UHF Neighborhood data
+```{r air_quality_uhf}
+#Align UHF neighborhood names
+air_quality_df = 
+  left_join(air_quality_df, uhf_34_df, by = c("geo_join_id" = "uhf34"))
+
+air_quality_df =
+  air_quality_df |>
+select(data_value, neighborhood ) |>
+ distinct()
+```
+
 
 ## Join Citibike data to UHF/Zip/Neighborhood data
 
@@ -344,7 +367,7 @@ missing_enduhf = citibike_zip_neighborhoods |>
 
 There are r missing_startuhf |> pull(n) |> sum() entries whose start zipcode do not have an associated uhf34, and  r missing_enduhf |> pull(n) |> sum() entries whose end zipcode do not have an associated uhf34.
 
-## Merge Citibike, SDI, Overweight Data 
+# Final Dataset: Merge Citibike, SDI, Overweight, and AQ  
 
 ### Merge SDI and Overweight data 
 There are rows in the overweight data without zipcode that refer instead to borough and city-wide overweight percentages. These are excluded from joining on SDI/citibike data, which function by zipcode more granular than borough
@@ -382,7 +405,28 @@ citibike_df = citibike_df |>
             by = join_by("end_zipcode" == "zip")) |>
   rename("end_sdi_score" = "sdi_score",
          "end_percent_overweight" = "percent_overweight") 
+```
 
+### Merge AQ data onto citibike
+
+```{r AQ_join} 
+#Join to final dataframe
+citibike_df =
+  citibike_df |>
+  left_join(y = air_quality_df,
+            by = join_by("start_uhf34_neighborhood" == "neighborhood")) |>
+  rename("start_aq" = "data_value")
+
+citibike_df = citibike_df |>
+  left_join(y = air_quality_df,
+            by = join_by("end_uhf34_neighborhood" == "neighborhood")) |>
+  rename("end_aq" = "data_value")
+
+```
+
+## Final Tidy of Citibike Data 
+
+```{r final_citibike_tidy}
 citibike_df = citibike_df |>
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
@@ -390,51 +434,17 @@ citibike_df = citibike_df |>
          start_zipcode, start_uhf34_neighborhood,
          end_station_id, end_station_name,
          end_zipcode, end_uhf34_neighborhood,
-         start_sdi_score, start_percent_overweight,
-         end_sdi_score, end_percent_overweight)
+         start_sdi_score, start_percent_overweight, start_aq,
+         end_sdi_score, end_percent_overweight, end_aq)
 
 head(citibike_df) |>
   knitr::kable()
-
-```
-
-### Merge AQ data onto citibike
-
-```{r AQ_join} 
-#Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
-air_quality_df =   
-  air_quality_df |>
-  filter(geo_type_name == "UHF34") |>
-  filter(time_period == "Annual Average 2019") |>
-  filter(name == "Fine particles (PM 2.5)")
-
-#Align UHF neighborhood names
-air_quality_df = 
-  left_join(air_quality_df, uhf_34_df, by = c("geo_join_id" = "uhf34"))
-
-air_quality_df =
-  air_quality_df |>
-select(data_value, neighborhood ) |>
- distinct()
-
-#Join to final dataframe
-citibike_df =
-  citibike_df |>
-  left_join(y = air_quality_df,
-            by = join_by("start_uhf34_neighborhood" == "neighborhood")) |>
-  rename("start_uhf34_AQ" = "data_value")
-
-citibike_df = citibike_df |>
-  left_join(y = air_quality_df,
-            by = join_by("end_uhf34_neighborhood" == "neighborhood")) |>
-rename("end_uhf34_AQ" = "data_value")
-
 
 #write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
 
 ```
 
-# Note: still need to filter out rows with no UHF34 neighborhood from citibike sheet. --Laura
+
 
 
 
