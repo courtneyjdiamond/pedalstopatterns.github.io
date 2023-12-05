@@ -39,15 +39,21 @@ Citibike Jan/2019 ~ Dec/2019
 ``` r
 citibike = 
   tibble(
-    files = list.files("../citibike"),
-    path = str_c("../citibike/", files)
+    files = list.files("./citibike"),
+    path = str_c("./citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
     'start station id' = col_double()
   )))) |>
   unnest(cols = c(data))
+
+head(citibike) |>
+  knitr::kable()
 ```
+
+| files | path | data |
+|:------|:-----|:-----|
 
 Tidy dataset:
 
@@ -376,14 +382,11 @@ sdi_overweight =
          "sdi_score","percent_overweight") |>
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
   filter(!is.na(zip)) 
-<<<<<<< HEAD
-=======
 
 remove(joined_overweight_zip_neighborhood)
 remove(joined_SDI_zip_neighborhood)
 remove(SDI_df)
 remove(overweight_df)
->>>>>>> e682f58ee2cb83220b583cce371c117c3e80cf6d
 ```
 
 ### Merge SDI and Overweight data onto citibike
