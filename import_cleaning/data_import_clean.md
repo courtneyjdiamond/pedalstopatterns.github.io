@@ -40,21 +40,15 @@ Citibike Jan/2019 ~ Dec/2019
 ``` r
 citibike = 
   tibble(
-    files = list.files("./citibike"),
-    path = str_c("./citibike/", files)
+    files = list.files("../citibike"),
+    path = str_c("../citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
     'start station id' = col_double()
   )))) |>
   unnest(cols = c(data))
-
-head(citibike) |>
-  knitr::kable()
 ```
-
-| files | path | data |
-|:------|:-----|:-----|
 
 Tidy dataset:
 
@@ -391,9 +385,7 @@ citibike_zip |>
     ## 11 W 52 St & 6 Ave                          40.8                 -74.0 54714
     ## 12 William St & Pine St                     40.7                 -74.0 20933
 
-There are r citibike_zip \|\> filter(is.na(start_zipcode) \|
-is.na(end_code)) \|\> nrow() entries missing either the start or end
-zipcode.
+There are 804243 entries missing either the start or end zipcode.
 
 ``` r
 citibike_zip = citibike_zip |>
@@ -464,12 +456,18 @@ missing_enduhf = citibike_zip_neighborhoods |>
   rename(zipcode = end_zipcode)
 
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
+
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
 ```
 
-There are r missing_startuhf \|\> pull(n) \|\> sum() entries whose start
-zipcode do not have an associated uhf34, and r missing_enduhf \|\>
-pull(n) \|\> sum() entries whose end zipcode do not have an associated
-uhf34.
+There are 1963674 entries whose start zipcode do not have an associated
+uhf34, and 1989338 entries whose end zipcode do not have an associated
+uhf34. Manual validation showed these zipcodes are business zipcodes,
+where a zipcode refers to a small domain of a business. While these can
+be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to
+simply omit them, as we still retain a substantial dataset size. The
+resulting dataset has 3579463 entries.
 
 # Final Dataset: Merge Citibike, SDI, Overweight, and AQ
 
@@ -549,15 +547,69 @@ head(citibike_df) |>
   knitr::kable()
 ```
 
-| bikeid | user_type  | gender  | age | start_time          | stop_time           | start_station_id | start_station_name         | start_zipcode | start_uhf34_neighborhood           | end_station_id | end_station_name         | end_zipcode | end_uhf34_neighborhood           | start_sdi_score | start_percent_overweight | start_aq | end_sdi_score | end_percent_overweight | end_aq |
-|-------:|:-----------|:--------|----:|:--------------------|:--------------------|-----------------:|:---------------------------|--------------:|:-----------------------------------|---------------:|:-------------------------|------------:|:---------------------------------|----------------:|-------------------------:|---------:|--------------:|-----------------------:|-------:|
-|  19573 | Customer   | Female  |  19 | 2018-12-31 12:42:23 | 2019-01-01 06:06:47 |             3427 | Lafayette St & Jersey St   |         10012 | Chelsea Village                    |            529 | W 42 St & 8 Ave          |       10036 | Chelsea Village                  |              60 |                     38.1 |    10.02 |            69 |                   38.1 |  10.02 |
-|  16996 | Subscriber | Female  |  66 | 2018-12-31 13:21:55 | 2019-01-01 13:20:39 |              458 | 11 Ave & W 27 St           |         10001 | Chelsea Village                    |            127 | Barrow St & Hudson St    |       10014 | Chelsea Village                  |              70 |                     38.1 |    10.02 |            37 |                   38.1 |  10.02 |
-|  15420 | Customer   | Unknown |  50 | 2018-12-31 16:54:58 | 2019-01-01 14:32:11 |             3055 | Greene Ave & Nostrand Ave  |         11216 | Bedford Stuyvesant Crown Heights   |            437 | Macon St & Nostrand Ave  |       11233 | Bedford Stuyvesant Crown Heights |              83 |                     62.9 |     6.61 |            97 |                   62.9 |   6.61 |
-|  28349 | Subscriber | Female  |  53 | 2018-12-31 17:37:05 | 2019-01-01 08:13:33 |             3457 | E 58 St & Madison Ave      |         10022 | Upper East Side Gramercy           |           3457 | E 58 St & Madison Ave    |       10022 | Upper East Side Gramercy         |              26 |                     36.5 |     8.98 |            26 |                   36.5 |   8.98 |
-|  14710 | Subscriber | Female  |  24 | 2018-12-31 18:00:44 | 2019-01-01 15:12:14 |             3521 | Lenox Ave & W 111 St       |         10037 | Central Harlem Morningside Heights |           3164 | Columbus Ave & W 72 St   |       10023 | Upper West Side                  |              97 |                     68.7 |     7.00 |            43 |                   43.4 |   7.38 |
-|  16935 | Customer   | Male    |  32 | 2018-12-31 18:40:45 | 2019-01-01 08:52:56 |             3581 | Underhill Ave & Lincoln Pl |         11238 | Bedford Stuyvesant Crown Heights   |           3576 | Park Pl & Vanderbilt Ave |       11238 | Bedford Stuyvesant Crown Heights |              70 |                     62.9 |     6.61 |            70 |                   62.9 |   6.61 |
+| bikeid | user_type  | gender  | age | start_time          | stop_time           | start_station_id | start_station_name           | start_zipcode | start_uhf34_neighborhood | end_station_id | end_station_name                  | end_zipcode | end_uhf34_neighborhood             | start_sdi_score | start_percent_overweight | start_aq | end_sdi_score | end_percent_overweight | end_aq |
+|-------:|:-----------|:--------|----:|:--------------------|:--------------------|-----------------:|:-----------------------------|--------------:|:-------------------------|---------------:|:----------------------------------|------------:|:-----------------------------------|----------------:|-------------------------:|---------:|--------------:|-----------------------:|-------:|
+|  16390 | Customer   | Unknown |  50 | 2018-12-31 23:55:44 | 2019-01-01 00:38:15 |             3320 | Central Park West & W 100 St |         10025 | Upper West Side          |           2006 | Central Park S & 6 Ave            |       10105 | NA                                 |              74 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  30818 | Customer   | Unknown |  50 | 2018-12-31 23:58:29 | 2019-01-01 00:44:27 |             3320 | Central Park West & W 100 St |         10025 | Upper West Side          |            281 | Grand Army Plaza & Central Park S |       10153 | NA                                 |              74 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  27451 | Subscriber | Male    |  32 | 2019-01-01 00:06:03 | 2019-01-01 00:15:55 |             3171 | Amsterdam Ave & W 82 St      |         10024 | Upper West Side          |           3154 | E 77 St & 3 Ave                   |       10075 | NA                                 |              41 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  31801 | Subscriber | Male    |  38 | 2019-01-01 00:18:45 | 2019-01-01 00:27:10 |             3132 | E 59 St & Madison Ave        |         10022 | Upper East Side Gramercy |            359 | E 47 St & Park Ave                |       10172 | NA                                 |              26 |                     36.5 |     8.98 |            NA |                     NA |     NA |
+|  24895 | Subscriber | Male    |  21 | 2019-01-01 00:21:25 | 2019-01-01 00:31:42 |             3159 | W 67 St & Broadway           |         10023 | Upper West Side          |           3142 | 1 Ave & E 62 St                   |       10065 | NA                                 |              43 |                     43.4 |     7.38 |            NA |                     NA |     NA |
+|  30089 | Subscriber | Male    |  23 | 2019-01-01 00:21:42 | 2019-01-01 00:30:40 |             3231 | E 67 St & Park Ave           |         10065 | NA                       |            519 | Pershing Square North             |       10037 | Central Harlem Morningside Heights |              NA |                       NA |       NA |            97 |                   68.7 |      7 |
 
 ``` r
-#write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+skimr::skim(citibike_df)
+```
+
+|                                                  |             |
+|:-------------------------------------------------|:------------|
+| Name                                             | citibike_df |
+| Number of rows                                   | 3579463     |
+| Number of columns                                | 20          |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_   |             |
+| Column type frequency:                           |             |
+| character                                        | 6           |
+| numeric                                          | 12          |
+| POSIXct                                          | 2           |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |             |
+| Group variables                                  | None        |
+
+Data summary
+
+**Variable type: character**
+
+| skim_variable            | n_missing | complete_rate | min | max | empty | n_unique | whitespace |
+|:-------------------------|----------:|--------------:|----:|----:|------:|---------:|-----------:|
+| user_type                |         0 |          1.00 |   8 |  10 |     0 |        2 |          0 |
+| gender                   |         0 |          1.00 |   4 |   7 |     0 |        3 |          0 |
+| start_station_name       |         0 |          1.00 |   9 |  45 |     0 |      919 |          0 |
+| start_uhf34_neighborhood |   1963674 |          0.45 |  10 |  34 |     0 |       22 |          0 |
+| end_station_name         |         0 |          1.00 |   7 |  45 |     0 |      951 |          0 |
+| end_uhf34_neighborhood   |   1989338 |          0.44 |  10 |  34 |     0 |       22 |          0 |
+
+**Variable type: numeric**
+
+| skim_variable            | n_missing | complete_rate |     mean |       sd |       p0 |      p25 |      p50 |      p75 |      p100 | hist  |
+|:-------------------------|----------:|--------------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|:------|
+| bikeid                   |         0 |          1.00 | 29620.51 |  7597.04 | 14529.00 | 25255.00 | 30887.00 | 35047.00 |  42046.00 | ▅▂▇▇▅ |
+| age                      |         0 |          1.00 |    39.34 |    11.86 |    16.00 |    29.00 |    37.00 |    50.00 |    162.00 | ▇▅▁▁▁ |
+| start_station_id         |         0 |          1.00 |  1719.22 |  1432.36 |    72.00 |   394.00 |   531.00 |  3164.00 |   3911.00 | ▇▁▁▂▅ |
+| start_zipcode            |         0 |          1.00 | 11582.36 | 10411.35 | 10000.00 | 10022.00 | 10115.00 | 10463.00 | 100019.00 | ▇▁▁▁▁ |
+| end_station_id           |         0 |          1.00 |  1715.66 |  1433.17 |    72.00 |   401.00 |   529.00 |  3165.00 |   3911.00 | ▇▁▁▂▅ |
+| end_zipcode              |         0 |          1.00 | 11732.02 | 11010.30 |  7087.00 | 10023.00 | 10120.00 | 10463.00 | 100019.00 | ▇▁▁▁▁ |
+| start_sdi_score          |   1963674 |          0.45 |    63.08 |    21.89 |    26.00 |    42.00 |    63.00 |    85.00 |    100.00 | ▅▆▇▂▆ |
+| start_percent_overweight |   1963674 |          0.45 |    43.43 |     9.13 |    36.50 |    38.10 |    40.50 |    43.40 |     72.10 | ▇▁▁▁▁ |
+| start_aq                 |   1963674 |          0.45 |     8.71 |     1.09 |     6.04 |     7.44 |     8.67 |    10.02 |     10.02 | ▁▅▁▇▆ |
+| end_sdi_score            |   1989338 |          0.44 |    62.80 |    22.13 |    26.00 |    42.00 |    63.00 |    85.00 |    100.00 | ▅▆▇▂▆ |
+| end_percent_overweight   |   1989338 |          0.44 |    43.52 |     9.40 |    36.50 |    38.10 |    40.50 |    43.40 |     72.10 | ▇▁▁▁▁ |
+| end_aq                   |   1989338 |          0.44 |     8.72 |     1.08 |     6.04 |     7.44 |     8.67 |    10.02 |     10.02 | ▁▅▁▇▆ |
+
+**Variable type: POSIXct**
+
+| skim_variable | n_missing | complete_rate | min                 | max                 | median              | n_unique |
+|:--------------|----------:|--------------:|:--------------------|:--------------------|:--------------------|---------:|
+| start_time    |         0 |             1 | 2018-12-31 23:55:44 | 2019-12-31 23:53:22 | 2019-07-19 15:45:55 |  3579025 |
+| stop_time     |         0 |             1 | 2019-01-01 00:15:55 | 2020-01-01 16:40:26 | 2019-07-19 16:05:13 |  3579015 |
+
+``` r
+write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
 ```

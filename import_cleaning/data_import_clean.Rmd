@@ -297,8 +297,7 @@ citibike_zip |>
 
 ```
 
-There are r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_code)) |> nrow() entries missing either the start or end zipcode.
-
+There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
 
 ```{r manual_zip}
 citibike_zip = citibike_zip |>
@@ -363,9 +362,15 @@ missing_enduhf = citibike_zip_neighborhoods |>
 
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
 
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
+
+
 ```
 
-There are r missing_startuhf |> pull(n) |> sum() entries whose start zipcode do not have an associated uhf34, and  r missing_enduhf |> pull(n) |> sum() entries whose end zipcode do not have an associated uhf34.
+There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode do not have an associated uhf34, and  `r missing_enduhf |> pull(n) |> sum()` entries whose end zipcode do not have an associated uhf34. Manual validation showed these zipcodes are business zipcodes, where a zipcode refers to a small domain of a business. While these can be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to simply omit them, as we still retain a substantial dataset size. The resulting dataset has `r citibike_zip_neighborhoods |> nrow()` entries. 
+
+
 
 # Final Dataset: Merge Citibike, SDI, Overweight, and AQ  
 
@@ -440,6 +445,8 @@ citibike_df = citibike_df |>
 head(citibike_df) |>
   knitr::kable()
 
-#write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+skimr::skim(citibike_df)
+
+write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
 
 ```
