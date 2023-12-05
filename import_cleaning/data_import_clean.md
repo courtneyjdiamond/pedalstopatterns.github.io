@@ -18,12 +18,12 @@ P8105 Fall 2023 Final Project
     data](#join-overweight-data-to-uhfzipneighborhood-data)
   - [Join Citibike data to UHF/Zip/Neighborhood
     data](#join-citibike-data-to-uhfzipneighborhood-data)
+    - [Manually add missing zipcodes](#manually-add-missing-zipcodes)
   - [Merge Citibike, SDI, Overweight
     Data](#merge-citibike-sdi-overweight-data)
     - [Merge SDI and Overweight data](#merge-sdi-and-overweight-data)
     - [Merge SDI and Overweight data onto
       citibike](#merge-sdi-and-overweight-data-onto-citibike)
-  - [Citibike - Missing zips](#citibike---missing-zips)
 
 # Load and tidy the Citibike ridership data
 
@@ -35,8 +35,8 @@ Citibike Jan/2019 ~ Dec/2019
 ``` r
 citibike = 
   tibble(
-    files = list.files("citibike"),
-    path = str_c("citibike/", files)
+    files = list.files("../citibike"),
+    path = str_c("../citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
@@ -76,18 +76,28 @@ citibike_df <- citibike |>
     as.Date(start_time) <= as.Date("2019-12-31")
   )  |>
   select(trip_duration_sec, trip_duration_min, everything())
+
+remove(citibike)
+
+head(citibike_df) |>
+  knitr::kable()
 ```
+
+| trip_duration_sec | trip_duration_min | start_time          | stop_time           | start_station_id | start_station_name         | start_station_latitude | start_station_longitude | end_station_id | end_station_name         | end_station_latitude | end_station_longitude | bikeid | user_type  | birth_year | gender  | age |
+|------------------:|------------------:|:--------------------|:--------------------|-----------------:|:---------------------------|-----------------------:|------------------------:|---------------:|:-------------------------|---------------------:|----------------------:|-------:|:-----------|-----------:|:--------|----:|
+|             62663 |         1044.3833 | 2018-12-31 12:42:23 | 2019-01-01 06:06:47 |             3427 | Lafayette St & Jersey St   |               40.72431 |               -73.99601 |            529 | W 42 St & 8 Ave          |             40.75757 |             -73.99099 |  19573 | Customer   |       2000 | Female  |  19 |
+|             86324 |         1438.7333 | 2018-12-31 13:21:55 | 2019-01-01 13:20:39 |              458 | 11 Ave & W 27 St           |               40.75140 |               -74.00523 |            127 | Barrow St & Hudson St    |             40.73172 |             -74.00674 |  16996 | Subscriber |       1953 | Female  |  66 |
+|             77833 |         1297.2167 | 2018-12-31 16:54:58 | 2019-01-01 14:32:11 |             3055 | Greene Ave & Nostrand Ave  |               40.68833 |               -73.95092 |            437 | Macon St & Nostrand Ave  |             40.68098 |             -73.95005 |  15420 | Customer   |       1969 | Unknown |  50 |
+|             52587 |          876.4500 | 2018-12-31 17:37:05 | 2019-01-01 08:13:33 |             3457 | E 58 St & Madison Ave      |               40.76303 |               -73.97210 |           3457 | E 58 St & Madison Ave    |             40.76303 |             -73.97210 |  28349 | Subscriber |       1966 | Female  |  53 |
+|             76290 |         1271.5000 | 2018-12-31 18:00:44 | 2019-01-01 15:12:14 |             3521 | Lenox Ave & W 111 St       |               40.79879 |               -73.95230 |           3164 | Columbus Ave & W 72 St   |             40.77706 |             -73.97898 |  14710 | Subscriber |       1995 | Female  |  24 |
+|             51131 |          852.1833 | 2018-12-31 18:40:45 | 2019-01-01 08:52:56 |             3581 | Underhill Ave & Lincoln Pl |               40.67401 |               -73.96715 |           3576 | Park Pl & Vanderbilt Ave |             40.67670 |             -73.96902 |  16935 | Customer   |       1987 | Male    |  32 |
 
 # Other Data Sets
 
 ## Load and tidy the AQI data
 
 ``` r
-air <- read_csv("data/air_quality/Air_Quality_20231126.csv") 
-```
-
-``` r
- air_quality_df =air |>
+air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
   janitor::clean_names() |>
   mutate(
     start_date = mdy(start_date),
@@ -99,11 +109,23 @@ air <- read_csv("data/air_quality/Air_Quality_20231126.csv")
 ## Load and tidy the SDI data
 
 ``` r
-SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
+SDI_df <- read_csv("../data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
   rename(zip=zcta5_fips)
+
+head(SDI_df) |>
+  knitr::kable()
 ```
+
+| zip   | sdi_score |
+|:------|----------:|
+| 01001 |        36 |
+| 01002 |        72 |
+| 01003 |        76 |
+| 01005 |        14 |
+| 01007 |        14 |
+| 01008 |         8 |
 
 ## Load the Overweight data
 
@@ -114,11 +136,11 @@ Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta/data-explorer/overweig
 - Full table loaded for “Overweight and Obese Adults”
 
 ``` r
-overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
-    janitor::clean_names()
-
+#overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
+#    janitor::clean_names()
 overweight_df =
- overweight |>
+  read_csv('../data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
+  janitor::clean_names() |>
   mutate(number = gsub("\\*", "", number)) |>
   mutate(number = gsub(",", "", number)) |>
   mutate(number = as.numeric(number)) |>
@@ -131,6 +153,20 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
   rename(year = time) |>
   filter (year == 2019)
 
+head(overweight_df) |>
+  knitr::kable()
+```
+
+| year | geo_type | geo_id | geo_rank | geography                  | number | percent | percent_low | percent_high |
+|-----:|:---------|-------:|---------:|:---------------------------|-------:|--------:|------------:|-------------:|
+| 2019 | UHF34    |    101 |        3 | Kingsbridge - Riverdale    |  37000 |    52.4 |        40.8 |         63.8 |
+| 2019 | UHF34    |    102 |        3 | Northeast Bronx            | 103000 |    69.6 |        59.7 |         78.0 |
+| 2019 | UHF34    |    103 |        3 | Fordham - Bronx Pk         | 122000 |    71.1 |        61.1 |         79.3 |
+| 2019 | UHF34    |    104 |        3 | Pelham - Throgs Neck       | 152000 |    66.4 |        58.7 |         73.4 |
+| 2019 | UHF34    |    201 |        3 | Greenpoint                 |  40000 |    41.8 |        31.0 |         53.6 |
+| 2019 | UHF34    |    202 |        3 | Downtown - Heights - Slope |  86000 |    50.8 |        41.8 |         59.7 |
+
+``` r
 #write_csv(overweight_df, "data/SDI_data/overweight_data_clean.csv")
 ```
 
@@ -142,11 +178,8 @@ Data source:
 `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`
 
 ``` r
-# install.packages("pdftables")
-# install.packages("pdftools")
-
 uhf_zip = 
-  pdf_text("data/geocoding/zipcodetable.pdf") |> 
+  pdf_text("../data/geocoding/zipcodetable.pdf") |> 
   extract(1)
 
 uhf_zip_df =
@@ -176,7 +209,7 @@ uhf_zip_df =
 
 ``` r
 uhf_34 = 
-  pdf_text("data/geocoding/uhf34.pdf")
+  pdf_text("../data/geocoding/uhf34.pdf")
 
 uhf_34_df =
   uhf_34 |> 
@@ -249,7 +282,7 @@ Load latitude/longitude to zip code crosswalk to merge start_zip and
 end_zip onto citibike_df. Then crosswalk to the UHF neighborhoods!
 
 ``` r
-latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
+latlong_zip = read_csv('../data/geocoding/citibike_latlong_zip.csv')
 
 citibike_zip =
   citibike_df |>
@@ -262,6 +295,101 @@ citibike_zip =
                    "end_station_longitude" = "longitude")) |>
   rename("end_zipcode" = "postcode") 
 
+remove(citibike_df)
+```
+
+### Manually add missing zipcodes
+
+``` r
+citibike_zip |>
+  filter(is.na(start_zipcode)) |>
+  group_by(start_station_name, start_station_latitude, start_station_longitude) |>
+  summarize(n = n())
+```
+
+    ## # A tibble: 12 × 4
+    ## # Groups:   start_station_name, start_station_latitude [12]
+    ##    start_station_name       start_station_latitude start_station_longitude     n
+    ##    <chr>                                     <dbl>                   <dbl> <int>
+    ##  1 Broadway & W 32 St                         40.7                   -74.0 14007
+    ##  2 Broadway & W 36 St                         40.8                   -74.0 26108
+    ##  3 Broadway & W 37 St                         40.8                   -74.0 32273
+    ##  4 Broadway & W 38 St                         40.8                   -74.0 39144
+    ##  5 Broadway & W 41 St                         40.8                   -74.0 69461
+    ##  6 Cooper Square & Astor Pl                   40.7                   -74.0 62815
+    ##  7 E 47 St & 1 Ave                            40.8                   -74.0 17988
+    ##  8 Roebling St & N 4 St                       40.7                   -74.0 13617
+    ##  9 South St & Gouverneur Ln                   40.7                   -74.0 43769
+    ## 10 W 43 St & 6 Ave                            40.8                   -74.0 17682
+    ## 11 W 52 St & 6 Ave                            40.8                   -74.0 48828
+    ## 12 William St & Pine St                       40.7                   -74.0 20940
+
+``` r
+citibike_zip |>
+  filter(is.na(end_zipcode)) |>
+  group_by(end_station_name, end_station_latitude, end_station_longitude) |>
+  summarize(n = n())
+```
+
+    ## # A tibble: 12 × 4
+    ## # Groups:   end_station_name, end_station_latitude [12]
+    ##    end_station_name         end_station_latitude end_station_longitude     n
+    ##    <chr>                                   <dbl>                 <dbl> <int>
+    ##  1 Broadway & W 32 St                       40.7                 -74.0 13737
+    ##  2 Broadway & W 36 St                       40.8                 -74.0 24982
+    ##  3 Broadway & W 37 St                       40.8                 -74.0 31809
+    ##  4 Broadway & W 38 St                       40.8                 -74.0 39448
+    ##  5 Broadway & W 41 St                       40.8                 -74.0 72968
+    ##  6 Cooper Square & Astor Pl                 40.7                 -74.0 59873
+    ##  7 E 47 St & 1 Ave                          40.8                 -74.0 18373
+    ##  8 Roebling St & N 4 St                     40.7                 -74.0 13924
+    ##  9 South St & Gouverneur Ln                 40.7                 -74.0 43034
+    ## 10 W 43 St & 6 Ave                          40.8                 -74.0 18730
+    ## 11 W 52 St & 6 Ave                          40.8                 -74.0 54714
+    ## 12 William St & Pine St                     40.7                 -74.0 20933
+
+There are r citibike_zip \|\> filter(is.na(start_zipcode) \|
+is.na(end_code)) \|\> nrow() entries missing either the start or end
+zipcode.
+
+``` r
+citibike_zip = citibike_zip |>
+  mutate(start_zipcode = case_when(start_station_name == "Broadway & W 32 St" ~ 10001,
+                               start_station_name == "Cooper Square & Astor Pl" ~ 10003,
+                               start_station_name == "William St & Pine St" ~ 10005,
+                               start_station_name %in% c("Broadway & W 36 St","Broadway & W 37 St","Broadway & W 38 St","Broadway & W 41 St") ~ 10018,
+                               start_station_name == "W 52 St & 6 Ave" ~ 100019,
+                               start_station_name %in% c("Broadway & W 41 St","W 43 St & 6 Ave") ~ 10036,
+                               start_station_name == "South St & Gouverneur Ln" ~ 10043,
+                               start_station_name == "E 47 St & 1 Ave" ~ 10075,
+                               start_station_name == "Roebling St & N 4 St" ~ 11211,
+                               TRUE ~ start_zipcode)) |>
+  mutate(end_zipcode = case_when(end_station_name == "Broadway & W 32 St" ~ 10001,
+                               end_station_name == "Cooper Square & Astor Pl" ~ 10003,
+                               end_station_name == "William St & Pine St" ~ 10005,
+                               end_station_name %in% c("Broadway & W 36 St","Broadway & W 37 St","Broadway & W 38 St","Broadway & W 41 St") ~ 10018,
+                               end_station_name == "W 52 St & 6 Ave" ~ 100019,
+                               end_station_name %in% c("Broadway & W 41 St","W 43 St & 6 Ave") ~ 10036,
+                               end_station_name == "South St & Gouverneur Ln" ~ 10043,
+                               end_station_name == "E 47 St & 1 Ave" ~ 10075,
+                               end_station_name == "Roebling St & N 4 St" ~ 11211,
+                               TRUE ~ end_zipcode))
+
+# Should be empty now
+citibike_zip |>
+  filter(is.na(end_zipcode) | is.na(start_zipcode)) 
+```
+
+    ## # A tibble: 0 × 19
+    ## # ℹ 19 variables: trip_duration_sec <dbl>, trip_duration_min <dbl>,
+    ## #   start_time <dttm>, stop_time <dttm>, start_station_id <dbl>,
+    ## #   start_station_name <chr>, start_station_latitude <dbl>,
+    ## #   start_station_longitude <dbl>, end_station_id <dbl>,
+    ## #   end_station_name <chr>, end_station_latitude <dbl>,
+    ## #   end_station_longitude <dbl>, bikeid <dbl>, user_type <chr>,
+    ## #   birth_year <dbl>, gender <chr>, age <dbl>, start_zipcode <dbl>, …
+
+``` r
 citibike_zip_neighborhoods =
   citibike_zip |>
   left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
@@ -273,9 +401,32 @@ citibike_zip_neighborhoods =
   rename("end_uhf34_neighborhood" = "uhf34_neighborhood",
          "end_uhf42_neighborhood" = "uhf42_neighborhood")
 
-head(citibike_zip_neighborhoods) |> 
-  knitr::kable()
+remove(citibike_zip)
+
+#head(citibike_zip_neighborhoods) |> 
+#  knitr::kable()
 ```
+
+``` r
+missing_startuhf = citibike_zip_neighborhoods |>
+  filter(is.na(start_uhf34_neighborhood)) |>
+  group_by(start_zipcode) |>
+  summarize(n = n()) |>
+  rename(zipcode = start_zipcode)
+  
+missing_enduhf = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood)) |>
+  group_by(end_zipcode) |>
+  summarize(n = n()) |>
+  rename(zipcode = end_zipcode)
+
+#write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
+```
+
+There are r missing_startuhf \|\> pull(n) \|\> sum() entries whose start
+zipcode do not have an associated uhf34, and r missing_enduhf \|\>
+pull(n) \|\> sum() entries whose end zipcode do not have an associated
+uhf34.
 
 ## Merge Citibike, SDI, Overweight Data
 
@@ -296,23 +447,27 @@ sdi_overweight =
          "sdi_score","percent_overweight") |>
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
   filter(!is.na(zip)) 
+<<<<<<< HEAD
+=======
+
+remove(joined_overweight_zip_neighborhood)
+remove(joined_SDI_zip_neighborhood)
+remove(SDI_df)
+remove(overweight_df)
+>>>>>>> e682f58ee2cb83220b583cce371c117c3e80cf6d
 ```
 
 ### Merge SDI and Overweight data onto citibike
 
 ``` r
-sample = citibike_zip_neighborhoods |>  slice(1)
-citibike_zip_neighborhood_test = head(citibike_zip_neighborhoods, n = 5000)
-
-colnames(joined_overweight_zip_neighborhood)
-colnames(joined_SDI_zip_neighborhood)
-
 citibike_df =
   citibike_zip_neighborhoods |>
   left_join(y = sdi_overweight,
             by = join_by("start_zipcode" == "zip")) |>
   rename("start_sdi_score" = "sdi_score",
          "start_percent_overweight" = "percent_overweight") 
+
+remove(citibike_zip_neighborhoods)
 
 citibike_df = citibike_df |>
   left_join(y = sdi_overweight,
@@ -321,29 +476,26 @@ citibike_df = citibike_df |>
          "end_percent_overweight" = "percent_overweight") 
 
 citibike_df = citibike_df |>
-  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
-         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
-         -uhf42.x, - uhf42_neighborhood.x)
+  select(bikeid, user_type, gender, age,
+         start_time, stop_time, 
+         start_station_id, start_station_name,
+         start_zipcode, start_uhf34_neighborhood,
+         end_station_id, end_station_name,
+         end_zipcode, end_uhf34_neighborhood,
+         start_sdi_score, start_percent_overweight,
+         end_sdi_score, end_percent_overweight)
 
-write_csv(citibike_df, file = './citibike/citibike_clean.csv')
+#write_csv(citibike_df, file = './citibike/citibike_clean.csv')
+
+head(citibike_df) |>
+  knitr::kable()
 ```
 
-## Citibike - Missing zips
-
-``` r
-missing_startzip = citibike_df |>
-  filter(is.na(start_zipcode)) 
-
-missing_startzip |>
-  group_by(start_station_name, start_station_latitude, start_station_longitude) |>
-  summarize(n = n())
-
-missing_endzip = citibike_df |>
-  filter(is.na(end_zipcode)) 
-
-missing_endzip |>
-  group_by(end_station_name, end_station_latitude, end_station_longitude) |>
-  summarize(n = n())
-
-There are `r nrow(missing_startzip)` entries missing start zip and `rnrow(missing_endzip)` missing end zip. 
-```
+| bikeid | user_type  | gender  | age | start_time          | stop_time           | start_station_id | start_station_name         | start_zipcode | start_uhf34_neighborhood           | end_station_id | end_station_name         | end_zipcode | end_uhf34_neighborhood           | start_sdi_score | start_percent_overweight | end_sdi_score | end_percent_overweight |
+|-------:|:-----------|:--------|----:|:--------------------|:--------------------|-----------------:|:---------------------------|--------------:|:-----------------------------------|---------------:|:-------------------------|------------:|:---------------------------------|----------------:|-------------------------:|--------------:|-----------------------:|
+|  19573 | Customer   | Female  |  19 | 2018-12-31 12:42:23 | 2019-01-01 06:06:47 |             3427 | Lafayette St & Jersey St   |         10012 | Chelsea Village                    |            529 | W 42 St & 8 Ave          |       10036 | Chelsea Village                  |              60 |                     38.1 |            69 |                   38.1 |
+|  16996 | Subscriber | Female  |  66 | 2018-12-31 13:21:55 | 2019-01-01 13:20:39 |              458 | 11 Ave & W 27 St           |         10001 | Chelsea Village                    |            127 | Barrow St & Hudson St    |       10014 | Chelsea Village                  |              70 |                     38.1 |            37 |                   38.1 |
+|  15420 | Customer   | Unknown |  50 | 2018-12-31 16:54:58 | 2019-01-01 14:32:11 |             3055 | Greene Ave & Nostrand Ave  |         11216 | Bedford Stuyvesant Crown Heights   |            437 | Macon St & Nostrand Ave  |       11233 | Bedford Stuyvesant Crown Heights |              83 |                     62.9 |            97 |                   62.9 |
+|  28349 | Subscriber | Female  |  53 | 2018-12-31 17:37:05 | 2019-01-01 08:13:33 |             3457 | E 58 St & Madison Ave      |         10022 | Upper East Side Gramercy           |           3457 | E 58 St & Madison Ave    |       10022 | Upper East Side Gramercy         |              26 |                     36.5 |            26 |                   36.5 |
+|  14710 | Subscriber | Female  |  24 | 2018-12-31 18:00:44 | 2019-01-01 15:12:14 |             3521 | Lenox Ave & W 111 St       |         10037 | Central Harlem Morningside Heights |           3164 | Columbus Ave & W 72 St   |       10023 | Upper West Side                  |              97 |                     68.7 |            43 |                   43.4 |
+|  16935 | Customer   | Male    |  32 | 2018-12-31 18:40:45 | 2019-01-01 08:52:56 |             3581 | Underhill Ave & Lincoln Pl |         11238 | Bedford Stuyvesant Crown Heights   |           3576 | Park Pl & Vanderbilt Ave |       11238 | Bedford Stuyvesant Crown Heights |              70 |                     62.9 |            70 |                   62.9 |

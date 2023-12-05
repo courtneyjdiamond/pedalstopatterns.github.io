@@ -21,6 +21,8 @@ library(tidyverse)
 library(shiny)
 library(shinyjs)
 shinyjs::useShinyjs()
+library(pdftools)
+library(pdftables)
 ```  
   
   ***
@@ -54,11 +56,11 @@ shinyjs::useShinyjs()
 The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available.
 
 
-```{r import citibike, eval= FALSE}
+```{r import citibike}
 citibike = 
   tibble(
-    files = list.files("citibike"),
-    path = str_c("citibike/", files)
+    files = list.files("./citibike"),
+    path = str_c("./citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
@@ -67,15 +69,13 @@ citibike =
   unnest(cols = c(data))
 ```
 
-```{r show first few rows of uncleaned citibike data, eval = FALSE}
+```{r show first few rows of uncleaned citibike data}
 citibike |>
   head() |>
   knitr::kable()
 ```
 
-(Will not include actual code for now as I cannot figure out how to knit)
-
-The citibike dataframe includes r nrow(citibike) trips and r ncol(citibike) variables. The variables in the dataframe are r names(citibike). 
+The citibike dataframe includes `r nrow(citibike)` trips and `r ncol(citibike)` variables. The variables in the dataframe are `r names(citibike)`. 
 
   &nbsp;
 
@@ -88,8 +88,9 @@ The cleaning of the citibike data included the following steps:
  * Including trips that started in 2018 but ended in 2019 and trips that started in 2019 but ended in 2020, so as to include all trips taken in 2019
  * Creating an age at time of trip variable from birth year
  * Creating a trip duration in minutes (as opposed to seconds) variable
+ * Renaming variables
  
-```{r tidy citibike, eval = FALSE}
+```{r tidy citibike}
 citibike_df <- citibike |>
   janitor::clean_names() |>
   select(-files, -path) |>
@@ -110,19 +111,19 @@ citibike_df <- citibike |>
     as.Date(stop_time) >= as.Date("2019-01-01"),
     as.Date(start_time) <= as.Date("2019-12-31")
   )  |>
-  select(trip_duration_sec, trip_duration_min, everything())
+  select(trip_duration_sec, trip_duration_min, -start_station_id, -end_station_id, everything())
 
 ```
 
 The table below displays the citibike tidied data.
 
-```{r show first few rows of cleaned citibike data, eval = FALSE}
+```{r show first few rows of cleaned citibike data}
 citibike_df |>
   head() |>
   knitr::kable()
 ```
 
-The citibike dataframe includes r nrow(citibike_df) trips and r ncol(citibike_df) variables. The variables in the dataframe are r names(citibike_df). 
+The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
 
   &nbsp;
 
@@ -136,19 +137,18 @@ The SDI dataset was a csv. We renamed the zip code variable to be more intuitive
 
 * It is important to note that the higher the SDI score the higher the social deprivation in that area.
 
-```{r sdi import and clean, eval = FALSE}
+```{r sdi import and clean}
 SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
   rename(zip=zcta5_fips)
 ```
 
-This table shows the zip codes with the least social deprivation (ie the lowest SDI score).
+This table shows the first few rows of the sdi dataframe.
 
-```{r sdi table, eval = FALSE}
+```{r sdi clean dataframe}
 SDI_df |>
-  arrange(sdi_score) |>  
-  head(5) |>
+  head() |>
   knitr::kable()
 ```
 
@@ -162,12 +162,10 @@ SDI_df |>
 
 The overweight data was a  csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available.
 
-```{r import overweight data, eval = FALSE}
+```{r import overweight data}
 overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
     janitor::clean_names()
 ```
-
-The overweight dataframe includes r nrow(overweight) trips and r ncol(overweight) variables. The variables in the dataframe are r names(overweight). 
 
  &nbsp;
 
@@ -180,7 +178,7 @@ The cleaning of the overweight data included the following steps:
 * Renaming time to year
 * Filtering data to 2019
 
-```{r tidy overweight , eval = FALSE}
+```{r tidy overweight}
 overweight_df =
  overweight |>
   mutate(number = gsub("\\*", "", number)) |>
@@ -198,28 +196,26 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
 
 The table below displays the overweight tidied data.
 
-```{r show first few rows of cleaned overweight data, eval = FALSE}
+```{r show first few rows of cleaned overweight data}
 overweight_df |>
   head() |>
   knitr::kable()
 ```
 
-The overweight dataframe now includes r nrow(overweight_df) trips and r ncol(overweight_df) variables. The variables in the dataframe are r names(overweight_df). 
+The overweight dataframe now includes `r nrow(overweight_df)` rows and `r ncol(overweight_df)` variables. The variables in the dataframe are `r names(overweight_df)`. 
+
+ &nbsp;
 
 ### *Air Quality Index* ###
 
-   &nbsp;
 
 ##### Data Import #####
 
 The air quality data was a  csv files. 
 
-```{r air quality, eval = FALSE}
+```{r air quality}
 air <- read_csv("data/air_quality/Air_Quality_20231126.csv") 
 ```
-
-The air dataframe includes r nrow(air) trips and r ncol(air) variables. The variables in the dataframe are r names(air). 
-
  &nbsp;
 
 ##### Data Cleaning #####
@@ -229,7 +225,7 @@ The cleaning of the air quality index data included the following steps:
 * Separating out year 
 * Filtering data to 2019
 
-```{r air quality tidy, eval = FALSE}
+```{r air quality tidy}
  air_quality_df =air |>
   janitor::clean_names() |>
   mutate(
@@ -241,41 +237,40 @@ The cleaning of the air quality index data included the following steps:
 
 The table below displays the air quality tidied data.
 
-```{r show first few rows of cleaned air quality data, eval = FALSE}
+```{r show first few rows of cleaned air quality data}
  air_quality_df |>
   head() |>
   knitr::kable()
 ```
 
-The air quality dataframe now includes r nrow( air_quality_df) trips and r ncol( air_quality_df) variables. The variables in the dataframe are r names( air_quality_df).
+The air quality dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_quality_df)` variables. The variables in the dataframe are `r names( air_quality_df)`.
 
 ***
 
 ## <span style='color: blue;'>Data Merging by NYC Neighborhood</span>
 
-Our end goal was to merge data by neighborhood. We decided to use United Hospital (UHF) 42 codes which consist of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We decideded to use UFH 34 instead of other versions as UFH 34 had the least number of neighborhoods (contains the largest area per neighborhood)
+Our end goal was to merge data by neighborhood. We decided to use United Hospital (UHF) 42 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UFH 34 (instead of other UFH versions) as UFH 34 had the least number of neighborhoods (contains the largest area per neighborhood)
 
   * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
 
 
-To do this, we did the following:
+ We did the following:
 
 1. First we combined United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UFH 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). We imported this table and tidied it into a dataframe.
 
-```{r import and tidy UFH42 pdf, eval = FALSE}
+```{r import and tidy UFH42 pdf}
 # install.packages("pdftables")
 # install.packages("pdftools")
 
 uhf_zip = 
-  pdf_text("data/geocoding/zipcodetable.pdf") |> 
-  extract(1)
+  pdf_text("data/geocoding/zipcodetable.pdf")
 
 uhf_zip_df =
   uhf_zip |> 
   str_split("\n") |>
   tibble() |> 
   rename("data" = "str_split(uhf_zip, \"\\n\")") |> 
-  unnest("data") |> 
+  unnest("data") |> 	
   filter(data != "") |> 
   filter(!row_number() %in% c(1, 2, 51)) |> 
   filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |> 
@@ -295,7 +290,7 @@ uhf_zip_df =
 
 2. We imported and cleaned a dataframe that converted UFH 34 to zip code.
 
-```{r import and tidy UFH 34 pdf, eval = FALSE}
+```{r import and tidy UFH 34 pdf}
 uhf_34 = 
   pdf_text("data/geocoding/uhf34.pdf")
 
@@ -328,9 +323,9 @@ uhf_34_df =
   
 ```
 
-3. Lastly we combined UFH 42 and UFH 34 dataframes.
+3. We combined UFH 42 and UFH 34 dataframes to create a neighborhood crosswalk dataframe.
 
-```{r, eval = FALSE}
+```{r combine neighborhood crosswalk}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
   left_join(y = uhf_34_df, by = join_by("uhf" == "uhf42")) |> 
@@ -343,4 +338,96 @@ joined_uhf_34_42 =
 
 ## <span style='color: blue;'>Creating One Final Dataframe</span>
 
-Next we needed to merge the neighborhood crosswalk dataframe with the citibike dataframe and each individual variable dataframe. 
+Next we needed to create one large dataframe that merged the citibike dataframe and each individual variable dataframe by UFH 34 neighborhood. 
+
+We did the following:
+
+1. Join SDI data to UHF/Zip/Neighborhood data
+```{r, eval = FALSE}
+joined_SDI_zip_neighborhood = 
+  SDI_df |> 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
+  mutate(zip = as.numeric(zip)) |> 
+  left_join(y = joined_uhf_34_42, by = "zip")
+```
+
+2. Join overweight data to UHF/Zip/Neighborhood data
+```{r, eval = FALSE}
+joined_overweight_zip_neighborhood = 
+  overweight_df |> 
+  left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34")) |>
+  rename(percent_overweight = percent)
+```
+
+3. Join overweight and sdi dataframes by uhf42
+
+```{r join_SDI_overweight, eval = FALSE}
+sdi_overweight = 
+  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
+                   by.x = c("zip", "uhf42", "uhf42_neighborhood"),
+                   by.y = c("zip", "uhf42", "uhf42_neighborhood"),
+                   all.x = TRUE)  |>
+  select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
+         "sdi_score","percent_overweight") |>
+  rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
+  filter(!is.na(zip)) 
+
+```
+
+4. Join citibike data to neighborhood data
+
+ * First, we need to convert the Citibike location data from latitude/longitude to zip code.
+    * This was done using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/). Here, we import the latitude/longitude to zipcode crosswalk we generated. The full code with details of how that was created [can be found here](latlong_to_zip.html). 
+ * Then crosswalk to the UHF neighborhoods.
+
+```{r citibike_zip, eval = FALSE}
+latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
+
+citibike_zip =
+  citibike_df |>
+  left_join(latlong_zip, 
+            by = c("start_station_latitude" = "latitude",
+                   "start_station_longitude" = "longitude")) |>
+  rename("start_zipcode" = "postcode") |>
+  left_join(latlong_zip, 
+            by = c("end_station_latitude" = "latitude",
+                   "end_station_longitude" = "longitude")) |>
+  rename("end_zipcode" = "postcode") 
+
+citibike_zip_neighborhoods =
+  citibike_zip |>
+  left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by("start_zipcode" == "zip")) |> 
+  rename("start_uhf34_neighborhood" = "uhf34_neighborhood",
+         "start_uhf42_neighborhood" = "uhf42_neighborhood") |> 
+  left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by("end_zipcode" == "zip")) |> 
+  rename("end_uhf34_neighborhood" = "uhf34_neighborhood",
+         "end_uhf42_neighborhood" = "uhf42_neighborhood")
+```
+
+5. Merge SDI and overweight dataframe onto citibike dataframe
+
+```{r citibike_final, eval = FALSE}
+
+colnames(joined_overweight_zip_neighborhood)
+colnames(joined_SDI_zip_neighborhood)
+
+citibike_df =
+  citibike_zip_neighborhoods |>
+  left_join(y = sdi_overweight,
+            by = join_by("start_zipcode" == "zip")) |>
+  rename("start_sdi_score" = "sdi_score",
+         "start_percent_overweight" = "percent_overweight") 
+
+citibike_df = citibike_df |>
+  left_join(y = sdi_overweight,
+            by = join_by("end_zipcode" == "zip")) |>
+  rename("end_sdi_score" = "sdi_score",
+         "end_percent_overweight" = "percent_overweight") 
+
+citibike_df = citibike_df |>
+  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
+         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
+         -uhf42.x, - uhf42_neighborhood.x)
+```

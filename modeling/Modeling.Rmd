@@ -16,7 +16,7 @@ As such, we sought to devise models that assessed the relationships between 1) r
 We created several models, first looking at the values without 
 
 
-```{r}
+```{r, eval = false}
 citibike.df = read_csv(here("/citibike/citibike_clean.csv"))
 
 model = lm(stations ~ )
@@ -31,7 +31,7 @@ citibike.df %>%
        y = )
 ```
 
-```{r}
+```{r, eval = false}
 cv_df = 
   crossv_mc(citibike.df, 100) 
 

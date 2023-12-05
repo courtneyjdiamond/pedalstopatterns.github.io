@@ -25,7 +25,9 @@ css: styles.css
 
 # Hyun Jin Jung
 
-[Learn more about Hyun]
+Hyun Jin is a first-year master’s student in Biostatistics, Clinical Research Methods track.
+
+[Learn more about Hyun](https://github.com/hyun7in)
 
  &nbsp;
 

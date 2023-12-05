@@ -422,22 +422,190 @@ and merged. We were specifically interested in 2019 as this was when SDI
 scores were available.</p>
 <pre class="r"><code>citibike = 
   tibble(
-    files = list.files(&quot;citibike&quot;),
-    path = str_c(&quot;citibike/&quot;, files)
+    files = list.files(&quot;./citibike&quot;),
+    path = str_c(&quot;./citibike/&quot;, files)
   ) |&gt;
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     &#39;end station id&#39; = col_double(),
     &#39;start station id&#39; = col_double()
   )))) |&gt;
   unnest(cols = c(data))</code></pre>
+<pre><code>## Warning: There were 6 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `data = map(...)`.
+## Caused by warning:
+## ! One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <pre class="r"><code>citibike |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
-<p>(Will not include actual code for now as I cannot figure out how to
-knit)</p>
-<p>The citibike dataframe includes r nrow(citibike) trips and r
-ncol(citibike) variables. The variables in the dataframe are r
-names(citibike).</p>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="11%" />
+<col width="3%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="8%" />
+<col width="6%" />
+<col width="7%" />
+<col width="4%" />
+<col width="8%" />
+<col width="6%" />
+<col width="6%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">files</th>
+<th align="left">path</th>
+<th align="right">tripduration</th>
+<th align="left">starttime</th>
+<th align="left">stoptime</th>
+<th align="right">start station id</th>
+<th align="left">start station name</th>
+<th align="right">start station latitude</th>
+<th align="right">start station longitude</th>
+<th align="right">end station id</th>
+<th align="left">end station name</th>
+<th align="right">end station latitude</th>
+<th align="right">end station longitude</th>
+<th align="right">bikeid</th>
+<th align="left">usertype</th>
+<th align="right">birth year</th>
+<th align="right">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">689</td>
+<td align="left">2018-12-01 00:00:04</td>
+<td align="left">2018-12-01 00:11:33</td>
+<td align="right">3359</td>
+<td align="left">E 68 St &amp; Madison Ave</td>
+<td align="right">40.76916</td>
+<td align="right">-73.96703</td>
+<td align="right">164</td>
+<td align="left">E 47 St &amp; 2 Ave</td>
+<td align="right">40.75323</td>
+<td align="right">-73.97033</td>
+<td align="right">35033</td>
+<td align="left">Subscriber</td>
+<td align="right">1989</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">204</td>
+<td align="left">2018-12-01 00:00:05</td>
+<td align="left">2018-12-01 00:03:30</td>
+<td align="right">3504</td>
+<td align="left">E 123 St &amp; Lexington Ave</td>
+<td align="right">40.80293</td>
+<td align="right">-73.93790</td>
+<td align="right">3490</td>
+<td align="left">E 116 St &amp; 2 Ave</td>
+<td align="right">40.79688</td>
+<td align="right">-73.93726</td>
+<td align="right">20501</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">316</td>
+<td align="left">2018-12-01 00:00:10</td>
+<td align="left">2018-12-01 00:05:27</td>
+<td align="right">270</td>
+<td align="left">Adelphi St &amp; Myrtle Ave</td>
+<td align="right">40.69308</td>
+<td align="right">-73.97179</td>
+<td align="right">243</td>
+<td align="left">Fulton St &amp; Rockwell Pl</td>
+<td align="right">40.68823</td>
+<td align="right">-73.97938</td>
+<td align="right">18386</td>
+<td align="left">Subscriber</td>
+<td align="right">1984</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">726</td>
+<td align="left">2018-12-01 00:00:21</td>
+<td align="left">2018-12-01 00:12:28</td>
+<td align="right">495</td>
+<td align="left">W 47 St &amp; 10 Ave</td>
+<td align="right">40.76270</td>
+<td align="right">-73.99301</td>
+<td align="right">3660</td>
+<td align="left">W 16 St &amp; 8 Ave</td>
+<td align="right">40.74102</td>
+<td align="right">-74.00138</td>
+<td align="right">27616</td>
+<td align="left">Subscriber</td>
+<td align="right">1983</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">397</td>
+<td align="left">2018-12-01 00:00:29</td>
+<td align="left">2018-12-01 00:07:07</td>
+<td align="right">473</td>
+<td align="left">Rivington St &amp; Chrystie St</td>
+<td align="right">40.72110</td>
+<td align="right">-73.99193</td>
+<td align="right">3467</td>
+<td align="left">W Broadway &amp; Spring Street</td>
+<td align="right">40.72495</td>
+<td align="right">-74.00166</td>
+<td align="right">35096</td>
+<td align="left">Subscriber</td>
+<td align="right">1976</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">299</td>
+<td align="left">2018-12-01 00:00:30</td>
+<td align="left">2018-12-01 00:05:30</td>
+<td align="right">237</td>
+<td align="left">E 11 St &amp; 2 Ave</td>
+<td align="right">40.73047</td>
+<td align="right">-73.98672</td>
+<td align="right">237</td>
+<td align="left">E 11 St &amp; 2 Ave</td>
+<td align="right">40.73047</td>
+<td align="right">-73.98672</td>
+<td align="right">15087</td>
+<td align="left">Customer</td>
+<td align="right">1994</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>The citibike dataframe includes 22808798 trips and 17 variables. The
+variables in the dataframe are files, path, tripduration, starttime,
+stoptime, start station id, start station name, start station latitude,
+start station longitude, end station id, end station name, end station
+latitude, end station longitude, bikeid, usertype, birth year,
+gender.</p>
 <p> </p>
 </div>
 <div id="data-cleaning" class="section level5">
@@ -453,6 +621,7 @@ in 2019</li>
 <li>Creating an age at time of trip variable from birth year</li>
 <li>Creating a trip duration in minutes (as opposed to seconds)
 variable</li>
+<li>Renaming variables</li>
 </ul>
 <pre class="r"><code>citibike_df &lt;- citibike |&gt;
   janitor::clean_names() |&gt;
@@ -474,14 +643,175 @@ variable</li>
     as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
     as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
   )  |&gt;
-  select(trip_duration_sec, trip_duration_min, everything())</code></pre>
+  select(trip_duration_sec, trip_duration_min, -start_station_id, -end_station_id, everything())</code></pre>
 <p>The table below displays the citibike tidied data.</p>
 <pre class="r"><code>citibike_df |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
-<p>The citibike dataframe includes r nrow(citibike_df) trips and r
-ncol(citibike_df) variables. The variables in the dataframe are r
-names(citibike_df).</p>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="5%" />
+<col width="9%" />
+<col width="7%" />
+<col width="8%" />
+<col width="5%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+<col width="1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">trip_duration_sec</th>
+<th align="right">trip_duration_min</th>
+<th align="left">start_time</th>
+<th align="left">stop_time</th>
+<th align="right">start_station_id</th>
+<th align="left">start_station_name</th>
+<th align="right">start_station_latitude</th>
+<th align="right">start_station_longitude</th>
+<th align="right">end_station_id</th>
+<th align="left">end_station_name</th>
+<th align="right">end_station_latitude</th>
+<th align="right">end_station_longitude</th>
+<th align="right">bikeid</th>
+<th align="left">user_type</th>
+<th align="right">birth_year</th>
+<th align="left">gender</th>
+<th align="right">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">62663</td>
+<td align="right">1044.3833</td>
+<td align="left">2018-12-31 12:42:23</td>
+<td align="left">2019-01-01 06:06:47</td>
+<td align="right">3427</td>
+<td align="left">Lafayette St &amp; Jersey St</td>
+<td align="right">40.72431</td>
+<td align="right">-73.99601</td>
+<td align="right">529</td>
+<td align="left">W 42 St &amp; 8 Ave</td>
+<td align="right">40.75757</td>
+<td align="right">-73.99099</td>
+<td align="right">19573</td>
+<td align="left">Customer</td>
+<td align="right">2000</td>
+<td align="left">Female</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="right">86324</td>
+<td align="right">1438.7333</td>
+<td align="left">2018-12-31 13:21:55</td>
+<td align="left">2019-01-01 13:20:39</td>
+<td align="right">458</td>
+<td align="left">11 Ave &amp; W 27 St</td>
+<td align="right">40.75140</td>
+<td align="right">-74.00523</td>
+<td align="right">127</td>
+<td align="left">Barrow St &amp; Hudson St</td>
+<td align="right">40.73172</td>
+<td align="right">-74.00674</td>
+<td align="right">16996</td>
+<td align="left">Subscriber</td>
+<td align="right">1953</td>
+<td align="left">Female</td>
+<td align="right">66</td>
+</tr>
+<tr class="odd">
+<td align="right">77833</td>
+<td align="right">1297.2167</td>
+<td align="left">2018-12-31 16:54:58</td>
+<td align="left">2019-01-01 14:32:11</td>
+<td align="right">3055</td>
+<td align="left">Greene Ave &amp; Nostrand Ave</td>
+<td align="right">40.68833</td>
+<td align="right">-73.95092</td>
+<td align="right">437</td>
+<td align="left">Macon St &amp; Nostrand Ave</td>
+<td align="right">40.68098</td>
+<td align="right">-73.95005</td>
+<td align="right">15420</td>
+<td align="left">Customer</td>
+<td align="right">1969</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+</tr>
+<tr class="even">
+<td align="right">52587</td>
+<td align="right">876.4500</td>
+<td align="left">2018-12-31 17:37:05</td>
+<td align="left">2019-01-01 08:13:33</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
+<td align="right">40.76303</td>
+<td align="right">-73.97210</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
+<td align="right">40.76303</td>
+<td align="right">-73.97210</td>
+<td align="right">28349</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="left">Female</td>
+<td align="right">53</td>
+</tr>
+<tr class="odd">
+<td align="right">76290</td>
+<td align="right">1271.5000</td>
+<td align="left">2018-12-31 18:00:44</td>
+<td align="left">2019-01-01 15:12:14</td>
+<td align="right">3521</td>
+<td align="left">Lenox Ave &amp; W 111 St</td>
+<td align="right">40.79879</td>
+<td align="right">-73.95230</td>
+<td align="right">3164</td>
+<td align="left">Columbus Ave &amp; W 72 St</td>
+<td align="right">40.77706</td>
+<td align="right">-73.97898</td>
+<td align="right">14710</td>
+<td align="left">Subscriber</td>
+<td align="right">1995</td>
+<td align="left">Female</td>
+<td align="right">24</td>
+</tr>
+<tr class="even">
+<td align="right">51131</td>
+<td align="right">852.1833</td>
+<td align="left">2018-12-31 18:40:45</td>
+<td align="left">2019-01-01 08:52:56</td>
+<td align="right">3581</td>
+<td align="left">Underhill Ave &amp; Lincoln Pl</td>
+<td align="right">40.67401</td>
+<td align="right">-73.96715</td>
+<td align="right">3576</td>
+<td align="left">Park Pl &amp; Vanderbilt Ave</td>
+<td align="right">40.67670</td>
+<td align="right">-73.96902</td>
+<td align="right">16935</td>
+<td align="left">Customer</td>
+<td align="right">1987</td>
+<td align="left">Male</td>
+<td align="right">32</td>
+</tr>
+</tbody>
+</table>
+<p>The citibike dataframe includes 16893163 trips and 17 variables. The
+variables in the dataframe are trip_duration_sec, trip_duration_min,
+start_time, stop_time, start_station_id, start_station_name,
+start_station_latitude, start_station_longitude, end_station_id,
+end_station_name, end_station_latitude, end_station_longitude, bikeid,
+user_type, birth_year, gender, age.</p>
 <p> </p>
 </div>
 </div>
@@ -501,12 +831,52 @@ social deprivation in that area.</li>
   janitor::clean_names() |&gt;
   select(zcta5_fips, sdi_score)|&gt;
   rename(zip=zcta5_fips)</code></pre>
-<p>This table shows the zip codes with the least social deprivation (ie
-the lowest SDI score).</p>
+<pre><code>## Rows: 32989 Columns: 18
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): ZCTA5_FIPS
+## dbl (17): ZCTA5_population, SDI_score, PovertyLT100_FPL_score, Single_Parent...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>This table shows the first few rows of the sdi dataframe.</p>
 <pre class="r"><code>SDI_df |&gt;
-  arrange(sdi_score) |&gt;  
-  head(5) |&gt;
+  head() |&gt;
   knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">zip</th>
+<th align="right">sdi_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">01001</td>
+<td align="right">36</td>
+</tr>
+<tr class="even">
+<td align="left">01002</td>
+<td align="right">72</td>
+</tr>
+<tr class="odd">
+<td align="left">01003</td>
+<td align="right">76</td>
+</tr>
+<tr class="even">
+<td align="left">01005</td>
+<td align="right">14</td>
+</tr>
+<tr class="odd">
+<td align="left">01007</td>
+<td align="right">14</td>
+</tr>
+<tr class="even">
+<td align="left">01008</td>
+<td align="right">8</td>
+</tr>
+</tbody>
+</table>
 <p> </p>
 </div>
 </div>
@@ -520,9 +890,14 @@ were specifically interested in 2019 as this was when SDI scores were
 available.</p>
 <pre class="r"><code>overweight = read_csv(&#39;./data/SDI_data/nyc_overweight_or_obesity_adults.csv&#39;) |&gt;
     janitor::clean_names()</code></pre>
-<p>The overweight dataframe includes r nrow(overweight) trips and r
-ncol(overweight) variables. The variables in the dataframe are r
-names(overweight).</p>
+<pre><code>## Rows: 720 Columns: 7
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (4): GeoType, Geography, Number, Percent
+## dbl (3): Time, GeoID, GeoRank
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p> </p>
 </div>
 <div id="data-cleaning-1" class="section level5">
@@ -552,20 +927,121 @@ percent = as.numeric(ifelse(grepl(&quot;\\*&quot;, percent),
 <pre class="r"><code>overweight_df |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
-<p>The overweight dataframe now includes r nrow(overweight_df) trips and
-r ncol(overweight_df) variables. The variables in the dataframe are r
-names(overweight_df).</p>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="9%" />
+<col width="7%" />
+<col width="9%" />
+<col width="27%" />
+<col width="7%" />
+<col width="8%" />
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">geo_type</th>
+<th align="right">geo_id</th>
+<th align="right">geo_rank</th>
+<th align="left">geography</th>
+<th align="right">number</th>
+<th align="right">percent</th>
+<th align="right">percent_low</th>
+<th align="right">percent_high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">101</td>
+<td align="right">3</td>
+<td align="left">Kingsbridge - Riverdale</td>
+<td align="right">37000</td>
+<td align="right">52.4</td>
+<td align="right">40.8</td>
+<td align="right">63.8</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">102</td>
+<td align="right">3</td>
+<td align="left">Northeast Bronx</td>
+<td align="right">103000</td>
+<td align="right">69.6</td>
+<td align="right">59.7</td>
+<td align="right">78.0</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">103</td>
+<td align="right">3</td>
+<td align="left">Fordham - Bronx Pk</td>
+<td align="right">122000</td>
+<td align="right">71.1</td>
+<td align="right">61.1</td>
+<td align="right">79.3</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">104</td>
+<td align="right">3</td>
+<td align="left">Pelham - Throgs Neck</td>
+<td align="right">152000</td>
+<td align="right">66.4</td>
+<td align="right">58.7</td>
+<td align="right">73.4</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">201</td>
+<td align="right">3</td>
+<td align="left">Greenpoint</td>
+<td align="right">40000</td>
+<td align="right">41.8</td>
+<td align="right">31.0</td>
+<td align="right">53.6</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">202</td>
+<td align="right">3</td>
+<td align="left">Downtown - Heights - Slope</td>
+<td align="right">86000</td>
+<td align="right">50.8</td>
+<td align="right">41.8</td>
+<td align="right">59.7</td>
+</tr>
+</tbody>
+</table>
+<p>The overweight dataframe now includes 40 rows and 9 variables. The
+variables in the dataframe are year, geo_type, geo_id, geo_rank,
+geography, number, percent, percent_low, percent_high.</p>
+<p> </p>
 </div>
 </div>
 <div id="air-quality-index" class="section level3">
 <h3><em>Air Quality Index</em></h3>
-<p> </p>
 <div id="data-import-2" class="section level5">
 <h5>Data Import</h5>
 <p>The air quality data was a csv files.</p>
 <pre class="r"><code>air &lt;- read_csv(&quot;data/air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
-<p>The air dataframe includes r nrow(air) trips and r ncol(air)
-variables. The variables in the dataframe are r names(air).</p>
+<pre><code>## Rows: 16218 Columns: 12
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
+## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
+## lgl (1): Message
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p> </p>
 </div>
 <div id="data-cleaning-2" class="section level5">
@@ -587,9 +1063,136 @@ steps:</p>
 <pre class="r"><code> air_quality_df |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
-<p>The air quality dataframe now includes r nrow( air_quality_df) trips
-and r ncol( air_quality_df) variables. The variables in the dataframe
-are r names( air_quality_df).</p>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="7%" />
+<col width="12%" />
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+<col width="6%" />
+<col width="20%" />
+<col width="10%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">unique_id</th>
+<th align="right">indicator_id</th>
+<th align="left">name</th>
+<th align="left">measure</th>
+<th align="left">measure_info</th>
+<th align="left">geo_type_name</th>
+<th align="right">geo_join_id</th>
+<th align="left">geo_place_name</th>
+<th align="left">time_period</th>
+<th align="left">start_date</th>
+<th align="right">data_value</th>
+<th align="left">message</th>
+<th align="right">year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">643618</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">CD</td>
+<td align="right">212</td>
+<td align="left">Williamsbridge and Baychester (CD12)</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">14.19</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">643339</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">UHF42</td>
+<td align="right">201</td>
+<td align="left">Greenpoint</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">21.40</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="odd">
+<td align="right">643577</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">CD</td>
+<td align="right">110</td>
+<td align="left">Central Harlem (CD10)</td>
+<td align="left">Summer 2019</td>
+<td align="left">2019-06-01</td>
+<td align="right">16.80</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">667586</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">CD</td>
+<td align="right">112</td>
+<td align="left">Washington Heights and Inwood (CD12)</td>
+<td align="left">Winter 2019-20</td>
+<td align="left">2019-12-01</td>
+<td align="right">24.28</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="odd">
+<td align="right">667730</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">CD</td>
+<td align="right">312</td>
+<td align="left">Borough Park (CD12)</td>
+<td align="left">Winter 2019-20</td>
+<td align="left">2019-12-01</td>
+<td align="right">25.93</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">667646</td>
+<td align="right">375</td>
+<td align="left">Nitrogen dioxide (NO2)</td>
+<td align="left">Mean</td>
+<td align="left">ppb</td>
+<td align="left">CD</td>
+<td align="right">210</td>
+<td align="left">Throgs Neck and Co-op City (CD10)</td>
+<td align="left">Winter 2019-20</td>
+<td align="left">2019-12-01</td>
+<td align="right">21.25</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+</tbody>
+</table>
+<p>The air quality dataframe now includes 987 rows and 13 variables. The
+variables in the dataframe are unique_id, indicator_id, name, measure,
+measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
+start_date, data_value, message, year.</p>
 <hr />
 </div>
 </div>
@@ -598,16 +1201,16 @@ are r names( air_quality_df).</p>
 <h2><span style="color: blue;">Data Merging by NYC
 Neighborhood</span></h2>
 <p>Our end goal was to merge data by neighborhood. We decided to use
-United Hospital (UHF) 42 codes which consist of 34 adjoining zip codes
-with similar characteristics compiled by NYC Gov. We decideded to use
-UFH 34 instead of other versions as UFH 34 had the least number of
+United Hospital (UHF) 42 codes which consists of 34 adjoining zip codes
+with similar characteristics compiled by NYC Gov. We used UFH 34
+(instead of other UFH versions) as UFH 34 had the least number of
 neighborhoods (contains the largest area per neighborhood)</p>
 <ul>
 <li>For more information about the background behind UHF codes, please
 see <a
 href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><strong>here</strong></a>.</li>
 </ul>
-<p>To do this, we did the following:</p>
+<p>We did the following:</p>
 <ol style="list-style-type: decimal">
 <li>First we combined United Hospital (UHF) 42 codes to zip codes, as
 the overweight dataframe included UHF 42 codes. We found a table that
@@ -619,15 +1222,14 @@ We imported this table and tidied it into a dataframe.</li>
 # install.packages(&quot;pdftools&quot;)
 
 uhf_zip = 
-  pdf_text(&quot;data/geocoding/zipcodetable.pdf&quot;) |&gt; 
-  extract(1)
+  pdf_text(&quot;data/geocoding/zipcodetable.pdf&quot;)
 
 uhf_zip_df =
   uhf_zip |&gt; 
   str_split(&quot;\n&quot;) |&gt;
   tibble() |&gt; 
   rename(&quot;data&quot; = &quot;str_split(uhf_zip, \&quot;\\n\&quot;)&quot;) |&gt; 
-  unnest(&quot;data&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt;     
   filter(data != &quot;&quot;) |&gt; 
   filter(!row_number() %in% c(1, 2, 51)) |&gt; 
   filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |&gt; 
@@ -643,6 +1245,17 @@ uhf_zip_df =
   pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
   filter(!is.na(zip)) |&gt; 
   select(!zip_name)</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 2 rows [65, 75].</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 38 rows [43, 44, 45, 46,
+## 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, ...].</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 8 rows [65, 67, 68, 75,
+## 79, 80, 84, 87].</code></pre>
+<pre><code>## Warning: Expected 9 pieces. Missing pieces filled with `NA` in 41 rows [1, 2, 3, 4, 5,
+## 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `uhf = as.numeric(uhf)`.
+## Caused by warning:
+## ! NAs introduced by coercion</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>We imported and cleaned a dataframe that converted UFH 34 to zip
 code.</li>
@@ -677,7 +1290,8 @@ uhf_34_df =
   mutate(uhf34 = as.numeric(uhf34),
          uhf42 = as.numeric(uhf42))</code></pre>
 <ol start="3" style="list-style-type: decimal">
-<li>Lastly we combined UFH 42 and UFH 34 dataframes.</li>
+<li>We combined UFH 42 and UFH 34 dataframes to create a neighborhood
+crosswalk dataframe.</li>
 </ol>
 <pre class="r"><code>joined_uhf_34_42 = 
   uhf_zip_df |&gt; 
@@ -689,8 +1303,98 @@ uhf_34_df =
 </div>
 <div id="creating-one-final-dataframe" class="section level2">
 <h2><span style="color: blue;">Creating One Final Dataframe</span></h2>
-<p>Next we needed to merge the neighborhood crosswalk dataframe with the
-citibike dataframe and each individual variable dataframe.</p>
+<p>Next we needed to create one large dataframe that merged the citibike
+dataframe and each individual variable dataframe by UFH 34
+neighborhood.</p>
+<p>We did the following:</p>
+<ol style="list-style-type: decimal">
+<li>Join SDI data to UHF/Zip/Neighborhood data</li>
+</ol>
+<pre class="r"><code>joined_SDI_zip_neighborhood = 
+  SDI_df |&gt; 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |&gt; 
+  mutate(zip = as.numeric(zip)) |&gt; 
+  left_join(y = joined_uhf_34_42, by = &quot;zip&quot;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Join overweight data to UHF/Zip/Neighborhood data</li>
+</ol>
+<pre class="r"><code>joined_overweight_zip_neighborhood = 
+  overweight_df |&gt; 
+  left_join(y = joined_uhf_34_42, by = join_by(&quot;geo_id&quot; == &quot;uhf34&quot;)) |&gt;
+  rename(percent_overweight = percent)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Join overweight and sdi dataframes by uhf42</li>
+</ol>
+<pre class="r"><code>sdi_overweight = 
+  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
+                   by.x = c(&quot;zip&quot;, &quot;uhf42&quot;, &quot;uhf42_neighborhood&quot;),
+                   by.y = c(&quot;zip&quot;, &quot;uhf42&quot;, &quot;uhf42_neighborhood&quot;),
+                   all.x = TRUE)  |&gt;
+  select(&quot;zip&quot;,&quot;uhf34&quot;,&quot;uhf34_neighborhood.x&quot;,&quot;uhf42&quot;,&quot;uhf42_neighborhood&quot;,
+         &quot;sdi_score&quot;,&quot;percent_overweight&quot;) |&gt;
+  rename(uhf34_neighborhood = uhf34_neighborhood.x) |&gt;
+  filter(!is.na(zip)) </code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Join citibike data to neighborhood data</li>
+</ol>
+<ul>
+<li>First, we need to convert the Citibike location data from
+latitude/longitude to zip code.
+<ul>
+<li>This was done using a package <a
+href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>.
+Here, we import the latitude/longitude to zipcode crosswalk we
+generated. The full code with details of how that was created <a
+href="latlong_to_zip.html">can be found here</a>.</li>
+</ul></li>
+<li>Then crosswalk to the UHF neighborhoods.</li>
+</ul>
+<pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)
+
+citibike_zip =
+  citibike_df |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
+
+citibike_zip_neighborhoods =
+  citibike_zip |&gt;
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;start_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;start_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;) |&gt; 
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;end_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Merge SDI and overweight dataframe onto citibike dataframe</li>
+</ol>
+<pre class="r"><code>colnames(joined_overweight_zip_neighborhood)
+colnames(joined_SDI_zip_neighborhood)
+
+citibike_df =
+  citibike_zip_neighborhoods |&gt;
+  left_join(y = sdi_overweight,
+            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt;
+  rename(&quot;start_sdi_score&quot; = &quot;sdi_score&quot;,
+         &quot;start_percent_overweight&quot; = &quot;percent_overweight&quot;) 
+
+citibike_df = citibike_df |&gt;
+  left_join(y = sdi_overweight,
+            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt;
+  rename(&quot;end_sdi_score&quot; = &quot;sdi_score&quot;,
+         &quot;end_percent_overweight&quot; = &quot;percent_overweight&quot;) 
+
+citibike_df = citibike_df |&gt;
+  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
+         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
+         -uhf42.x, - uhf42_neighborhood.x)</code></pre>
 </div>
 
 
