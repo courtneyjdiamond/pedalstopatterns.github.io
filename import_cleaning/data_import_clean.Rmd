@@ -297,8 +297,7 @@ citibike_zip |>
 
 ```
 
-There are r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_code)) |> nrow() entries missing either the start or end zipcode.
-
+There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
 
 ```{r manual_zip}
 citibike_zip = citibike_zip |>
@@ -446,6 +445,8 @@ citibike_df = citibike_df |>
 head(citibike_df) |>
   knitr::kable()
 
-#write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+skimr::skim(citibike_df)
+
+write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
 
 ```

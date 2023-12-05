@@ -385,9 +385,7 @@ citibike_zip |>
     ## 11 W 52 St & 6 Ave                          40.8                 -74.0 54714
     ## 12 William St & Pine St                     40.7                 -74.0 20933
 
-There are r citibike_zip \|\> filter(is.na(start_zipcode) \|
-is.na(end_code)) \|\> nrow() entries missing either the start or end
-zipcode.
+There are 804243 entries missing either the start or end zipcode.
 
 ``` r
 citibike_zip = citibike_zip |>
@@ -559,5 +557,59 @@ head(citibike_df) |>
 |  30089 | Subscriber | Male    |  23 | 2019-01-01 00:21:42 | 2019-01-01 00:30:40 |             3231 | E 67 St & Park Ave           |         10065 | NA                       |            519 | Pershing Square North             |       10037 | Central Harlem Morningside Heights |              NA |                       NA |       NA |            97 |                   68.7 |      7 |
 
 ``` r
-#write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+skimr::skim(citibike_df)
+```
+
+|                                                  |             |
+|:-------------------------------------------------|:------------|
+| Name                                             | citibike_df |
+| Number of rows                                   | 3579463     |
+| Number of columns                                | 20          |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_   |             |
+| Column type frequency:                           |             |
+| character                                        | 6           |
+| numeric                                          | 12          |
+| POSIXct                                          | 2           |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |             |
+| Group variables                                  | None        |
+
+Data summary
+
+**Variable type: character**
+
+| skim_variable            | n_missing | complete_rate | min | max | empty | n_unique | whitespace |
+|:-------------------------|----------:|--------------:|----:|----:|------:|---------:|-----------:|
+| user_type                |         0 |          1.00 |   8 |  10 |     0 |        2 |          0 |
+| gender                   |         0 |          1.00 |   4 |   7 |     0 |        3 |          0 |
+| start_station_name       |         0 |          1.00 |   9 |  45 |     0 |      919 |          0 |
+| start_uhf34_neighborhood |   1963674 |          0.45 |  10 |  34 |     0 |       22 |          0 |
+| end_station_name         |         0 |          1.00 |   7 |  45 |     0 |      951 |          0 |
+| end_uhf34_neighborhood   |   1989338 |          0.44 |  10 |  34 |     0 |       22 |          0 |
+
+**Variable type: numeric**
+
+| skim_variable            | n_missing | complete_rate |     mean |       sd |       p0 |      p25 |      p50 |      p75 |      p100 | hist  |
+|:-------------------------|----------:|--------------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|:------|
+| bikeid                   |         0 |          1.00 | 29620.51 |  7597.04 | 14529.00 | 25255.00 | 30887.00 | 35047.00 |  42046.00 | ▅▂▇▇▅ |
+| age                      |         0 |          1.00 |    39.34 |    11.86 |    16.00 |    29.00 |    37.00 |    50.00 |    162.00 | ▇▅▁▁▁ |
+| start_station_id         |         0 |          1.00 |  1719.22 |  1432.36 |    72.00 |   394.00 |   531.00 |  3164.00 |   3911.00 | ▇▁▁▂▅ |
+| start_zipcode            |         0 |          1.00 | 11582.36 | 10411.35 | 10000.00 | 10022.00 | 10115.00 | 10463.00 | 100019.00 | ▇▁▁▁▁ |
+| end_station_id           |         0 |          1.00 |  1715.66 |  1433.17 |    72.00 |   401.00 |   529.00 |  3165.00 |   3911.00 | ▇▁▁▂▅ |
+| end_zipcode              |         0 |          1.00 | 11732.02 | 11010.30 |  7087.00 | 10023.00 | 10120.00 | 10463.00 | 100019.00 | ▇▁▁▁▁ |
+| start_sdi_score          |   1963674 |          0.45 |    63.08 |    21.89 |    26.00 |    42.00 |    63.00 |    85.00 |    100.00 | ▅▆▇▂▆ |
+| start_percent_overweight |   1963674 |          0.45 |    43.43 |     9.13 |    36.50 |    38.10 |    40.50 |    43.40 |     72.10 | ▇▁▁▁▁ |
+| start_aq                 |   1963674 |          0.45 |     8.71 |     1.09 |     6.04 |     7.44 |     8.67 |    10.02 |     10.02 | ▁▅▁▇▆ |
+| end_sdi_score            |   1989338 |          0.44 |    62.80 |    22.13 |    26.00 |    42.00 |    63.00 |    85.00 |    100.00 | ▅▆▇▂▆ |
+| end_percent_overweight   |   1989338 |          0.44 |    43.52 |     9.40 |    36.50 |    38.10 |    40.50 |    43.40 |     72.10 | ▇▁▁▁▁ |
+| end_aq                   |   1989338 |          0.44 |     8.72 |     1.08 |     6.04 |     7.44 |     8.67 |    10.02 |     10.02 | ▁▅▁▇▆ |
+
+**Variable type: POSIXct**
+
+| skim_variable | n_missing | complete_rate | min                 | max                 | median              | n_unique |
+|:--------------|----------:|--------------:|:--------------------|:--------------------|:--------------------|---------:|
+| start_time    |         0 |             1 | 2018-12-31 23:55:44 | 2019-12-31 23:53:22 | 2019-07-19 15:45:55 |  3579025 |
+| stop_time     |         0 |             1 | 2019-01-01 00:15:55 | 2020-01-01 16:40:26 | 2019-07-19 16:05:13 |  3579015 |
+
+``` r
+write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
 ```
