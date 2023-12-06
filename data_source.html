@@ -431,15 +431,6 @@ through January 2020.</p>
     &#39;start station id&#39; = col_double()
   )))) |&gt;
   unnest(cols = c(data))</code></pre>
-<pre><code>## Warning: There were 6 warnings in `mutate()`.
-## The first warning was:
-## ℹ In argument: `data = map(...)`.
-## Caused by warning:
-## ! One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <pre class="r"><code>citibike |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
@@ -1229,17 +1220,6 @@ uhf_zip_df =
   pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
   filter(!is.na(zip)) |&gt; 
   select(!zip_name)</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 2 rows [65, 75].</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 38 rows [43, 44, 45, 46,
-## 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, ...].</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 8 rows [65, 67, 68, 75,
-## 79, 80, 84, 87].</code></pre>
-<pre><code>## Warning: Expected 9 pieces. Missing pieces filled with `NA` in 41 rows [1, 2, 3, 4, 5,
-## 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
-<pre><code>## Warning: There was 1 warning in `mutate()`.
-## ℹ In argument: `uhf = as.numeric(uhf)`.
-## Caused by warning:
-## ! NAs introduced by coercion</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>We imported and cleaned a dataframe that converted UFH 34 to zip
 code.</li>
@@ -1285,9 +1265,9 @@ crosswalk dataframe.</li>
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
 <hr />
 </div>
-<div id="joining-citibike-to-ufh-42-neighborhood-dataframe"
+<div id="joining-citibike-to-ufh-34-neighborhood-dataframe"
 class="section level2">
-<h2><span style="color: blue;">Joining citibike to UFH 42 Neighborhood
+<h2><span style="color: blue;">Joining citibike to UFH 34 Neighborhood
 Dataframe</span></h2>
 <p>The citibike data contained latitude/longitude, but we wanted our
 final location variable to be UHF 34 neighborhood. To do this, we did
@@ -1318,9 +1298,7 @@ href="latlong_to_zip.html">can be found here</a>.</li>
             by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
                    &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
   rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) </code></pre>
-<p>There are r citibike_zip |&gt; filter(is.na(start_zipcode) |
-is.na(end_zipcode)) |&gt; nrow() entries missing either the start or end
-zipcode.</p>
+<p>There are 804243 entries missing either the start or end zipcode.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>So next, we manually added the missing zipcodes into the
 dataframe.</li>
@@ -1373,8 +1351,6 @@ missing_enduhf = citibike_zip_neighborhoods |&gt;
   summarize(n = n()) |&gt;
   rename(zipcode = end_zipcode)
 
-#write_csv(rbind(missing_startuhf, missing_enduhf) ,&#39;../data/geocoding/missing_uhf34.csv&#39;)
-
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
   filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))</code></pre>
 <p>We noticed that there were 1963674 entries whose start zipcode do not
@@ -1387,10 +1363,11 @@ cleaner to simply omit them, as we still retain a substantial dataset
 size. The resulting dataset has 3579463 entries.</p>
 <hr />
 </div>
-<div id="finally-merge-citibike-sdi-overweight-and-aq"
+<div
+id="finally-merge-citibike-social-deprivation-index-overweight-and-air-quality-index-data"
 class="section level2">
-<h2><span style="color: blue;">: Finally, Merge Citibike, SDI,
-Overweight, and AQ </span></h2>
+<h2><span style="color: blue;">Finally, Merge Citibike, Social
+Deprivation Index, Overweight, and Air Quality Index Data </span></h2>
 <p>Next we needed to create one large dataframe that merged the citibike
 dataframe and each individual variable dataframe by UFH 34
 neighborhood.</p>
@@ -1426,13 +1403,9 @@ neighborhood.</p>
 <li>Join air quality to neighborhood datafame</li>
 </ol>
 <pre class="r"><code>air_quality_df = 
-  left_join(air_quality_df, uhf_34_df, by = c(&quot;geo_join_id&quot; = &quot;uhf34&quot;))</code></pre>
-<pre><code>## Warning in left_join(air_quality_df, uhf_34_df, by = c(geo_join_id = &quot;uhf34&quot;)): Detected an unexpected many-to-many relationship between `x` and `y`.
-## ℹ Row 2 of `x` matches multiple rows in `y`.
-## ℹ Row 7 of `y` matches multiple rows in `x`.
-## ℹ If a many-to-many relationship is expected, set `relationship =
-##   &quot;many-to-many&quot;` to silence this warning.</code></pre>
-<pre class="r"><code>air_quality_df =
+  left_join(air_quality_df, uhf_34_df, by = c(&quot;geo_join_id&quot; = &quot;uhf34&quot;))
+
+air_quality_df =
   air_quality_df |&gt;
 select(data_value, neighborhood ) |&gt;
  distinct()</code></pre>
@@ -1456,8 +1429,7 @@ citibike_df = citibike_df |&gt;
 <ol start="6" style="list-style-type: decimal">
 <li>Join air quality dataframe with citibike dataframe</li>
 </ol>
-<pre class="r"><code>#Join to final dataframe
-citibike_df =
+<pre class="r"><code>citibike_df =
   citibike_df |&gt;
   left_join(y = air_quality_df,
             by = join_by(&quot;start_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;

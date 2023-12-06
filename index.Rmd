@@ -15,6 +15,7 @@ css: styles.css
   }
 </style>
 
+
   &nbsp;
   
 *Exploring citibike trends throughout NYC in 2019*
@@ -32,7 +33,7 @@ Increasing transportation costs, congested streets, and subway delays across New
 
 As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a collective curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of CitiBike use:
 
-  * Geographical Utilization: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
+  * <u>Geographical Utilization</u>.: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
   * User Demographics: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
   * Neighborhood Disparities: We aim to investigate if there is an uneven distribution of CitiBikes across neighborhoods, particularly focusing on areas characterized by higher levels of social deprivation. Addressing this aspect is important in understanding the accessibility and inclusiveness of the CitiBike system.
   * Health Implications: Beyond transportation, we aim to explore whether disproportionate access to CitiBikes might contribute to health disparities among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
@@ -106,6 +107,9 @@ shinyjs::useShinyjs()
   - Jesus Luevano, jl5934<br>
   - Kayla Schiffer-Kane, khs2138<br>
   - Haley Zylberberg, hmz2105<br> 
+  
+
+
 
 
 
