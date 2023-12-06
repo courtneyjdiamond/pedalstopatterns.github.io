@@ -75,15 +75,12 @@ shinyjs::useShinyjs()
     * Which neighborhoods are frequently traveled to and from?
   * User Demographics:
     * Who uses citibike?
-    &nbsp;
   * Neighborhood Disparities
-    * Are citibike docks correclation
+    * 
   * Health Implications
+    *
 
  
-  * User Demographics: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
-  * Neighborhood Disparities: We aim to investigate if there is an uneven distribution of CitiBikes across neighborhoods, particularly focusing on areas characterized by higher levels of social deprivation. Addressing this aspect is important in understanding the accessibility and inclusiveness of the CitiBike system.
-  * Health Implications: Beyond transportation, we aim to explore whether disproportionate access to CitiBikes might contribute to health disparities among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
   &nbsp;
   
 *Project Report*:
