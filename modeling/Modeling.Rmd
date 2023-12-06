@@ -106,3 +106,83 @@ cv_df |>
        x = "Model",
        y = "Frequency")
 ```
+
+
+```{r health outcomes as outcome}
+fit_overweight = lm(mean_overweight ~ mean_aq + mean_sdi + n_rides, data = citibike_group_by_station)
+
+fit_overweight %>%
+  broom::tidy() %>%
+  knitr::kable()
+
+citibike_group_by_station %>%
+  modelr::add_residuals(fit_overweight) %>%
+  modelr::add_predictions(fit_overweight) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = "Model of mean percentage overweight",
+       x = "predictor" ,
+       y = "residual")
+
+fit_AQI = lm(mean_aq ~ mean_overweight + mean_sdi + n_rides, data = citibike_group_by_station)
+
+fit_AQI %>%
+  broom::tidy() %>%
+  knitr::kable()
+
+citibike_group_by_station %>%
+  modelr::add_residuals(fit_AQI) %>%
+  modelr::add_predictions(fit_AQI) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = "Model of mean AQI",
+       x = "predictor" ,
+       y = "residual")
+
+fit_sdi = lm(mean_sdi ~ mean_aq + mean_overweight + n_rides, data = citibike_group_by_station)
+
+fit_sdi %>%
+  broom::tidy() %>%
+  knitr::kable()
+
+citibike_group_by_station %>%
+  modelr::add_residuals(fit_sdi) %>%
+  modelr::add_predictions(fit_sdi) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = "Model of mean SDI",
+       x = "predictor" ,
+       y = "residual")
+```
+
+```{r}
+cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_aq), ] %>%
+  crossv_mc(100) 
+
+#cv_df =  crossv_mc(citibike_group_by_station, 100) 
+
+cv_df = 
+  cv_df |> 
+  mutate(
+    fit_overweight  = map(train, \(df) lm(mean_overweight ~ mean_aq + mean_sdi + n_rides, data = df)), 
+    fit_sdi  = map(train, \(df) lm(mean_sdi ~ mean_aq + mean_overweight + n_rides, data = df)), 
+    fit_AQI  = map(train, \(df) lm(mean_aq ~ mean_overweight + mean_sdi + n_rides, data = df))) |>  
+  mutate(
+    rmse_overweight = map2_dbl(fit_overweight, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_sdi = map2_dbl(fit_sdi, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_AQI = map2_dbl(fit_AQI, test, \(mod, df) rmse(model = mod, data = df)))
+
+cv_df |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(title = "Density Plot of RMSE values", 
+       x = "Model",
+       y = "Frequency")
+```
+
