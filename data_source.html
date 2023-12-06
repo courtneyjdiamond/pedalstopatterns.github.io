@@ -419,7 +419,8 @@ Cleaning</span></h2>
 <h5>Data Import</h5>
 <p>The citibike data was a collection of csv files that we downloaded
 and merged. We were specifically interested in 2019 as this was when SDI
-scores were available.</p>
+scores were available. We downloaded the data files from December 2018
+through January 2020.</p>
 <pre class="r"><code>citibike = 
   tibble(
     files = list.files(&quot;./citibike&quot;),
@@ -430,15 +431,6 @@ scores were available.</p>
     &#39;start station id&#39; = col_double()
   )))) |&gt;
   unnest(cols = c(data))</code></pre>
-<pre><code>## Warning: There were 6 warnings in `mutate()`.
-## The first warning was:
-## ℹ In argument: `data = map(...)`.
-## Caused by warning:
-## ! One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 5 remaining warnings.</code></pre>
 <pre class="r"><code>citibike |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
@@ -625,7 +617,7 @@ variable</li>
 </ul>
 <pre class="r"><code>citibike_df &lt;- citibike |&gt;
   janitor::clean_names() |&gt;
-  select(-files, -path) |&gt;
+  select(-files, -path, -start_station_id, -end_station_id) |&gt;
   rename(trip_duration_sec = tripduration,
          start_time = starttime,
          stop_time = stoptime,
@@ -643,29 +635,27 @@ variable</li>
     as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
     as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
   )  |&gt;
-  select(trip_duration_sec, trip_duration_min, -start_station_id, -end_station_id, everything())</code></pre>
+  select(trip_duration_sec, trip_duration_min, everything())</code></pre>
 <p>The table below displays the citibike tidied data.</p>
 <pre class="r"><code>citibike_df |&gt;
   head() |&gt;
   knitr::kable()</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
 <col width="6%" />
 <col width="6%" />
-<col width="6%" />
-<col width="6%" />
-<col width="5%" />
+<col width="7%" />
+<col width="7%" />
+<col width="10%" />
+<col width="8%" />
 <col width="9%" />
-<col width="7%" />
+<col width="9%" />
 <col width="8%" />
-<col width="5%" />
 <col width="8%" />
-<col width="7%" />
-<col width="7%" />
 <col width="2%" />
+<col width="4%" />
+<col width="4%" />
 <col width="3%" />
-<col width="3%" />
-<col width="2%" />
 <col width="1%" />
 </colgroup>
 <thead>
@@ -674,11 +664,9 @@ variable</li>
 <th align="right">trip_duration_min</th>
 <th align="left">start_time</th>
 <th align="left">stop_time</th>
-<th align="right">start_station_id</th>
 <th align="left">start_station_name</th>
 <th align="right">start_station_latitude</th>
 <th align="right">start_station_longitude</th>
-<th align="right">end_station_id</th>
 <th align="left">end_station_name</th>
 <th align="right">end_station_latitude</th>
 <th align="right">end_station_longitude</th>
@@ -695,11 +683,9 @@ variable</li>
 <td align="right">1044.3833</td>
 <td align="left">2018-12-31 12:42:23</td>
 <td align="left">2019-01-01 06:06:47</td>
-<td align="right">3427</td>
 <td align="left">Lafayette St &amp; Jersey St</td>
 <td align="right">40.72431</td>
 <td align="right">-73.99601</td>
-<td align="right">529</td>
 <td align="left">W 42 St &amp; 8 Ave</td>
 <td align="right">40.75757</td>
 <td align="right">-73.99099</td>
@@ -714,11 +700,9 @@ variable</li>
 <td align="right">1438.7333</td>
 <td align="left">2018-12-31 13:21:55</td>
 <td align="left">2019-01-01 13:20:39</td>
-<td align="right">458</td>
 <td align="left">11 Ave &amp; W 27 St</td>
 <td align="right">40.75140</td>
 <td align="right">-74.00523</td>
-<td align="right">127</td>
 <td align="left">Barrow St &amp; Hudson St</td>
 <td align="right">40.73172</td>
 <td align="right">-74.00674</td>
@@ -733,11 +717,9 @@ variable</li>
 <td align="right">1297.2167</td>
 <td align="left">2018-12-31 16:54:58</td>
 <td align="left">2019-01-01 14:32:11</td>
-<td align="right">3055</td>
 <td align="left">Greene Ave &amp; Nostrand Ave</td>
 <td align="right">40.68833</td>
 <td align="right">-73.95092</td>
-<td align="right">437</td>
 <td align="left">Macon St &amp; Nostrand Ave</td>
 <td align="right">40.68098</td>
 <td align="right">-73.95005</td>
@@ -752,11 +734,9 @@ variable</li>
 <td align="right">876.4500</td>
 <td align="left">2018-12-31 17:37:05</td>
 <td align="left">2019-01-01 08:13:33</td>
-<td align="right">3457</td>
 <td align="left">E 58 St &amp; Madison Ave</td>
 <td align="right">40.76303</td>
 <td align="right">-73.97210</td>
-<td align="right">3457</td>
 <td align="left">E 58 St &amp; Madison Ave</td>
 <td align="right">40.76303</td>
 <td align="right">-73.97210</td>
@@ -771,11 +751,9 @@ variable</li>
 <td align="right">1271.5000</td>
 <td align="left">2018-12-31 18:00:44</td>
 <td align="left">2019-01-01 15:12:14</td>
-<td align="right">3521</td>
 <td align="left">Lenox Ave &amp; W 111 St</td>
 <td align="right">40.79879</td>
 <td align="right">-73.95230</td>
-<td align="right">3164</td>
 <td align="left">Columbus Ave &amp; W 72 St</td>
 <td align="right">40.77706</td>
 <td align="right">-73.97898</td>
@@ -790,11 +768,9 @@ variable</li>
 <td align="right">852.1833</td>
 <td align="left">2018-12-31 18:40:45</td>
 <td align="left">2019-01-01 08:52:56</td>
-<td align="right">3581</td>
 <td align="left">Underhill Ave &amp; Lincoln Pl</td>
 <td align="right">40.67401</td>
 <td align="right">-73.96715</td>
-<td align="right">3576</td>
 <td align="left">Park Pl &amp; Vanderbilt Ave</td>
 <td align="right">40.67670</td>
 <td align="right">-73.96902</td>
@@ -806,12 +782,11 @@ variable</li>
 </tr>
 </tbody>
 </table>
-<p>The citibike dataframe includes 16893163 trips and 17 variables. The
+<p>The citibike dataframe includes 16893163 trips and 15 variables. The
 variables in the dataframe are trip_duration_sec, trip_duration_min,
-start_time, stop_time, start_station_id, start_station_name,
-start_station_latitude, start_station_longitude, end_station_id,
-end_station_name, end_station_latitude, end_station_longitude, bikeid,
-user_type, birth_year, gender, age.</p>
+start_time, stop_time, start_station_name, start_station_latitude,
+start_station_longitude, end_station_name, end_station_latitude,
+end_station_longitude, bikeid, user_type, birth_year, gender, age.</p>
 <p> </p>
 </div>
 </div>
@@ -1245,17 +1220,6 @@ uhf_zip_df =
   pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
   filter(!is.na(zip)) |&gt; 
   select(!zip_name)</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 2 rows [65, 75].</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 38 rows [43, 44, 45, 46,
-## 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, ...].</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 8 rows [65, 67, 68, 75,
-## 79, 80, 84, 87].</code></pre>
-<pre><code>## Warning: Expected 9 pieces. Missing pieces filled with `NA` in 41 rows [1, 2, 3, 4, 5,
-## 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
-<pre><code>## Warning: There was 1 warning in `mutate()`.
-## ℹ In argument: `uhf = as.numeric(uhf)`.
-## Caused by warning:
-## ! NAs introduced by coercion</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>We imported and cleaned a dataframe that converted UFH 34 to zip
 code.</li>
@@ -1301,14 +1265,115 @@ crosswalk dataframe.</li>
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
 <hr />
 </div>
-<div id="creating-one-final-dataframe" class="section level2">
-<h2><span style="color: blue;">Creating One Final Dataframe</span></h2>
+<div id="joining-citibike-to-ufh-34-neighborhood-dataframe"
+class="section level2">
+<h2><span style="color: blue;">Joining citibike to UFH 34 Neighborhood
+Dataframe</span></h2>
+<p>The citibike data contained latitude/longitude, but we wanted our
+final location variable to be UHF 34 neighborhood. To do this, we did
+the following:</p>
+<ol style="list-style-type: decimal">
+<li>First, we need to convert the Citibike location data from
+latitude/longitude to zip code.This was done using a package <a
+href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>.
+Here, we import the latitude/longitude to zipcode crosswalk we
+generated. The full code with details of how that was created <a
+href="latlong_to_zip.html">can be found here</a>.</li>
+</ol>
+<pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)</code></pre>
+<pre><code>## Rows: 1090 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (3): latitude, longitude, postcode
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>citibike_zip =
+  citibike_df |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) </code></pre>
+<p>There are 804243 entries missing either the start or end zipcode.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>So next, we manually added the missing zipcodes into the
+dataframe.</li>
+</ol>
+<pre class="r"><code>citibike_zip = citibike_zip |&gt;
+  mutate(start_zipcode = case_when(start_station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
+                               start_station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
+                               start_station_name == &quot;William St &amp; Pine St&quot; ~ 10005,
+                               start_station_name %in% c(&quot;Broadway &amp; W 36 St&quot;,&quot;Broadway &amp; W 37 St&quot;,&quot;Broadway &amp; W 38 St&quot;,&quot;Broadway &amp; W 41 St&quot;) ~ 10018,
+                               start_station_name == &quot;W 52 St &amp; 6 Ave&quot; ~ 100019,
+                               start_station_name %in% c(&quot;Broadway &amp; W 41 St&quot;,&quot;W 43 St &amp; 6 Ave&quot;) ~ 10036,
+                               start_station_name == &quot;South St &amp; Gouverneur Ln&quot; ~ 10043,
+                               start_station_name == &quot;E 47 St &amp; 1 Ave&quot; ~ 10075,
+                               start_station_name == &quot;Roebling St &amp; N 4 St&quot; ~ 11211,
+                               TRUE ~ start_zipcode)) |&gt;
+  mutate(end_zipcode = case_when(end_station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
+                               end_station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
+                               end_station_name == &quot;William St &amp; Pine St&quot; ~ 10005,
+                               end_station_name %in% c(&quot;Broadway &amp; W 36 St&quot;,&quot;Broadway &amp; W 37 St&quot;,&quot;Broadway &amp; W 38 St&quot;,&quot;Broadway &amp; W 41 St&quot;) ~ 10018,
+                               end_station_name == &quot;W 52 St &amp; 6 Ave&quot; ~ 100019,
+                               end_station_name %in% c(&quot;Broadway &amp; W 41 St&quot;,&quot;W 43 St &amp; 6 Ave&quot;) ~ 10036,
+                               end_station_name == &quot;South St &amp; Gouverneur Ln&quot; ~ 10043,
+                               end_station_name == &quot;E 47 St &amp; 1 Ave&quot; ~ 10075,
+                               end_station_name == &quot;Roebling St &amp; N 4 St&quot; ~ 11211,
+                               TRUE ~ end_zipcode))</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Then we merged the citibike dataframe with the neighborhood
+dataframe by zip code.</li>
+</ol>
+<pre class="r"><code>citibike_zip_neighborhoods =
+  citibike_zip |&gt;
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;start_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;start_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;) |&gt; 
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;end_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)</code></pre>
+<p>We performed a check to see if there were missing UHF 34 codes.</p>
+<pre class="r"><code>missing_startuhf = citibike_zip_neighborhoods |&gt;
+  filter(is.na(start_uhf34_neighborhood)) |&gt;
+  group_by(start_zipcode) |&gt;
+  summarize(n = n()) |&gt;
+  rename(zipcode = start_zipcode)
+  
+missing_enduhf = citibike_zip_neighborhoods |&gt;
+  filter(is.na(end_uhf34_neighborhood)) |&gt;
+  group_by(end_zipcode) |&gt;
+  summarize(n = n()) |&gt;
+  rename(zipcode = end_zipcode)
+
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
+  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))</code></pre>
+<p>We noticed that there were 1963674 entries whose start zipcode do not
+have an associated uhf34, and 1989338 entries whose end zipcode do not
+have an associated uhf34. This corresponded to 28 start zip codes and 35
+end zip codes. Manual validation showed these zipcodes are business
+zipcodes, where a zipcode refers to a small domain of a business. While
+these can be pinpointed roughly to a UHF34 neighborhood manually, it is
+cleaner to simply omit them, as we still retain a substantial dataset
+size. The resulting dataset has 3579463 entries.</p>
+<hr />
+</div>
+<div
+id="finally-merge-citibike-social-deprivation-index-overweight-and-air-quality-index-data"
+class="section level2">
+<h2><span style="color: blue;">Finally, Merge Citibike, Social
+Deprivation Index, Overweight, and Air Quality Index Data </span></h2>
 <p>Next we needed to create one large dataframe that merged the citibike
 dataframe and each individual variable dataframe by UFH 34
 neighborhood.</p>
 <p>We did the following:</p>
 <ol style="list-style-type: decimal">
-<li>Join SDI data to UHF/Zip/Neighborhood data</li>
+<li>Join SDI data to neighborhood dataframe</li>
 </ol>
 <pre class="r"><code>joined_SDI_zip_neighborhood = 
   SDI_df |&gt; 
@@ -1316,7 +1381,7 @@ neighborhood.</p>
   mutate(zip = as.numeric(zip)) |&gt; 
   left_join(y = joined_uhf_34_42, by = &quot;zip&quot;)</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Join overweight data to UHF/Zip/Neighborhood data</li>
+<li>Join overweight data to neighborhood dataframe</li>
 </ol>
 <pre class="r"><code>joined_overweight_zip_neighborhood = 
   overweight_df |&gt; 
@@ -1335,66 +1400,64 @@ neighborhood.</p>
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |&gt;
   filter(!is.na(zip)) </code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li>Join citibike data to neighborhood data</li>
+<li>Join air quality to neighborhood datafame</li>
 </ol>
-<ul>
-<li>First, we need to convert the Citibike location data from
-latitude/longitude to zip code.
-<ul>
-<li>This was done using a package <a
-href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>.
-Here, we import the latitude/longitude to zipcode crosswalk we
-generated. The full code with details of how that was created <a
-href="latlong_to_zip.html">can be found here</a>.</li>
-</ul></li>
-<li>Then crosswalk to the UHF neighborhoods.</li>
-</ul>
-<pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)
+<pre class="r"><code>air_quality_df = 
+  left_join(air_quality_df, uhf_34_df, by = c(&quot;geo_join_id&quot; = &quot;uhf34&quot;))
 
-citibike_zip =
-  citibike_df |&gt;
-  left_join(latlong_zip, 
-            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
-                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
-  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
-  left_join(latlong_zip, 
-            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
-                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
-  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
-
-citibike_zip_neighborhoods =
-  citibike_zip |&gt;
-  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
-            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt; 
-  rename(&quot;start_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
-         &quot;start_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;) |&gt; 
-  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
-            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt; 
-  rename(&quot;end_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
-         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)</code></pre>
+air_quality_df =
+  air_quality_df |&gt;
+select(data_value, neighborhood ) |&gt;
+ distinct()</code></pre>
 <ol start="5" style="list-style-type: decimal">
-<li>Merge SDI and overweight dataframe onto citibike dataframe</li>
+<li>Join SDI/Overweight dataframe with citibike dataframe</li>
 </ol>
-<pre class="r"><code>colnames(joined_overweight_zip_neighborhood)
-colnames(joined_SDI_zip_neighborhood)
-
-citibike_df =
+<pre class="r"><code>citibike_df =
   citibike_zip_neighborhoods |&gt;
   left_join(y = sdi_overweight,
             by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt;
   rename(&quot;start_sdi_score&quot; = &quot;sdi_score&quot;,
          &quot;start_percent_overweight&quot; = &quot;percent_overweight&quot;) 
 
+remove(citibike_zip_neighborhoods)
+
 citibike_df = citibike_df |&gt;
   left_join(y = sdi_overweight,
             by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt;
   rename(&quot;end_sdi_score&quot; = &quot;sdi_score&quot;,
-         &quot;end_percent_overweight&quot; = &quot;percent_overweight&quot;) 
+         &quot;end_percent_overweight&quot; = &quot;percent_overweight&quot;) </code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Join air quality dataframe with citibike dataframe</li>
+</ol>
+<pre class="r"><code>citibike_df =
+  citibike_df |&gt;
+  left_join(y = air_quality_df,
+            by = join_by(&quot;start_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;
+  rename(&quot;start_aq&quot; = &quot;data_value&quot;)
 
 citibike_df = citibike_df |&gt;
-  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
-         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
-         -uhf42.x, - uhf42_neighborhood.x)</code></pre>
+  left_join(y = air_quality_df,
+            by = join_by(&quot;end_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;
+  rename(&quot;end_aq&quot; = &quot;data_value&quot;)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Perform final Tidy of Citibike Data</li>
+</ol>
+<pre class="r"><code>citibike_df = citibike_df |&gt;
+  select(bikeid, user_type, gender, age,
+         start_time, stop_time, 
+         start_station_id, start_station_name,
+         start_zipcode, start_uhf34_neighborhood,
+         end_station_id, end_station_name,
+         end_zipcode, end_uhf34_neighborhood,
+         start_sdi_score, start_percent_overweight, start_aq,
+         end_sdi_score, end_percent_overweight, end_aq)</code></pre>
+<p>The table below shows the first few rows of the final version of the
+citibike dataframe.</p>
+<pre class="r"><code>head(citibike_df) |&gt;
+  knitr::kable()</code></pre>
+<p>The citibike dataframe includes r nrow(citibike) trips and r
+ncol(citibike) variables. The variables in the dataframe are r
+names(citibike).</p>
 </div>
 
 
