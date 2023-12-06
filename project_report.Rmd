@@ -34,14 +34,14 @@ css: styles.css
 
 Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, a critical question emerges: Does every NYer enjoy equitable access to these bikes and the health advantages they confer?
 
-As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a collective curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to delve into the intricacies of CitiBike usage:
+As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a collective curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of CitiBike use:
 
-  * Geographical Utilization: We seek to unravel the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is integral to discerning the impact on urban mobility.
-  * User Demographics: A crucial part of our inquiry involves identifying the demographics of CitiBike users. 
-  * Neighborhood Disparities: We aim to investigate if there is an uneven distribution of CitiBikes across neighborhoods, particularly focusing on areas characterized by higher levels of social deprivation. Addressing this aspect is pivotal in gauging the accessibility and inclusiveness of the CitiBike system.
-  * Health Implications: Beyond transportation, we aim to examine whether disproportionate access to CitiBikes might contribute to health disparities among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
+  * Geographical Utilization: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
+  * User Demographics: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
+  * Neighborhood Disparities: We aim to investigate if there is an uneven distribution of CitiBikes across neighborhoods, particularly focusing on areas characterized by higher levels of social deprivation. Addressing this aspect is important in understanding the accessibility and inclusiveness of the CitiBike system.
+  * Health Implications: Beyond transportation, we aim to explore whether disproportionate access to CitiBikes might contribute to health disparities among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
 
-By delving into these dimensions, we aim to understand how CitiBike intersects with public health and urban life in NYC.
+Overall, we aim to understand how CitiBike intersects with public health and urban life in NYC.
 
   &nbsp;
 
