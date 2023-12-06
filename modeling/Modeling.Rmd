@@ -15,35 +15,94 @@ As such, we sought to devise models that assessed the relationships between 1) r
 
 We created several models, first looking at the values without 
 
-
-```{r, eval = false}
-citibike.df = read_csv(here("/citibike/citibike_clean.csv"))
-
-model = lm(stations ~ )
-
-citibike.df %>%
-  modelr::add_residuals(model) %>%
-  modelr::add_predictions(model) %>%
-  ggplot(aes(x = pred, y = resid)) +
-  geom_point() + 
-  labs(title = ,
-       x = ,
-       y = )
+```{r libraries, include = FALSE}
+library(tidyverse)
+library(mgcv)
+library(modelr)
+library(purrr)
+library(here)
 ```
 
-```{r, eval = false}
-cv_df = 
-  crossv_mc(citibike.df, 100) 
+
+```{r first model, eval = TRUE}
+citibike.df = read_csv(here("./citibike/citibike_clean.csv"))
+
+citibike_group_by_station <- citibike.df %>%
+  group_by(start_station_name) %>%
+  summarize(n_rides = n(), 
+            mean_aq = mean(start_aq),
+            mean_sdi = mean(start_sdi_score), 
+            mean_overweight = mean(start_percent_overweight), 
+            mean_end_aq = mean(end_aq),
+            mean_end_sdi = mean(end_sdi_score),
+            mean_end_overweight = mean(end_percent_overweight),
+            mean_age = mean(age)
+  )
+
+fit_model = lm(n_rides ~ mean_aq + mean_sdi + mean_overweight, data = citibike_group_by_station)
+
+fit_model %>%
+  broom::tidy() %>%
+  knitr::kable()
+
+citibike_group_by_station %>%
+  modelr::add_residuals(fit_model) %>%
+  modelr::add_predictions(fit_model) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = "Model of rides per station",
+       x = "predictor" ,
+       y = "residual")
+
+```
+
+```{r second model, eval = TRUE}
+fit_model_interactions = lm(n_rides ~ mean_aq + mean_sdi + mean_overweight + mean_aq*mean_sdi + mean_aq*mean_overweight + mean_aq*mean_sdi*mean_overweight, data = citibike_group_by_station)
+
+fit_model_interactions %>%
+  broom::tidy() %>%
+  knitr::kable()
+
+citibike_group_by_station %>%
+  modelr::add_residuals(fit_model_interactions) %>%
+  modelr::add_predictions(fit_model_interactions) %>%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = "Model of rides per station",
+       x = "predictor" ,
+       y = "residual")
+```
+
+
+```{r CV, eval = TRUE}
+cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_aq), ] %>%
+  crossv_mc(100) 
+
+#cv_df =  crossv_mc(citibike_group_by_station, 100) 
 
 cv_df = 
   cv_df |> 
   mutate(
-    fit_mine  = map(train, \(df) lm(bwt ~ fincome + delwt + momage, data = df)), 
-    fit_main  = map(train, \(df) lm(bwt ~ blength + gaweeks, data = df)), 
-    fit_alt  = map(train, \(df) lm(bwt ~ bhead + blength + sex + bhead*blength + bhead*sex + blength*sex + bhead*blength*sex, data = df))) |>  
+    fit_model  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight, data = df)), 
+    #fit_two  = map(train, \(df) lm(n_rides ~ mean_end_aq + mean_end_sdi + mean_end_overweight, data = df)), 
+    fit_model_interactions  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight + mean_aq*mean_sdi + mean_aq*mean_overweight + mean_aq*mean_sdi*mean_overweight, data = df))) |>  
   mutate(
-    rmse_mine = map2_dbl(fit_mine, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_main = map2_dbl(fit_main, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_alt = map2_dbl(fit_alt, test, \(mod, df) rmse(model = mod, data = df)))
+    rmse_model = map2_dbl(fit_model, test, \(mod, df) rmse(model = mod, data = df)),
+    #rmse_two = map2_dbl(fit_two, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_model_interactions = map2_dbl(fit_model_interactions, test, \(mod, df) rmse(model = mod, data = df)))
 ```
 
+```{r density plot, eval = TRUE}
+cv_df |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(title = "Density Plot of RMSE values", 
+       x = "Model",
+       y = "Frequency")
+```
