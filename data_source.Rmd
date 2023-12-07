@@ -497,7 +497,7 @@ citibike_df = citibike_df |>
 
 6. Join air quality dataframe with citibike dataframe
 
-```{r AQ_join, eval = FALSE}
+```{r AQ_join, eval = TRUE}
 citibike_df =
   citibike_df |>
   left_join(y = air_quality_df,
@@ -513,7 +513,7 @@ citibike_df = citibike_df |>
 
 7. Perform final Tidy of Citibike Data 
 
-```{r final_citibike_tidy, eval = FALSE}
+```{r final_citibike_tidy, eval = TRUE}
 citibike_df = citibike_df |>
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
@@ -526,7 +526,7 @@ citibike_df = citibike_df |>
 ```
 
 The table below shows the first few rows of the final version of the citibike dataframe. 
-```{r final dataframe table, eval = FALSE}
+```{r final dataframe table, eval = TRUE}
 head(citibike_df) |>
   knitr::kable()
 ```
