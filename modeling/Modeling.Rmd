@@ -111,8 +111,8 @@ cv_df |>
        y = "Frequency")
 ```
 
-```{r, eval = FALSE}
-check_model(fit_model, check = c("linearity", "outliers", "qq", "normality"))
+```{r, eval = TRUE}
+performance::check_model(fit_model, check = c("linearity", "outliers", "qq", "normality"))
 ```
 
 
@@ -192,5 +192,9 @@ cv_df |>
   labs(title = "Density Plot of RMSE values", 
        x = "Model",
        y = "Frequency")
+```
+
+```{r}
+performance::compare_performance(fit_overweight, fit_sdi, fit_AQI)
 ```
 
