@@ -9,6 +9,12 @@ output:
 css: styles.css
 ---
 
+#Regression Models for Statistical Analyses 
+
+For regression analysis, the merged data set was read and imported in. 
+
+. A variable, ab_change was created to quantify the change in abortion restriction status per state (ab_change = 1 if Roe v. Wade added an abortion restriction that was not previously in place; ab_change = 0 if the overturning of Roe v. Wade did not change abortion restrictions). This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
+
 To better characterize and understand the relationships between our data, we sought to create models:
 
 
