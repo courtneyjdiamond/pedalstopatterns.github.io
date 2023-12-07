@@ -9,7 +9,7 @@ output:
 css: styles.css
 ---
 
-## SDI Exploratory anlyses
+# SDI Exploratory anlyses
 
 We sough to gather data from the Social deprivation index (SDI) is an effort in generating composite measures of socioeconomic factors across NYC by census tract. We will use these datasets to explore CitiBike availability and usage patterns across neighborhoods.
 
@@ -20,6 +20,7 @@ library(tidyverse)
 library(here)
 ```
 
+First we load in the datasets necessary.
 
 ```{r, eval = TRUE}
 SDI_df <- read_csv(here("data/SDI_data/rgcsdi-2015-2019-zcta.csv")) |>
@@ -40,6 +41,7 @@ joined_SDI_zip_neighborhood =
   left_join(y = joined_uhf_34_42, by = "zip")
 ```
 
+# Exploratory Analyses
 
 We then joined the UFH data to map neighborhoods on to zip codes. 
 ```{r, eval = TRUE}
@@ -49,19 +51,19 @@ joined_SDI_zip_neighborhood =
   mutate(zip = as.numeric(zip)) |> 
   left_join(y = joined_uhf_34_42, by = "zip")
 
-view(joined_SDI_zip_neighborhood)
+knitr::kable(head(joined_SDI_zip_neighborhood[,1:5]))
 
 #write output for ease of use in other files
-write_csv(joined_SDI_zip_neighborhood, here("data/SDI_data/SD_Zip_ufh.csv"))
+#write_csv(joined_SDI_zip_neighborhood, here("data/SDI_data/SD_Zip_ufh.csv"))
 ```
 
 This output variables: `zip, sdi_score, uhf42, uhf42_neighborhood, uhf34, uhf34_neighborhood`.
 
-```{r}
+```{r  fig.width=7, fig.height=4}
 joined_SDI_zip_neighborhood %>% 
   group_by(zip) %>%
   summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = as.factor(zip), y = mean_SDI)) +
+  ggplot(aes(x = reorder(zip, -mean_SDI), y = mean_SDI)) +
   geom_histogram(stat = "identity") + 
   labs(
     title = "SDI score by Zip code",
@@ -70,22 +72,19 @@ joined_SDI_zip_neighborhood %>%
   ) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+```
+
+* Running an initial analysis by SDI score for zip code we can see a large range from 10% up to 100%
+
+
+We then evaluate the SDI scores by neighborhoods (based on both the uhf34 and uhf42 registrations).
+
+
+```{r fig.width=7, fig.height=4}
 joined_SDI_zip_neighborhood %>% 
   group_by(uhf34_neighborhood) %>%
   summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = as.factor(uhf34_neighborhood), y = mean_SDI)) +
-  geom_bar(stat = "identity") + 
-  labs(
-    title = "Mean SDI score by Neighborhood",
-    x = "Neighborhood",
-    y = "Mean SDI score"
-  ) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-joined_SDI_zip_neighborhood %>% 
-  group_by(uhf42_neighborhood) %>%
-  summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = as.factor(uhf42_neighborhood), y = mean_SDI)) +
+  ggplot(aes(x = reorder(uhf34_neighborhood, -mean_SDI), y = mean_SDI)) +
   geom_bar(stat = "identity") + 
   labs(
     title = "Mean SDI score by Neighborhood",
@@ -95,3 +94,24 @@ joined_SDI_zip_neighborhood %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+* Again we can see a max SDI score up to 100% (in East Harlem and South Bronx), with the lowest score in Souther St. 
+
+* Two neighborhoods, Chealsea Village and Flushing Clearview, lacked SDI scores. 
+
+```{r  fig.width=7, fig.height=4}
+joined_SDI_zip_neighborhood %>% 
+  group_by(uhf42_neighborhood) %>%
+  summarize(mean_SDI = mean(sdi_score)) %>%
+  ggplot(aes(x = reorder(uhf42_neighborhood, -mean_SDI), y = mean_SDI)) +
+  geom_bar(stat = "identity") + 
+  labs(
+    title = "Mean SDI score by Neighborhood",
+    x = "Neighborhood",
+    y = "Mean SDI score"
+  ) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+* Looking at the data by the uhf42 classifications again the peak scores are 100% in Crotona Tremont, East Harlem, and High Bridge Morrisania; lowest values in South Beach Tottenville. 
+
+* Again Chealsea Village and Flushing Clearview were missing values.

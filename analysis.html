@@ -329,7 +329,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="data_source.html">Data Sources</a>
+  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
 </li>
 <li>
   <a href="analysis.html">Analysis</a>
@@ -387,11 +387,51 @@ style="color: blue;">Analysis</span></h1>
   }
 </style>
 <hr />
+<p>In order to explore New Yorker’s use of the Citibike program, we
+examined data on rides, users demographics, neighborhood disparities,
+and health implications. By looking at these facets individually, and
+then in comparison through linear models, we sought to unravel the
+connections between bikes and health.</p>
+<p>This page includes a few summary tables of the Citibike data, links
+to view deeper explorations of the air quality index, social deprivation
+index, and weight data, and links to our model page with full model
+charts and graphs.</p>
 <p> </p>
-<div id="exploration" class="section level1">
-<h1><span style="color: blue;">Exploration</span></h1>
-<div id="exploring-citibikes" class="section level2">
-<h2>Exploring Citibikes</h2>
+<div id="citibike-exploration" class="section level1">
+<h1><span style="color: blue;">Citibike Exploration</span></h1>
+<p> </p>
+<div id="geographic-utilization" class="section level2">
+<h2><span style="color: blue;">Geographic utilization</span></h2>
+<p> </p>
+<pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+<pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+<p>Here is a table of the number of rides per start neighborhood.</p>
+<pre class="r"><code>citibike_zip_neighborhoods |&gt;
+group_by(start_uhf34_neighborhood) |&gt;
+  rename(&quot;Start_Neighborhood&quot; = start_uhf34_neighborhood) |&gt;
+  summarize(Number_Rides = n()) |&gt;
+  arrange(desc(Number_Rides)) |&gt;
+  knitr:: kable()</code></pre>
+<p>Here is a table of the number of rides per end neighborhood.</p>
+<pre class="r"><code>citibike_zip_neighborhoods |&gt;
+ filter(! is.na(end_uhf34_neighborhood)) |&gt;
+group_by(end_uhf34_neighborhood) |&gt;
+  summarize(Number_Rides = n()) |&gt;
+  rename(&quot;End_Neighborhood&quot; = end_uhf34_neighborhood) |&gt;
+   arrange(desc(Number_Rides)) |&gt;
+  knitr:: kable()</code></pre>
+<p>Here are the most popular start stations.</p>
+<pre class="r"><code># Count the number of rides for each start station
+popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
+  group_by(start_station_name) %&gt;%
+  summarise(n_rides = n()) %&gt;%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(x = &quot;Start Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular Landmark Stations&quot;) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
 <div id="exploring-subsets" class="section level2">
@@ -407,17 +447,15 @@ href="Dashboard_Shiny.html">dashboard</a> to visualize some of these
 exploratory analyses all together!</p>
 <p> </p>
 <hr />
-</div>
-</div>
-<div id="modeling-outcomes" class="section level1">
-<h1><span style="color: blue;">Modeling Outcomes</span></h1>
+<p># <span style="color: blue;">Modeling Outcomes</span></p>
 <p>We sought to develop linear models that would characterize the number
 of rides per station as a surrogate for utilization of citibikes.
 Predictors included Air quality measures, social deprivation index, and
 percentage of overweight individuals in a neighborhood.</p>
-<p>We then flipped these models and looked at the outcomes of these
+<p>We then built on these models and looked at the outcomes of these
 metrics, based on the other metrics and citibike utilization.</p>
-<p><a href="modeling/Modeling.html">Models</a> **</p>
+<p><a href="modeling/Modeling.html">Models</a></p>
+</div>
 </div>
 
 

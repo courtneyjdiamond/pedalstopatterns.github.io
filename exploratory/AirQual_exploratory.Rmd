@@ -99,6 +99,10 @@ air_quality_df |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
+* There are three time periods: Annual average 2019, Winer 2019-20, Summer 2019. 
+
+* The range of values is from 12 - 17.5
+
 Average Air Quality Index Across Time Periods, UHF Neighborhoods only
 ```{r}
 air_zip_uhf |>
@@ -113,11 +117,12 @@ air_zip_uhf |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
+* The range of values is from 12 - 17.5
 
 Air Quality Comparison
 ```{r}
 air_quality_df |>
-  ggplot(aes(x = reorder(geo_place_name, data_value), y = data_value)) +
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
   labs(title = "Air Quality Comparison",
@@ -126,6 +131,10 @@ air_quality_df |>
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
+
+* We are evaluating three data particles: Fine particles (PM 2.5), Nitrogen dioxide (NO2), and Ozone (O3).
+
+* There is variability in values based by geopgraphic location. 
 
 Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
 ```{r}
@@ -144,6 +153,8 @@ air_particles |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
+* The highest concentration of Fine particles was in Greenpoint, with the lowest in South beach - Tottenville.
+
 Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
 ```{r}
 air_nitrogen =
@@ -161,6 +172,8 @@ air_nitrogen |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
+* Again the highest concentration of this measure, Nitrogen dioxide, was in Greenpoint, and lowest in South beach - Tottenville. 
+
 Air Quality Comparison, UHF Neighborhoods Only, Ozone
 ```{r}
 air_zip_uhf |>
@@ -174,7 +187,7 @@ air_zip_uhf |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
-
+* The higest value of Ozone concentrations was in Rockaways, but the lowest was in Chelsea - Clinton.
 
 
 

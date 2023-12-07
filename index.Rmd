@@ -56,44 +56,6 @@ shinyjs::useShinyjs()
   
 <link here to embed video>
   &nbsp;
-  
-***
-
-## <span style="color: blue;">Website Details</span>
-  
-*Data*:
-
-* A description of the data sources including:
-  * Description of variables
-  * Data cleaning methods
-
-
-*Analysis*:
-
-* A description of the analyses:
-  * Geographic utilization 
-    * Which neighborhoods are frequently traveled to and from?
-  * User Demographics:
-    * Who uses citibike?
-  * Neighborhood Disparities
-    * 
-  * Health Implications
-    *
-
- 
-  &nbsp;
-  
-*Project Report*:
-
-* A thorough description of the project.
-
-  &nbsp;
-
-*About Us*:
-
-* More about us!
-
-  &nbsp;
 
 ***
   
