@@ -608,5 +608,5 @@ Data summary
 | stop_time     |         0 |             1 | 2019-01-01 00:15:55 | 2020-01-01 16:40:26 | 2019-07-19 16:05:13 |  3579015 |
 
 ``` r
-write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
 ```
