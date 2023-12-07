@@ -807,7 +807,7 @@ social deprivation in that area.</li>
   select(zcta5_fips, sdi_score)|&gt;
   rename(zip=zcta5_fips)</code></pre>
 <pre><code>## Rows: 32989 Columns: 18
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (1): ZCTA5_FIPS
 ## dbl (17): ZCTA5_population, SDI_score, PovertyLT100_FPL_score, Single_Parent...
@@ -866,7 +866,7 @@ available.</p>
 <pre class="r"><code>overweight = read_csv(&#39;./data/SDI_data/nyc_overweight_or_obesity_adults.csv&#39;) |&gt;
     janitor::clean_names()</code></pre>
 <pre><code>## Rows: 720 Columns: 7
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (4): GeoType, Geography, Number, Percent
 ## dbl (3): Time, GeoID, GeoRank
@@ -1009,7 +1009,7 @@ geography, number, percent, percent_low, percent_high.</p>
 <p>The air quality data was a csv files.</p>
 <pre class="r"><code>air &lt;- read_csv(&quot;data/air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
 <pre><code>## Rows: 16218 Columns: 12
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
 ## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
@@ -1282,7 +1282,7 @@ href="latlong_to_zip.html">can be found here</a>.</li>
 </ol>
 <pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)</code></pre>
 <pre><code>## Rows: 1090 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (3): latitude, longitude, postcode
 ## 
