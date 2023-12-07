@@ -34,9 +34,6 @@ P8105 Fall 2023 Final Project
 
 Citibike Jan/2019 ~ Dec/2019
 
-**Note to group: should it actually be Dec/2018 - Jan/2020? – Laura
-(Response from HZ, see below)**
-
 ``` r
 citibike = 
   tibble(
