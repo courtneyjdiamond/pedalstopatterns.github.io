@@ -5,6 +5,7 @@ output:
     toc: true
     toc_float: true
     theme: yeti
+    code_folding: hide
 css: styles.css
 ---
 
@@ -22,9 +23,17 @@ css: styles.css
 
 ## Exploring Citibikes 
 
+[Citibike](exploratory/Citibike_exploratory.html)
 
 ## Exploring Subsets
 
+[Air Quality index](exploratory/AirQual_exploratory.html)
+
+[Social deprivation Index](exploratory/SDI_Exploratory.html)
+
+[Overweight Trends](exploratory/Weight_exploratory.html) 
+
+And we made an interactive [dashboard](Dashboard_Shiny.html) to visualize some of these exploratory analyses all together!
 
  &nbsp;
  
@@ -32,5 +41,9 @@ css: styles.css
 
 # <span style='color: blue;'>Modeling Outcomes</span>
 
-[Models](Modeling.html)
+We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
+
+We then flipped these models and looked at the outcomes of these metrics, based on the other metrics and citibike utilization. 
+
+[Models](modeling/Modeling.html)
 ** 

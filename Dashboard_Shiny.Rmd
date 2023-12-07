@@ -1,4 +1,5 @@
 ---
+title: Exploring Weather, Air Quality, and Social Deprivation Index Datasets
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -26,7 +27,7 @@ SDI.df <- read_csv(here("data/SDI_data/SD_Zip_ufh.csv"))
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-```{r}
+```{r weather inputs}
 element_vec = weather.df %>% pull(element) %>% unique()
 
 selectInput(
@@ -50,6 +51,37 @@ month_vec = weather.df %>% pull(month_name) %>% unique()
 #selectInput(  inputId = "month",  label = h3("Select a month"),  choices = month_vec,  select = "January")
 ```
 
+```{r AQI inputs}
+name_particle_vec = AQI.df %>% pull(name) %>% unique()
+
+selectInput(
+  inputId = "particle_choice",
+  label = h3("Select Particle"),
+  choices = name_particle_vec,
+  selected = "Fine particles (PM 2.5)"
+)
+
+neighborhood_vec = AQI.df %>% pull(geo_place_name) %>% unique()
+
+radioButtons(
+  inputId = "Neighborhood_choice",
+  label = h3("Select a neighborhood"),
+  choices = neighborhood_vec,
+  selected = "Washington Heights"
+)
+
+```
+
+```{r SDI inputs}
+uhf34_neighborhood_vec = SDI.df %>% pull(uhf34_neighborhood) %>% unique()
+
+selectInput(
+  inputId = "neighborhood_choice",
+  label = h3("Select Neighborhood"),
+  choices = uhf34_neighborhood_vec,
+  selected = "Washington Heights"
+)
+```
 
 
 Column {data-width=650}
@@ -58,16 +90,19 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-#renderText({input[["borough_choice"]]})
-renderPlotly({
-  weather.df %>%
-  filter(
-    element == input[["element_choice"]],
-    location == input[["borough_choice"]],
-    #month_name == input[["month"]]
-  ) %>%
-  plot_ly(x = ~month, y = ~data_value, type = "bar", mode = "markers", color = ~location)
-})
+renderText({
+  input[["borough_choice"]]
+  })
+
+
+# renderPlotly({
+#   AQI.df %>%
+#   filter(
+#     name == input$particle_choice,
+#     geo_place_name == input$Neighborhood_choice,
+#   ) %>%
+#   plot_ly(x = ~time_period, y = ~data_value, type = "bar", mode = "markers", color = ~geo_place_name)
+# })
 
 
 ```
@@ -78,13 +113,26 @@ Column {data-width=350}
 ### Chart B
 
 ```{r}
-#renderText({
- # input[["price_range"]]
-#})
+renderPlotly({
+  weather.df %>%
+  filter(
+    element == input$element_choice,
+    location == input$borough_choice,
+  ) %>%
+  plot_ly(x = ~month, y = ~data_value, type = "bar", mode = "markers", color = ~location)
+})
 ```
+
+x = reorder(geo_place_name, -data_value), y = data_value)
 
 ### Chart C
 
 ```{r}
-
+renderPlotly({
+  SDI.df %>%
+  filter(
+    uhf34_neighborhood == input$neighborhood_choice,
+  ) %>%
+  plot_ly(x = ~uhf34_neighborhood, y = ~sdi_score, type = "bar", mode = "markers")
+})
 ```

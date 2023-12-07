@@ -12,7 +12,7 @@ navbar:
     - text: "About Us"
       href: about_us.html
     - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
+      href: mailto:<jl5934@cumc.columbia.edu>
     - icon: fa-github fa-lg
       href: https://github.com/courtneyjdiamond/p8105_final_project
     - icon: fa-solid fa-bicycle

@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -222,6 +223,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -337,7 +341,7 @@ div.tocify {
   <a href="about_us.html">About Us</a>
 </li>
 <li>
-  <a href="mailto:&lt;you@youremail.com&gt;">
+  <a href="mailto:&lt;jl5934@cumc.columbia.edu&gt;">
     <span class="fa fa-envelope fa-lg"></span>
      
   </a>
@@ -361,6 +365,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore"><span
@@ -380,16 +392,32 @@ style="color: blue;">Analysis</span></h1>
 <h1><span style="color: blue;">Exploration</span></h1>
 <div id="exploring-citibikes" class="section level2">
 <h2>Exploring Citibikes</h2>
+<p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
 <div id="exploring-subsets" class="section level2">
 <h2>Exploring Subsets</h2>
+<p><a href="exploratory/AirQual_exploratory.html">Air Quality
+index</a></p>
+<p><a href="exploratory/SDI_Exploratory.html">Social deprivation
+Index</a></p>
+<p><a href="exploratory/Weight_exploratory.html">Overweight
+Trends</a></p>
+<p>And we made an interactive <a
+href="Dashboard_Shiny.html">dashboard</a> to visualize some of these
+exploratory analyses all together!</p>
 <p> </p>
 <hr />
 </div>
 </div>
 <div id="modeling-outcomes" class="section level1">
 <h1><span style="color: blue;">Modeling Outcomes</span></h1>
-<p><a href="Modeling.html">Models</a> **</p>
+<p>We sought to develop linear models that would characterize the number
+of rides per station as a surrogate for utilization of citibikes.
+Predictors included Air quality measures, social deprivation index, and
+percentage of overweight individuals in a neighborhood.</p>
+<p>We then flipped these models and looked at the outcomes of these
+metrics, based on the other metrics and citibike utilization.</p>
+<p><a href="modeling/Modeling.html">Models</a> **</p>
 </div>
 
 
@@ -427,6 +455,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

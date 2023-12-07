@@ -1,6 +1,12 @@
 ---
 title: "NOAA Weather dataset exploratoration"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
 ---
 
 ## Weather dataset preparation 

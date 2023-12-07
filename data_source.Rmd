@@ -5,6 +5,7 @@ output:
     toc: true
     toc_float: true
     theme: yeti
+    code_folding: hide
 css: styles.css
 ---
 
@@ -23,6 +24,8 @@ library(shinyjs)
 shinyjs::useShinyjs()
 library(pdftools)
 library(pdftables)
+
+options(warn = -1)
 ```  
   
   ***
@@ -53,7 +56,7 @@ library(pdftables)
 
 ##### Data Import #####
 
-The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available.
+The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available. We downloaded the data files from December 2018 through January 2020.
 
 
 ```{r import citibike}
@@ -90,10 +93,12 @@ The cleaning of the citibike data included the following steps:
  * Creating a trip duration in minutes (as opposed to seconds) variable
  * Renaming variables
  
+ Note: throughout the code chunks we have removed large dataframes to save memory.
+ 
 ```{r tidy citibike}
 citibike_df <- citibike |>
   janitor::clean_names() |>
-  select(-files, -path) |>
+  select(-files, -path, -start_station_id, -end_station_id) |>
   rename(trip_duration_sec = tripduration,
          start_time = starttime,
          stop_time = stoptime,
@@ -111,7 +116,9 @@ citibike_df <- citibike |>
     as.Date(stop_time) >= as.Date("2019-01-01"),
     as.Date(start_time) <= as.Date("2019-12-31")
   )  |>
-  select(trip_duration_sec, trip_duration_min, -start_station_id, -end_station_id, everything())
+  select(trip_duration_sec, trip_duration_min, everything())
+
+remove(citibike)
 
 ```
 
@@ -137,7 +144,7 @@ The SDI dataset was a csv. We renamed the zip code variable to be more intuitive
 
 * It is important to note that the higher the SDI score the higher the social deprivation in that area.
 
-```{r sdi import and clean}
+```{r sdi import and clean, show_col_types = FALSE}
 SDI_df <- read_csv("data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
@@ -162,7 +169,7 @@ SDI_df |>
 
 The overweight data was a  csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available.
 
-```{r import overweight data}
+```{r import overweight data, show_col_types = FALSE}
 overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
     janitor::clean_names()
 ```
@@ -213,7 +220,7 @@ The overweight dataframe now includes `r nrow(overweight_df)` rows and `r ncol(o
 
 The air quality data was a  csv files. 
 
-```{r air quality}
+```{r air quality, show_col_types = FALSE}
 air <- read_csv("data/air_quality/Air_Quality_20231126.csv") 
 ```
  &nbsp;
@@ -258,7 +265,7 @@ Our end goal was to merge data by neighborhood. We decided to use United Hospita
 
 1. First we combined United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UFH 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). We imported this table and tidied it into a dataframe.
 
-```{r import and tidy UFH42 pdf}
+```{r import and tidy UFH42 pdf, show_col_types = FALSE}
 # install.packages("pdftables")
 # install.packages("pdftools")
 
@@ -336,51 +343,15 @@ joined_uhf_34_42 =
 
 ***
 
-## <span style='color: blue;'>Creating One Final Dataframe</span>
+## <span style='color: blue;'>Joining citibike to UFH 34 Neighborhood Dataframe</span>
 
-Next we needed to create one large dataframe that merged the citibike dataframe and each individual variable dataframe by UFH 34 neighborhood. 
+The citibike data contained latitude/longitude, but we wanted our final location variable to be UHF 34 neighborhood. To do this, we did the following:
 
-We did the following:
 
-1. Join SDI data to UHF/Zip/Neighborhood data
-```{r, eval = FALSE}
-joined_SDI_zip_neighborhood = 
-  SDI_df |> 
-  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
-  mutate(zip = as.numeric(zip)) |> 
-  left_join(y = joined_uhf_34_42, by = "zip")
-```
+1. First, we need to convert the Citibike location data from latitude/longitude to zip code.This was done using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/). Here, we import the latitude/longitude to zipcode crosswalk we generated. The full code with details of how that was created [can be found here](latlong_to_zip.html). 
+ 
 
-2. Join overweight data to UHF/Zip/Neighborhood data
-```{r, eval = FALSE}
-joined_overweight_zip_neighborhood = 
-  overweight_df |> 
-  left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34")) |>
-  rename(percent_overweight = percent)
-```
-
-3. Join overweight and sdi dataframes by uhf42
-
-```{r join_SDI_overweight, eval = FALSE}
-sdi_overweight = 
-  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
-                   by.x = c("zip", "uhf42", "uhf42_neighborhood"),
-                   by.y = c("zip", "uhf42", "uhf42_neighborhood"),
-                   all.x = TRUE)  |>
-  select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
-         "sdi_score","percent_overweight") |>
-  rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
-  filter(!is.na(zip)) 
-
-```
-
-4. Join citibike data to neighborhood data
-
- * First, we need to convert the Citibike location data from latitude/longitude to zip code.
-    * This was done using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/). Here, we import the latitude/longitude to zipcode crosswalk we generated. The full code with details of how that was created [can be found here](latlong_to_zip.html). 
- * Then crosswalk to the UHF neighborhoods.
-
-```{r citibike_zip, eval = FALSE}
+```{r citibike geocode}
 latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
 
 citibike_zip =
@@ -394,6 +365,40 @@ citibike_zip =
                    "end_station_longitude" = "longitude")) |>
   rename("end_zipcode" = "postcode") 
 
+remove(citibike_df)
+```
+
+There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
+
+2. So next, we manually added the missing zipcodes into the dataframe.
+ 
+```{r manual_zip}
+citibike_zip = citibike_zip |>
+  mutate(start_zipcode = case_when(start_station_name == "Broadway & W 32 St" ~ 10001,
+                               start_station_name == "Cooper Square & Astor Pl" ~ 10003,
+                               start_station_name == "William St & Pine St" ~ 10005,
+                               start_station_name %in% c("Broadway & W 36 St","Broadway & W 37 St","Broadway & W 38 St","Broadway & W 41 St") ~ 10018,
+                               start_station_name == "W 52 St & 6 Ave" ~ 100019,
+                               start_station_name %in% c("Broadway & W 41 St","W 43 St & 6 Ave") ~ 10036,
+                               start_station_name == "South St & Gouverneur Ln" ~ 10043,
+                               start_station_name == "E 47 St & 1 Ave" ~ 10075,
+                               start_station_name == "Roebling St & N 4 St" ~ 11211,
+                               TRUE ~ start_zipcode)) |>
+  mutate(end_zipcode = case_when(end_station_name == "Broadway & W 32 St" ~ 10001,
+                               end_station_name == "Cooper Square & Astor Pl" ~ 10003,
+                               end_station_name == "William St & Pine St" ~ 10005,
+                               end_station_name %in% c("Broadway & W 36 St","Broadway & W 37 St","Broadway & W 38 St","Broadway & W 41 St") ~ 10018,
+                               end_station_name == "W 52 St & 6 Ave" ~ 100019,
+                               end_station_name %in% c("Broadway & W 41 St","W 43 St & 6 Ave") ~ 10036,
+                               end_station_name == "South St & Gouverneur Ln" ~ 10043,
+                               end_station_name == "E 47 St & 1 Ave" ~ 10075,
+                               end_station_name == "Roebling St & N 4 St" ~ 11211,
+                               TRUE ~ end_zipcode))
+```
+  
+3. Then we merged the citibike dataframe with the neighborhood dataframe by zip code.
+
+```{r citibike_neighborhoods}
 citibike_zip_neighborhoods =
   citibike_zip |>
   left_join(y = (joined_uhf_34_42 |> select(zip, uhf42_neighborhood, uhf34_neighborhood)),
@@ -404,15 +409,89 @@ citibike_zip_neighborhoods =
             by = join_by("end_zipcode" == "zip")) |> 
   rename("end_uhf34_neighborhood" = "uhf34_neighborhood",
          "end_uhf42_neighborhood" = "uhf42_neighborhood")
+
+remove(citibike_zip)
 ```
 
-5. Merge SDI and overweight dataframe onto citibike dataframe
+We performed a check to see if there were missing UHF 34 codes.
 
-```{r citibike_final, eval = FALSE}
+```{r missing_uhf}
+missing_startuhf = citibike_zip_neighborhoods |>
+  filter(is.na(start_uhf34_neighborhood)) |>
+  group_by(start_zipcode) |>
+  summarize(n = n()) |>
+  rename(zipcode = start_zipcode)
+  
+missing_enduhf = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood)) |>
+  group_by(end_zipcode) |>
+  summarize(n = n()) |>
+  rename(zipcode = end_zipcode)
 
-colnames(joined_overweight_zip_neighborhood)
-colnames(joined_SDI_zip_neighborhood)
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
+  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
+```
 
+We noticed that there were `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode do not have an associated uhf34, and  `r missing_enduhf |> pull(n) |> sum()` entries whose end zipcode do not have an associated uhf34. This corresponded to `r length(missing_startuhf |> pull(zipcode) |> na.omit())` start zip codes and `r length(missing_enduhf |> pull(zipcode) |> na.omit())` end zip codes. Manual validation showed these zipcodes are business zipcodes, where a zipcode refers to a small domain of a business. While these can be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to simply omit them, as we still retain a substantial dataset size. The resulting dataset has `r citibike_zip_neighborhoods |> nrow()` entries. 
+
+***
+
+## <span style='color: blue;'>Finally, Merge Citibike, Social Deprivation Index, Overweight, and Air Quality Index Data  </span>
+
+Next we needed to create one large dataframe that merged the citibike dataframe and each individual variable dataframe by UFH 34 neighborhood. 
+
+We did the following:
+
+1. Join SDI data to neighborhood dataframe
+```{r SDI to neighborhood}
+joined_SDI_zip_neighborhood = 
+  SDI_df |> 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
+  mutate(zip = as.numeric(zip)) |> 
+  left_join(y = joined_uhf_34_42, by = "zip")
+```
+
+2. Join overweight data to neighborhood dataframe
+```{r overweight to neighborhood}
+joined_overweight_zip_neighborhood = 
+  overweight_df |> 
+  left_join(y = joined_uhf_34_42, by = join_by("geo_id" == "uhf34")) |>
+  rename(percent_overweight = percent)
+```
+
+3. Join overweight and sdi dataframes by uhf42
+
+```{r join_SDI_overweight}
+sdi_overweight = 
+  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
+                   by.x = c("zip", "uhf42", "uhf42_neighborhood"),
+                   by.y = c("zip", "uhf42", "uhf42_neighborhood"),
+                   all.x = TRUE)  |>
+  select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
+         "sdi_score","percent_overweight") |>
+  rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
+  filter(!is.na(zip)) 
+
+remove(joined_overweight_zip_neighborhood)
+remove(joined_SDI_zip_neighborhood)
+remove(SDI_df)
+remove(overweight_df)
+
+```
+
+4. Join air quality to neighborhood datafame
+```{r air_quality_uhf}
+air_quality_df = 
+  left_join(air_quality_df, uhf_34_df, by = c("geo_join_id" = "uhf34"))
+
+air_quality_df =
+  air_quality_df |>
+select(data_value, neighborhood ) |>
+ distinct()
+```
+
+5. Join SDI/Overweight dataframe with citibike dataframe
+```{r SDI_Overweight_join}
 citibike_df =
   citibike_zip_neighborhoods |>
   left_join(y = sdi_overweight,
@@ -420,14 +499,50 @@ citibike_df =
   rename("start_sdi_score" = "sdi_score",
          "start_percent_overweight" = "percent_overweight") 
 
+remove(citibike_zip_neighborhoods)
+
 citibike_df = citibike_df |>
   left_join(y = sdi_overweight,
             by = join_by("end_zipcode" == "zip")) |>
   rename("end_sdi_score" = "sdi_score",
          "end_percent_overweight" = "percent_overweight") 
+```
+
+6. Join air quality dataframe with citibike dataframe
+
+```{r AQ_join, eval = FALSE}
+citibike_df =
+  citibike_df |>
+  left_join(y = air_quality_df,
+            by = join_by("start_uhf34_neighborhood" == "neighborhood")) |>
+  rename("start_aq" = "data_value")
 
 citibike_df = citibike_df |>
-  select(-uhf34.x, -uhf34_neighborhood.x, -uhf42.x, 
-         -uhf42_neighborhood.x, -uhf34.x, -uhf34_neighborhood.x, 
-         -uhf42.x, - uhf42_neighborhood.x)
+  left_join(y = air_quality_df,
+            by = join_by("end_uhf34_neighborhood" == "neighborhood")) |>
+  rename("end_aq" = "data_value")
+
 ```
+
+7. Perform final Tidy of Citibike Data 
+
+```{r final_citibike_tidy, eval = FALSE}
+citibike_df = citibike_df |>
+  select(bikeid, user_type, gender, age,
+         start_time, stop_time, 
+         start_station_id, start_station_name,
+         start_zipcode, start_uhf34_neighborhood,
+         end_station_id, end_station_name,
+         end_zipcode, end_uhf34_neighborhood,
+         start_sdi_score, start_percent_overweight, start_aq,
+         end_sdi_score, end_percent_overweight, end_aq)
+```
+
+The table below shows the first few rows of the final version of the citibike dataframe. 
+
+```{r final dataframe table, eval = FALSE}
+head(citibike_df) |>
+  knitr::kable()
+```
+
+The citibike dataframe includes r nrow(citibike) trips and r ncol(citibike) variables. The variables in the dataframe are r names(citibike).
