@@ -1,4 +1,5 @@
 ---
+title: Exploring Weather, Air Quality, and Social Deprivation Index Datasets
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -89,15 +90,19 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-#renderText({input[["borough_choice"]]})
-renderPlotly({
-  AQI.df %>%
-  filter(
-    name == input[["particle_choice"]],
-    geo_place_name == input[["Neighborhood_choice"]],
-  ) %>%
-  plot_ly(x = ~time_period, y = ~data_value, type = "bar", mode = "markers", color = ~geo_place_name)
-})
+renderText({
+  input[["borough_choice"]]
+  })
+
+
+# renderPlotly({
+#   AQI.df %>%
+#   filter(
+#     name == input$particle_choice,
+#     geo_place_name == input$Neighborhood_choice,
+#   ) %>%
+#   plot_ly(x = ~time_period, y = ~data_value, type = "bar", mode = "markers", color = ~geo_place_name)
+# })
 
 
 ```
@@ -111,8 +116,8 @@ Column {data-width=350}
 renderPlotly({
   weather.df %>%
   filter(
-    element == input[["element_choice"]],
-    location == input[["borough_choice"]],
+    element == input$element_choice,
+    location == input$borough_choice,
   ) %>%
   plot_ly(x = ~month, y = ~data_value, type = "bar", mode = "markers", color = ~location)
 })
@@ -126,7 +131,7 @@ x = reorder(geo_place_name, -data_value), y = data_value)
 renderPlotly({
   SDI.df %>%
   filter(
-    uhf34_neighborhood == input[["neighborhood_choice"]],
+    uhf34_neighborhood == input$neighborhood_choice,
   ) %>%
   plot_ly(x = ~uhf34_neighborhood, y = ~sdi_score, type = "bar", mode = "markers")
 })
