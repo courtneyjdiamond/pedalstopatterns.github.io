@@ -19,9 +19,81 @@ css: styles.css
 
  &nbsp;
 
-# <span style='color: blue;'>Exploration</span>
+# <span style='color: blue;'>Citibike Exploration</span>
 
-## Exploring Citibikes 
+ &nbsp;
+ 
+## <span style='color: blue;'>Geographic utilization</span> 
+
+ &nbsp;
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(ggridges)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+```{r}
+citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
+```
+
+Here is a table of the number of start stations per neighborhood.
+
+```{r table of start neighborhoods}
+citibike_zip_neighborhoods |>
+ filter(! is.na(start_uhf34_neighborhood)) |>
+group_by(start_uhf34_neighborhood) |>
+  rename("Start_Neighborhood" = start_uhf34_neighborhood) |>
+  summarize(Number_Rides = n()) |>
+  arrange(desc(Number_Rides)) |>
+  knitr:: kable()
+```
+
+Here is a table of the number of end stations per neighborhood.
+
+```{r table of end neighborhoods}
+citibike_zip_neighborhoods |>
+ filter(! is.na(end_uhf34_neighborhood)) |>
+group_by(end_uhf34_neighborhood) |>
+  summarize(Number_Rides = n()) |>
+  rename("End_Neighborhood" = end_uhf34_neighborhood) |>
+   arrange(desc(Number_Rides)) |>
+  knitr:: kable()
+```
+
+Here are the most popular start stations.
+
+```{r}
+# Count the number of rides for each start station
+popular_stations <- citibike_zip_neighborhoods %>%
+  group_by(start_station_name) %>%
+  summarise(n_rides = n()) %>%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Landmark Stations") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 [Citibike](exploratory/Citibike_exploratory.html)
 
