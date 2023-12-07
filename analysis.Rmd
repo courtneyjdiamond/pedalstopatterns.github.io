@@ -51,13 +51,13 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-```{r}
+```{r, eval=FALSE, eval=FALSE}
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
 ```
 
 Here is a table of the number of start stations per neighborhood.
 
-```{r table of start neighborhoods}
+```{r table of start neighborhoods, eval=FALSE}
 citibike_zip_neighborhoods |>
  filter(! is.na(start_uhf34_neighborhood)) |>
 group_by(start_uhf34_neighborhood) |>
@@ -69,7 +69,7 @@ group_by(start_uhf34_neighborhood) |>
 
 Here is a table of the number of end stations per neighborhood.
 
-```{r table of end neighborhoods}
+```{r table of end neighborhoods, eval=FALSE}
 citibike_zip_neighborhoods |>
  filter(! is.na(end_uhf34_neighborhood)) |>
 group_by(end_uhf34_neighborhood) |>
@@ -81,7 +81,7 @@ group_by(end_uhf34_neighborhood) |>
 
 Here are the most popular start stations.
 
-```{r}
+```{r, eval=FALSE}
 # Count the number of rides for each start station
 popular_stations <- citibike_zip_neighborhoods %>%
   group_by(start_station_name) %>%

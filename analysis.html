@@ -13,7 +13,7 @@
 
 <title>Analysis</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -403,104 +403,6 @@ group_by(start_uhf34_neighborhood) |&gt;
   summarize(Number_Rides = n()) |&gt;
   arrange(desc(Number_Rides)) |&gt;
   knitr:: kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Start_Neighborhood</th>
-<th align="right">Number_Rides</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Chelsea Village</td>
-<td align="right">495713</td>
-</tr>
-<tr class="even">
-<td align="left">Union Square, Lower Manhattan</td>
-<td align="right">256554</td>
-</tr>
-<tr class="odd">
-<td align="left">Upper East Side Gramercy</td>
-<td align="right">250601</td>
-</tr>
-<tr class="even">
-<td align="left">Upper West Side</td>
-<td align="right">159222</td>
-</tr>
-<tr class="odd">
-<td align="left">Greenpoint</td>
-<td align="right">120267</td>
-</tr>
-<tr class="even">
-<td align="left">Downtown Heights Slope</td>
-<td align="right">116147</td>
-</tr>
-<tr class="odd">
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">46194</td>
-</tr>
-<tr class="even">
-<td align="left">Long Island City Astoria</td>
-<td align="right">40964</td>
-</tr>
-<tr class="odd">
-<td align="left">East Harlem</td>
-<td align="right">36933</td>
-</tr>
-<tr class="even">
-<td align="left">Williamsburg Bushwick</td>
-<td align="right">31086</td>
-</tr>
-<tr class="odd">
-<td align="left">Bedford Stuyvesant Crown Heights</td>
-<td align="right">21422</td>
-</tr>
-<tr class="even">
-<td align="left">East New York</td>
-<td align="right">18182</td>
-</tr>
-<tr class="odd">
-<td align="left">Kingsbridge Riverdale</td>
-<td align="right">11615</td>
-</tr>
-<tr class="even">
-<td align="left">Washington Heights Inwood</td>
-<td align="right">4242</td>
-</tr>
-<tr class="odd">
-<td align="left">East Flatbush Flatbush</td>
-<td align="right">3401</td>
-</tr>
-<tr class="even">
-<td align="left">West Queens</td>
-<td align="right">1250</td>
-</tr>
-<tr class="odd">
-<td align="left">Bensonhurst Bay Ridge</td>
-<td align="right">640</td>
-</tr>
-<tr class="even">
-<td align="left">Ridgewood Forest Hills</td>
-<td align="right">618</td>
-</tr>
-<tr class="odd">
-<td align="left">Coney Island Sheepshead Bay</td>
-<td align="right">462</td>
-</tr>
-<tr class="even">
-<td align="left">Sunset Park</td>
-<td align="right">261</td>
-</tr>
-<tr class="odd">
-<td align="left">Southwest Queens</td>
-<td align="right">12</td>
-</tr>
-<tr class="even">
-<td align="left">Canarsie Flatlands</td>
-<td align="right">3</td>
-</tr>
-</tbody>
-</table>
 <p>Here is a table of the number of end stations per neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
  filter(! is.na(end_uhf34_neighborhood)) |&gt;
@@ -509,104 +411,6 @@ group_by(end_uhf34_neighborhood) |&gt;
   rename(&quot;End_Neighborhood&quot; = end_uhf34_neighborhood) |&gt;
    arrange(desc(Number_Rides)) |&gt;
   knitr:: kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">End_Neighborhood</th>
-<th align="right">Number_Rides</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Chelsea Village</td>
-<td align="right">487770</td>
-</tr>
-<tr class="even">
-<td align="left">Upper East Side Gramercy</td>
-<td align="right">263168</td>
-</tr>
-<tr class="odd">
-<td align="left">Union Square, Lower Manhattan</td>
-<td align="right">247881</td>
-</tr>
-<tr class="even">
-<td align="left">Upper West Side</td>
-<td align="right">141026</td>
-</tr>
-<tr class="odd">
-<td align="left">Greenpoint</td>
-<td align="right">117006</td>
-</tr>
-<tr class="even">
-<td align="left">Downtown Heights Slope</td>
-<td align="right">109043</td>
-</tr>
-<tr class="odd">
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">51888</td>
-</tr>
-<tr class="even">
-<td align="left">East Harlem</td>
-<td align="right">42876</td>
-</tr>
-<tr class="odd">
-<td align="left">Long Island City Astoria</td>
-<td align="right">39547</td>
-</tr>
-<tr class="even">
-<td align="left">Williamsburg Bushwick</td>
-<td align="right">28940</td>
-</tr>
-<tr class="odd">
-<td align="left">Bedford Stuyvesant Crown Heights</td>
-<td align="right">20400</td>
-</tr>
-<tr class="even">
-<td align="left">East New York</td>
-<td align="right">17205</td>
-</tr>
-<tr class="odd">
-<td align="left">Kingsbridge Riverdale</td>
-<td align="right">12526</td>
-</tr>
-<tr class="even">
-<td align="left">Washington Heights Inwood</td>
-<td align="right">4554</td>
-</tr>
-<tr class="odd">
-<td align="left">East Flatbush Flatbush</td>
-<td align="right">2584</td>
-</tr>
-<tr class="even">
-<td align="left">West Queens</td>
-<td align="right">1476</td>
-</tr>
-<tr class="odd">
-<td align="left">Ridgewood Forest Hills</td>
-<td align="right">693</td>
-</tr>
-<tr class="even">
-<td align="left">Bensonhurst Bay Ridge</td>
-<td align="right">626</td>
-</tr>
-<tr class="odd">
-<td align="left">Coney Island Sheepshead Bay</td>
-<td align="right">610</td>
-</tr>
-<tr class="even">
-<td align="left">Sunset Park</td>
-<td align="right">286</td>
-</tr>
-<tr class="odd">
-<td align="left">Southwest Queens</td>
-<td align="right">18</td>
-</tr>
-<tr class="even">
-<td align="left">Canarsie Flatlands</td>
-<td align="right">2</td>
-</tr>
-</tbody>
-</table>
 <p>Here are the most popular start stations.</p>
 <pre class="r"><code># Count the number of rides for each start station
 popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
@@ -619,7 +423,6 @@ ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rid
   geom_bar(stat = &quot;identity&quot;) +
   labs(x = &quot;Start Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular Landmark Stations&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
 <p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
 <div id="exploring-subsets" class="section level2">
