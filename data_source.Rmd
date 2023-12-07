@@ -348,7 +348,7 @@ joined_uhf_34_42 =
 The citibike data contained latitude/longitude, but we wanted our final location variable to be UHF 34 neighborhood. To do this, we did the following:
 
 
-1. First, we need to convert the Citibike location data from latitude/longitude to zip code.This was done using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/). Here, we import the latitude/longitude to zipcode crosswalk we generated. The full code with details of how that was created [can be found here](latlong_to_zip.html). 
+1. First, we need to convert the Citibike location data from latitude/longitude to zip code.This was done using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/). Here, we import the latitude/longitude to zipcode crosswalk we generated. The full code with details of how that was created [can be found here](data/geocoding/latlong_to_zip.html). 
  
 
 ```{r citibike geocode}
