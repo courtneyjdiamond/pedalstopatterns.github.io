@@ -211,13 +211,13 @@ The air quality dataframe now includes `r nrow( air_quality_df)` rows and `r nco
 
 # **NYC Neighborhood Data Merging**
 
-To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UFH 34 (instead of other UHF 42) as UFH 34 had the least number of neighborhoods and is therefore more manageable (contains the largest area per neighborhood).
+To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the least number of neighborhoods and is therefore more manageable (contains the largest area per neighborhood).
 
   * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
 
 We did the following:
 
-1. **UHF42 to Zipcode** First we converted United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UFH 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). Below we import this table and tidied it into a dataframe
+1. **UHF42 to Zipcode** First we converted United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). Below we import this table and tidied it into a dataframe
 
 
 ```{r uhf_zip}
@@ -249,7 +249,7 @@ uhf_zip_df =
 ```
 
 
-2. **UHF34 to UHF42**  We imported and cleaned a dataframe that converted UFH 34 to UHF 42 via neighborhood name
+2. **UHF34 to UHF42**  We imported and cleaned a dataframe that converted UHF 34 to UHF 42 via neighborhood name
 
 ```{r uhf}
 uhf_34 = 
@@ -465,7 +465,7 @@ There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode d
 
 # **Final Dataset: Merge Citibike, SDI, Overweight, and AQ** 
 
-Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UFH 34 neighborhood.
+Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
 ## Merge SDI and Overweight data 
 SDI and overweight are joined together first by UHF42. 

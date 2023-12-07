@@ -2395,7 +2395,7 @@ start_date, data_value, message, year.</p>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
-by NYC Gov. We used UFH 34 (instead of other UHF 42) as UFH 34 had the
+by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the
 least number of neighborhoods and is therefore more manageable (contains
 the largest area per neighborhood).</p>
 <ul>
@@ -2406,7 +2406,7 @@ see <a href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographi
 <ol style="list-style-type: decimal">
 <li><strong>UHF42 to Zipcode</strong> First we converted United Hospital
 (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42
-codes. We found a table that mapped UFH 42 codes to zip codes from a NYC
+codes. We found a table that mapped UHF 42 codes to zip codes from a NYC
 gov <a href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
 Below we import this table and tidied it into a dataframe</li>
 </ol>
@@ -2437,7 +2437,7 @@ uhf_zip_df =
   select(!zip_name)</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>UHF34 to UHF42</strong> We imported and cleaned a dataframe
-that converted UFH 34 to UHF 42 via neighborhood name</li>
+that converted UHF 34 to UHF 42 via neighborhood name</li>
 </ol>
 <pre class="r"><code>uhf_34 = 
   pdf_text(&quot;../data/geocoding/uhf34.pdf&quot;)
@@ -3032,7 +3032,7 @@ size. The resulting dataset has 3579463 entries.</p>
 <h1><strong>Final Dataset: Merge Citibike, SDI, Overweight, and
 AQ</strong></h1>
 <p>Next we needed to create one large dataframe that merged the citibike
-data with and each health dataset by UFH 34 neighborhood.</p>
+data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level2">
 <h2>Merge SDI and Overweight data</h2>
 <p>SDI and overweight are joined together first by UHF42.</p>
