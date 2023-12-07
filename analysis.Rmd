@@ -17,6 +17,21 @@ css: styles.css
 
 ***
 
+# <span style='color: blue;'>Modeling Outcomes</span>
+
+In order to explore New Yorker's use of the Citibike program, we examined data on rides, users demographics, neighborhood disparities, and health implications. By looking at these facets individually, and then in comparison through linear models, we sought to unravel the connections between bikes and health. 
+
+This page includes a few summary tables of the Citibike data, links to view deeper explorations of the air quality index, social deprivation index, and weight data, and links to our model page with full model charts and graphs. 
+
+
+
+We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
+
+We then built on these models and looked at the outcomes of these metrics, based on the other metrics and citibike utilization. 
+
+[Models](modeling/Modeling.html)
+
+
  &nbsp;
 
 # <span style='color: blue;'>Citibike Exploration</span>
@@ -51,13 +66,13 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-```{r, eval=FALSE, eval=FALSE}
-citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
+```{r}
+citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
 ```
 
 Here is a table of the number of start stations per neighborhood.
 
-```{r table of start neighborhoods, eval=FALSE}
+```{r table of start neighborhoods}
 citibike_zip_neighborhoods |>
  filter(! is.na(start_uhf34_neighborhood)) |>
 group_by(start_uhf34_neighborhood) |>
@@ -69,7 +84,7 @@ group_by(start_uhf34_neighborhood) |>
 
 Here is a table of the number of end stations per neighborhood.
 
-```{r table of end neighborhoods, eval=FALSE}
+```{r table of end neighborhoods}
 citibike_zip_neighborhoods |>
  filter(! is.na(end_uhf34_neighborhood)) |>
 group_by(end_uhf34_neighborhood) |>
@@ -81,7 +96,7 @@ group_by(end_uhf34_neighborhood) |>
 
 Here are the most popular start stations.
 
-```{r, eval=FALSE}
+```{r}
 # Count the number of rides for each start station
 popular_stations <- citibike_zip_neighborhoods %>%
   group_by(start_station_name) %>%
@@ -111,11 +126,3 @@ And we made an interactive [dashboard](Dashboard_Shiny.html) to visualize some o
  
  ***
 
-# <span style='color: blue;'>Modeling Outcomes</span>
-
-We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
-
-We then flipped these models and looked at the outcomes of these metrics, based on the other metrics and citibike utilization. 
-
-[Models](modeling/Modeling.html)
-** 
