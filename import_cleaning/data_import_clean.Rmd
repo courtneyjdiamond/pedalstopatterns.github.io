@@ -1,8 +1,12 @@
 ---
-title: "P8105 Fall 2023 Final Project"
+title: "**Data Sources and Overview**"
 output: 
-  github_document:
+  html_document:
     toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
 ---
 
 ```{r setup, include=FALSE}
@@ -21,13 +25,29 @@ knitr::opts_chunk$set(message = FALSE,
 
 ```
 
+# TO DO: 
 
-# Load and tidy the Citibike ridership data
+- Add in line r code of mean values of different datasets (not just their rows)
 
-Citibike Jan/2019 ~ Dec/2019
+# Data Sources
+[**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html): These datasets contain monthly logs of trip, including ride ID, the user's status (subscriber or casual user), trip start/end longitude/latitude coordinates, and the trip start/stop times and duration. 
 
-**Note to group: should it actually be Dec/2018 - Jan/2020? -- Laura (Response from HZ, see below)**
+[**Social Deprivation Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html): The social deprivation index (SDI) is an effort to generate a scoring system of socioeconomic factors using US census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage nonemployed adults under 65 years of age. For more details please see the webpage link.
 
+[**Overweight Data**](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113): This dataset contains publicly available data from NYC regarding the percent of people who are overweight per area. 
+
+[**Air Quality Index Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r): These data originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC.
+
+
+# **Invididual Dataset Imports and Cleaning**
+
+## Citibike
+
+The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available. We downloaded the data files from December 2018 through January 2020.
+ 
+### *Data Import*
+
+A look at the raw data: 
 
 ```{r import citibike}
 citibike = 
@@ -40,15 +60,26 @@ citibike =
     'start station id' = col_double()
   )))) |>
   unnest(cols = c(data))
+
+citibike |>
+  head() |>
+  knitr::kable()
 ```
 
-Tidy dataset:
+### *Data Cleaning*
 
- * recode gender
- * filter trip duration to more than 5 minutes but less than 1 day
- * include trips that started in 2018 but ended in 2019 and trips that started in 2019 but ended in 2020
- * create an age variable
- * create a trip duration in minutes variable
+The cleaning of the citibike data included the following steps:
+
+ * Recoding gender from numeric to text
+ * Filtering trip duration to more than 5 minutes but less than 1 day in order to capture true trips taken
+ * Including trips that started in 2018 but ended in 2019 and trips that started in 2019 but ended in 2020, so as to include all trips taken in 2019
+ * Creating an age at time of trip variable from birth year
+ * Creating a trip duration in minutes (as opposed to seconds) variable
+ * Renaming variables
+ 
+ Note: throughout the code chunks we have removed large dataframes to save memory.
+ 
+ A look at the tidied dataframe: 
  
 ```{r tidy citibike}
 citibike_df <- citibike |>
@@ -71,7 +102,7 @@ citibike_df <- citibike |>
     as.Date(stop_time) >= as.Date("2019-01-01"),
     as.Date(start_time) <= as.Date("2019-12-31")
   )  |>
-  select(trip_duration_sec, trip_duration_min, everything())
+  select(trip_duration_sec, trip_duration_min, everything()) 
 
 remove(citibike)
 
@@ -80,30 +111,17 @@ head(citibike_df) |>
 
 ```
 
-# Other Data Sets 
-## Load and tidy the AQI data
+The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
 
-```{r air_quality}
-air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
-  janitor::clean_names() |>
-  mutate(
-    start_date = mdy(start_date),
-    year = year(start_date)
-  ) |>
-  filter(year == "2019")
 
-#Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
-air_quality_df =   
-  air_quality_df |>
-  filter(geo_type_name == "UHF34") |>
-  filter(time_period == "Annual Average 2019") |>
-  filter(name == "Fine particles (PM 2.5)")
+## Social Deprivation Index
+### *Data Import and Cleaning*
 
-head(air_quality_df) |>
-  knitr::kable()
-```
+The SDI dataset was a csv. We renamed the zipcode variable to be more intuitive. As we were only interested in the entirety of the SDI score, we filtered the data to include zip code and sdi_score only. 
 
-## Load and tidy the SDI data
+* Note: the higher the SDI score, the higher the social deprivation in that area.
+
+A look at the tidied dataframe: 
 
 ```{r sdi_import}
 SDI_df <- read_csv("../data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
@@ -115,16 +133,20 @@ head(SDI_df) |>
   knitr::kable()
 ```
 
-## Load the Overweight data 
+## Overweight data 
+### *Data Import and Cleaning*
+The overweight data was downloaded as csv files for "Overweight and Obese Adults." We were specifically interested in 2019 as this was when SDI scores were available.
 
-Data Source: [NYC Data Portal](https://a816-dohbesp.nyc.gov/IndicatorPublic/beta/data-explorer/overweight/?id=2061#display=summary) 
+The cleaning of the overweight data included the following steps:
 
-  * Data accessed: `11/27/2023` 
-  * Full table loaded for "Overweight and Obese Adults"
-  
+* Converting percent to a numeric variable
+* Separating out the high and low confidence intervals of percent
+* Renaming time to year
+* Filtering data to 2019
+
+A look at the tidied dataframe:
+
 ```{r overweight_import}
-#overweight = read_csv('./data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
-#    janitor::clean_names()
 overweight_df =
   read_csv('../data/SDI_data/nyc_overweight_or_obesity_adults.csv') |>
   janitor::clean_names() |>
@@ -146,11 +168,57 @@ head(overweight_df) |>
 
 ```
 
-# Incorporate Geocoding
 
-## Import UHF42/ZipCode crosswalk 
+## Air Quality
 
-Data source:  `https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`
+### *Data Import and Cleaning*
+
+The air quality data was a downloaded from csv files. 
+
+The cleaning of the air quality index data included the following steps:
+
+* Extracting year from the date variable 
+* Filtering data to 2019
+* Filtering to geolocation type UHF34, as this is consistent with our other datasets (more on this below!)
+* Filtering to annual values, as this dataset also has seasonal values
+* Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3), but for the purpose of only a single value for AQ, we keep PM 2.5 as the most relevant 
+
+A look at the tidied dataset: 
+
+```{r air_quality}
+air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |>
+  filter(year == "2019")
+
+#Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
+air_quality_df =   
+  air_quality_df |>
+  filter(geo_type_name == "UHF34") |>
+  filter(time_period == "Annual Average 2019") |>
+  filter(name == "Fine particles (PM 2.5)")
+
+head(air_quality_df) |>
+  knitr::kable()
+```
+
+The air quality dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_quality_df)` variables. The variables in the dataframe are `r names( air_quality_df)`.
+
+
+# **NYC Neighborhood Data Merging**
+
+To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the least number of neighborhoods and is therefore more manageable (contains the largest area per neighborhood).
+
+  * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
+
+We did the following:
+
+1. **UHF42 to Zipcode** First we converted United Hospital (UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). Below we import this table and tidied it into a dataframe
+
+
 ```{r uhf_zip}
 uhf_zip = 
   pdf_text("../data/geocoding/zipcodetable.pdf") |> 
@@ -179,7 +247,9 @@ uhf_zip_df =
   select(!zip_name)
 ```
 
-## Import UHF34 / UHF 42 crosswalk
+
+2. **UHF34 to UHF42**  We imported and cleaned a dataframe that converted UHF 34 to UHF 42 via neighborhood name
+
 ```{r uhf}
 uhf_34 = 
   pdf_text("../data/geocoding/uhf34.pdf")
@@ -213,9 +283,8 @@ uhf_34_df =
   
 ```
 
-# Incorporate UHF34 to All Datasets 
+3. **UHF34, UHF42, Zip** We combined UHF 42 and UHF 34 dataframes and zipcode to create a neighborhood crosswalk.
 
-## Join UHF data
 ```{r uhf34_42}
 joined_uhf_34_42 = 
   uhf_zip_df |> 
@@ -226,6 +295,9 @@ joined_uhf_34_42 =
 
 ```
 
+# **Bring Neighborhood to Health Datasets**
+
+Now that we have a crosswalk among all location identifiers (UHF34, UHF42, and zipcode) used in our datasets, we'll make sure they all have UHF34 so they can be merged together later. 
 
 ## Join SDI data to UHF/Zip/Neighborhood data
 ```{r SDI_zip}
@@ -245,7 +317,7 @@ joined_overweight_zip_neighborhood =
 
 ```
 
-## Join Air quality to UHF Neighborhood data
+## Join Air Quality data to UHF/Zip/Neighborhood data
 ```{r air_quality_uhf}
 #Align UHF neighborhood names
 air_quality_df = 
@@ -257,12 +329,15 @@ select(data_value, neighborhood ) |>
  distinct()
 ```
 
+# **Bring Neighborhood to Citibike Dataset**
 
-## Join Citibike data to UHF/Zip/Neighborhood data
+The Citibike data is coded by latitude/longitude To enable merging of Citibike data with the health datasets, we need to transform coordinates to zipcode, that can later be easily converted to UHF34 identifiers.
 
-And finally, join the zipcodes/neighborhoods to the Citibike data! First, we need to convert the Citibike location data from latitude/longitude to zip code. We have done that in a separate script and are loading that file here first. 
+* To get zipcodes for each  latitude/longitude pair in the Citibike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](data/geocoding/latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
 
-Load latitude/longitude to zip code crosswalk to merge start_zip and end_zip onto citibike_df. Then crosswalk to the UHF neighborhoods! 
+  * Note: Every Citibike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
+  
+## Merge Citibike with Zipcode
 
 ```{r citibike_zip}
 latlong_zip = read_csv('../data/geocoding/citibike_latlong_zip.csv')
@@ -282,22 +357,36 @@ remove(citibike_df)
 
 ```
 
+There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
 
-### Manually add missing zipcodes
-```{r missing_zip}
+
+### *Missing Zipcodes*
+
+A look at the start coordinates with missing zipcodes below: 
+
+```{r missing_zip_start}
 citibike_zip |>
   filter(is.na(start_zipcode)) |>
   group_by(start_station_name, start_station_latitude, start_station_longitude) |>
-  summarize(n = n())
+  summarize(n = n()) |> 
+  knitr::kable()
+```
 
+A look at the end coordinates with missing zipcodes below: 
+
+```{r missing_zip_end}
 citibike_zip |>
   filter(is.na(end_zipcode)) |>
   group_by(end_station_name, end_station_latitude, end_station_longitude) |>
-  summarize(n = n())
+  summarize(n = n()) |>
+  knitr::kable()
 
 ```
 
-There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
+
+### *Manual Zipcode Completion*
+For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a csv on our g[ithub here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
+
 
 ```{r manual_zip}
 citibike_zip = citibike_zip |>
@@ -322,12 +411,10 @@ citibike_zip = citibike_zip |>
                                end_station_name == "Roebling St & N 4 St" ~ 11211,
                                TRUE ~ end_zipcode))
 
-# Should be empty now
-citibike_zip |>
-  filter(is.na(end_zipcode) | is.na(start_zipcode)) 
-  
-
 ```
+
+##  Merge Citibike with UHF34 Neighborhood
+Now that we have the zipcode for Citibike data, we can use the zipcode and UHF34 crosswalk generated above to get neighborhood onto Citibike data. 
 
 ```{r citibike_neighborhoods}
 citibike_zip_neighborhoods =
@@ -343,9 +430,13 @@ citibike_zip_neighborhoods =
 
 remove(citibike_zip)
 
-#head(citibike_zip_neighborhoods) |> 
-#  knitr::kable()
+head(citibike_zip_neighborhoods) |> 
+  knitr::kable()
 ```
+
+### *Missing UHF34*
+
+There were some citibike zipcodes with missing UHF34, which we explore below: 
 
 ```{r missing_uhf}
 missing_startuhf = citibike_zip_neighborhoods |>
@@ -363,19 +454,22 @@ missing_enduhf = citibike_zip_neighborhoods |>
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
 
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
-  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
+  filter(!is.na(end_uhf34_neighborhood) & !is.na(start_uhf34_neighborhood))
 
 
 ```
 
-There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode do not have an associated uhf34, and  `r missing_enduhf |> pull(n) |> sum()` entries whose end zipcode do not have an associated uhf34. Manual validation showed these zipcodes are business zipcodes, where a zipcode refers to a small domain of a business. While these can be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to simply omit them, as we still retain a substantial dataset size. The resulting dataset has `r citibike_zip_neighborhoods |> nrow()` entries. 
+There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode do not have an associated uhf34, and  `r missing_enduhf |> pull(n) |> sum()` entries whose end zipcode do not have an associated uhf34. Manual validation showed these zipcodes are business zipcodes, where a zipcode refers to a small domain of a business. While these could be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to simply omit them, as we still retain a substantial dataset size. The resulting dataset has `r citibike_zip_neighborhoods |> nrow()` entries. 
 
 
+# **Final Dataset: Merge Citibike, SDI, Overweight, and AQ** 
 
-# Final Dataset: Merge Citibike, SDI, Overweight, and AQ  
+Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
-### Merge SDI and Overweight data 
-There are rows in the overweight data without zipcode that refer instead to borough and city-wide overweight percentages. These are excluded from joining on SDI/citibike data, which function by zipcode more granular than borough
+## Merge SDI and Overweight data 
+SDI and overweight are joined together first by UHF42. 
+
+* Note: There are rows in the overweight data without zipcode that refer instead to borough and city-wide overweight percentages. These are excluded from joining on SDI/citibike data, which function by zipcode that is more granular than borough. These are what is excluded by filtering out null values. 
 
 ```{r join_SDI_overweight}
 sdi_overweight = 
@@ -394,7 +488,7 @@ remove(SDI_df)
 remove(overweight_df)
 ```
 
-### Merge SDI and Overweight data onto citibike
+## Merge SDI and Overweight data onto citibike
 ```{r SDI_Overweight_join}
 citibike_df =
   citibike_zip_neighborhoods |>
@@ -412,7 +506,7 @@ citibike_df = citibike_df |>
          "end_percent_overweight" = "percent_overweight") 
 ```
 
-### Merge AQ data onto citibike
+## Merge AQ data onto citibike
 
 ```{r AQ_join} 
 #Join to final dataframe
@@ -431,6 +525,8 @@ citibike_df = citibike_df |>
 
 ## Final Tidy of Citibike Data 
 
+A view at the final dataset, as well as overall summary of variables included and their missingness:
+
 ```{r final_citibike_tidy}
 citibike_df = citibike_df |>
   select(bikeid, user_type, gender, age,
@@ -447,6 +543,6 @@ head(citibike_df) |>
 
 skimr::skim(citibike_df)
 
-write_csv(citibike_df, file = '../citibike/citibike_clean.csv')
+write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
 
 ```

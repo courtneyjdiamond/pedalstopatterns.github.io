@@ -9,24 +9,6 @@ output:
 css: styles.css
 ---
 
-#Regression Models for Statistical Analyses 
-
-For regression analysis, the merged data set was read and imported in. 
-
-. A variable, ab_change was created to quantify the change in abortion restriction status per state (ab_change = 1 if Roe v. Wade added an abortion restriction that was not previously in place; ab_change = 0 if the overturning of Roe v. Wade did not change abortion restrictions). This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
-
-To better characterize and understand the relationships between our data, we sought to create models:
-
-
-
-## Citibike + health metrics modeling
-
-Our exploratory analyses noted some interesting trends in the Citibike data for NYC (in particular ***), as well as in the health metrics (___). 
-
-As such, we sought to devise models that assessed the relationships between 1) rides taken in a zip code ___, and how predictor variables (stations available, SDI score, percentage overweight, and AQI values of ***) influenced that. 
-
-We created several models, first looking at the values without 
-
 ```{r libraries, include = FALSE}
 library(tidyverse)
 library(mgcv)
@@ -36,9 +18,42 @@ library(here)
 ```
 
 
-```{r first model, eval = TRUE}
+#Regression Models for Statistical Analyses 
+
+For regression analysis, the merged data set was created by reading in Air Quality, Social Disparity Index, overweight percentages and merged with our Citibike dataset for 2019. To convert zip code data to neighborhoods we utilized ufh34/42 coding. 
+
+This finalized dataset was imported in as `citibike.df`.
+
+```{r load data}
 citibike.df = read_csv(here("./citibike/citibike_clean.csv"))
 
+```
+
+
+. A variable, ab_change was created to quantify the change in abortion restriction status per state (ab_change = 1 if Roe v. Wade added an abortion restriction that was not previously in place; ab_change = 0 if the overturning of Roe v. Wade did not change abortion restrictions). This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
+
+To better characterize and understand the relationships between our data, we sought to create models:
+
+
+
+## Citibike + health metrics modeling
+
+Our exploratory analyses noted some interesting trends in the Citibike data for NYC (in particular ***), 
+
+We also found interesting trends in health metrics:
+
+* 
+
+* For SDI scores, there was some variability in ranges based on grouping by zip code, uhf34 or uhf43 neighborhood classifications. However, across them all there were large ranges in scores from 10-100.
+
+* Percentage of neighorhood residents who were overweight varied broadly from the low 30%, with the lowest being Upper East Side-Gramercy, and up to nearly 80% in Rockaways. 
+
+As such, we sought to devise models that assessed the relationships between 1) rides taken in a zip code ___, and how predictor variables (stations available, SDI score, percentage overweight, and AQI values of ***) influenced that. 
+
+We created several models, first looking at the values without 
+
+
+```{r first model, eval = TRUE}
 citibike_group_by_station <- citibike.df %>%
   group_by(start_station_name) %>%
   summarize(n_rides = n(), 
