@@ -1603,18 +1603,12 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore"><span style="color: blue;">Data Sources and
-Overview</span></h1>
+<h1 class="title toc-ignore"><strong>Data Sources and
+Overview</strong></h1>
 
 </div>
 
 
-<style>
-h1 {
-font-weight: bold;
-}
-</style>
-<p> </p>
 <div id="to-do" class="section level1">
 <h1>TO DO:</h1>
 <ul>
@@ -1625,7 +1619,7 @@ also be in exploratory page , but needs to be addressed</li>
 </ul>
 </div>
 <div id="data-sources" class="section level1">
-<h1><span style="color: blue;">Data Sources</span></h1>
+<h1>Data Sources</h1>
 <p><a href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
 Data</strong></a>: These datasets contain monthly logs of trip,
 including ride ID, the user’s status (subscriber or casual user), trip
@@ -1648,10 +1642,9 @@ NYC regarding the percent of people who are overweight per area.</p>
 Quality Index Data</strong></a>: These data originated from NYC Open
 Data, contributed by the Department of Hygiene and Mental Health and
 include air quality indexes measured across boroughs in NYC.</p>
-<hr />
 </div>
-<div id="span-styleinvididual-dataset-imports-and-cleaning" class="section level1">
-<h1>&lt;span style=’Invididual Dataset Imports and Cleaning</span></h1>
+<div id="invididual-dataset-imports-and-cleaning" class="section level1">
+<h1><strong>Invididual Dataset Imports and Cleaning</strong></h1>
 <div id="citibike" class="section level2">
 <h2>Citibike</h2>
 <p>The citibike data was a collection of csv files that we downloaded
@@ -2394,12 +2387,11 @@ head(air_quality_df) |&gt;
 variables in the dataframe are unique_id, indicator_id, name, measure,
 measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
 start_date, data_value, message, year.</p>
-<hr />
 </div>
 </div>
 </div>
 <div id="nyc-neighborhood-data-merging" class="section level1">
-<h1><span style="color: blue;">NYC Neighborhood Data Merging</span></h1>
+<h1><strong>NYC Neighborhood Data Merging</strong></h1>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
@@ -2486,11 +2478,9 @@ dataframes and zipcode to create a neighborhood crosswalk.</li>
   rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
          &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
-<hr />
 </div>
 <div id="bring-neighborhood-to-health-datasets" class="section level1">
-<h1><span style="color: blue;">Bring Neighborhood to Health
-Datasets</span></h1>
+<h1><strong>Bring Neighborhood to Health Datasets</strong></h1>
 <p>Now that we have a crosswalk among all location identifiers (UHF34,
 UHF42, and zipcode) used in our datasets, we’ll make sure they all have
 UHF34 so they can be merged together later.</p>
@@ -2519,12 +2509,10 @@ air_quality_df =
   air_quality_df |&gt;
 select(data_value, neighborhood ) |&gt;
  distinct()</code></pre>
-<hr />
 </div>
 </div>
 <div id="bring-neighborhood-to-citibike-dataset" class="section level1">
-<h1><span style="color: blue;">Bring Neighborhood to Citibike
-Dataset</span></h1>
+<h1><strong>Bring Neighborhood to Citibike Dataset</strong></h1>
 <p>The Citibike data is coded by latitude/longitude To enable merging of
 Citibike data with the health datasets, we need to transform coordinates
 to zipcode, that can later be easily converted to UHF34 identifiers.</p>
@@ -3029,21 +3017,20 @@ missing_enduhf = citibike_zip_neighborhoods |&gt;
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,&#39;../data/geocoding/missing_uhf34.csv&#39;)
 
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
-  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))</code></pre>
+  filter(!is.na(end_uhf34_neighborhood) &amp; !is.na(start_uhf34_neighborhood))</code></pre>
 <p>There are 1963674 entries whose start zipcode do not have an
 associated uhf34, and 1989338 entries whose end zipcode do not have an
 associated uhf34. Manual validation showed these zipcodes are business
 zipcodes, where a zipcode refers to a small domain of a business. While
 these could be pinpointed roughly to a UHF34 neighborhood manually, it
 is cleaner to simply omit them, as we still retain a substantial dataset
-size. The resulting dataset has 3579463 entries.</p>
-<hr />
+size. The resulting dataset has 13313700 entries.</p>
 </div>
 </div>
 </div>
 <div id="final-dataset-merge-citibike-sdi-overweight-and-aq" class="section level1">
-<h1><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
-Overweight, and AQ</span></h1>
+<h1><strong>Final Dataset: Merge Citibike, SDI, Overweight, and
+AQ</strong></h1>
 <p>Next we needed to create one large dataframe that merged the citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level2">
@@ -3118,7 +3105,7 @@ included and their missingness:</p>
 
 head(citibike_df) |&gt;
   knitr::kable()</code></pre>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="2%" />
 <col width="3%" />
@@ -3127,13 +3114,13 @@ head(citibike_df) |&gt;
 <col width="5%" />
 <col width="5%" />
 <col width="4%" />
-<col width="8%" />
-<col width="4%" />
 <col width="7%" />
 <col width="4%" />
-<col width="9%" />
-<col width="3%" />
 <col width="10%" />
+<col width="4%" />
+<col width="7%" />
+<col width="3%" />
+<col width="9%" />
 <col width="4%" />
 <col width="7%" />
 <col width="2%" />
@@ -3167,136 +3154,136 @@ head(citibike_df) |&gt;
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">16390</td>
+<td align="right">19573</td>
 <td align="left">Customer</td>
-<td align="left">Unknown</td>
-<td align="right">50</td>
-<td align="left">2018-12-31 23:55:44</td>
-<td align="left">2019-01-01 00:38:15</td>
-<td align="right">3320</td>
-<td align="left">Central Park West &amp; W 100 St</td>
-<td align="right">10025</td>
-<td align="left">Upper West Side</td>
-<td align="right">2006</td>
-<td align="left">Central Park S &amp; 6 Ave</td>
-<td align="right">10105</td>
-<td align="left">NA</td>
-<td align="right">74</td>
-<td align="right">43.4</td>
-<td align="right">7.38</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
+<td align="left">Female</td>
+<td align="right">19</td>
+<td align="left">2018-12-31 12:42:23</td>
+<td align="left">2019-01-01 06:06:47</td>
+<td align="right">3427</td>
+<td align="left">Lafayette St &amp; Jersey St</td>
+<td align="right">10012</td>
+<td align="left">Chelsea Village</td>
+<td align="right">529</td>
+<td align="left">W 42 St &amp; 8 Ave</td>
+<td align="right">10036</td>
+<td align="left">Chelsea Village</td>
+<td align="right">60</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">69</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
 </tr>
 <tr class="even">
-<td align="right">30818</td>
-<td align="left">Customer</td>
-<td align="left">Unknown</td>
-<td align="right">50</td>
-<td align="left">2018-12-31 23:58:29</td>
-<td align="left">2019-01-01 00:44:27</td>
-<td align="right">3320</td>
-<td align="left">Central Park West &amp; W 100 St</td>
-<td align="right">10025</td>
-<td align="left">Upper West Side</td>
-<td align="right">281</td>
-<td align="left">Grand Army Plaza &amp; Central Park S</td>
-<td align="right">10153</td>
-<td align="left">NA</td>
-<td align="right">74</td>
-<td align="right">43.4</td>
-<td align="right">7.38</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
+<td align="right">16996</td>
+<td align="left">Subscriber</td>
+<td align="left">Female</td>
+<td align="right">66</td>
+<td align="left">2018-12-31 13:21:55</td>
+<td align="left">2019-01-01 13:20:39</td>
+<td align="right">458</td>
+<td align="left">11 Ave &amp; W 27 St</td>
+<td align="right">10001</td>
+<td align="left">Chelsea Village</td>
+<td align="right">127</td>
+<td align="left">Barrow St &amp; Hudson St</td>
+<td align="right">10014</td>
+<td align="left">Chelsea Village</td>
+<td align="right">70</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">37</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
 </tr>
 <tr class="odd">
-<td align="right">27451</td>
-<td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">32</td>
-<td align="left">2019-01-01 00:06:03</td>
-<td align="left">2019-01-01 00:15:55</td>
-<td align="right">3171</td>
-<td align="left">Amsterdam Ave &amp; W 82 St</td>
-<td align="right">10024</td>
-<td align="left">Upper West Side</td>
-<td align="right">3154</td>
-<td align="left">E 77 St &amp; 3 Ave</td>
-<td align="right">10075</td>
-<td align="left">NA</td>
-<td align="right">41</td>
-<td align="right">43.4</td>
-<td align="right">7.38</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
+<td align="right">15420</td>
+<td align="left">Customer</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+<td align="left">2018-12-31 16:54:58</td>
+<td align="left">2019-01-01 14:32:11</td>
+<td align="right">3055</td>
+<td align="left">Greene Ave &amp; Nostrand Ave</td>
+<td align="right">11216</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">437</td>
+<td align="left">Macon St &amp; Nostrand Ave</td>
+<td align="right">11233</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">83</td>
+<td align="right">62.9</td>
+<td align="right">6.61</td>
+<td align="right">97</td>
+<td align="right">62.9</td>
+<td align="right">6.61</td>
 </tr>
 <tr class="even">
-<td align="right">31801</td>
+<td align="right">28349</td>
 <td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">38</td>
-<td align="left">2019-01-01 00:18:45</td>
-<td align="left">2019-01-01 00:27:10</td>
-<td align="right">3132</td>
-<td align="left">E 59 St &amp; Madison Ave</td>
+<td align="left">Female</td>
+<td align="right">53</td>
+<td align="left">2018-12-31 17:37:05</td>
+<td align="left">2019-01-01 08:13:33</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
 <td align="right">10022</td>
 <td align="left">Upper East Side Gramercy</td>
-<td align="right">359</td>
-<td align="left">E 47 St &amp; Park Ave</td>
-<td align="right">10172</td>
-<td align="left">NA</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
+<td align="right">10022</td>
+<td align="left">Upper East Side Gramercy</td>
 <td align="right">26</td>
 <td align="right">36.5</td>
 <td align="right">8.98</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
+<td align="right">26</td>
+<td align="right">36.5</td>
+<td align="right">8.98</td>
 </tr>
 <tr class="odd">
-<td align="right">24895</td>
+<td align="right">14710</td>
 <td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">21</td>
-<td align="left">2019-01-01 00:21:25</td>
-<td align="left">2019-01-01 00:31:42</td>
-<td align="right">3159</td>
-<td align="left">W 67 St &amp; Broadway</td>
+<td align="left">Female</td>
+<td align="right">24</td>
+<td align="left">2018-12-31 18:00:44</td>
+<td align="left">2019-01-01 15:12:14</td>
+<td align="right">3521</td>
+<td align="left">Lenox Ave &amp; W 111 St</td>
+<td align="right">10037</td>
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">3164</td>
+<td align="left">Columbus Ave &amp; W 72 St</td>
 <td align="right">10023</td>
 <td align="left">Upper West Side</td>
-<td align="right">3142</td>
-<td align="left">1 Ave &amp; E 62 St</td>
-<td align="right">10065</td>
-<td align="left">NA</td>
+<td align="right">97</td>
+<td align="right">68.7</td>
+<td align="right">7.00</td>
 <td align="right">43</td>
 <td align="right">43.4</td>
 <td align="right">7.38</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="right">30089</td>
-<td align="left">Subscriber</td>
+<td align="right">16935</td>
+<td align="left">Customer</td>
 <td align="left">Male</td>
-<td align="right">23</td>
-<td align="left">2019-01-01 00:21:42</td>
-<td align="left">2019-01-01 00:30:40</td>
-<td align="right">3231</td>
-<td align="left">E 67 St &amp; Park Ave</td>
-<td align="right">10065</td>
-<td align="left">NA</td>
-<td align="right">519</td>
-<td align="left">Pershing Square North</td>
-<td align="right">10037</td>
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">97</td>
-<td align="right">68.7</td>
-<td align="right">7</td>
+<td align="right">32</td>
+<td align="left">2018-12-31 18:40:45</td>
+<td align="left">2019-01-01 08:52:56</td>
+<td align="right">3581</td>
+<td align="left">Underhill Ave &amp; Lincoln Pl</td>
+<td align="right">11238</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">3576</td>
+<td align="left">Park Pl &amp; Vanderbilt Ave</td>
+<td align="right">11238</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">70</td>
+<td align="right">62.9</td>
+<td align="right">6.61</td>
+<td align="right">70</td>
+<td align="right">62.9</td>
+<td align="right">6.61</td>
 </tr>
 </tbody>
 </table>
@@ -3310,7 +3297,7 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">3579463</td>
+<td align="left">13313700</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
@@ -3374,7 +3361,7 @@ head(citibike_df) |&gt;
 <tr class="odd">
 <td align="left">user_type</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
+<td align="right">1</td>
 <td align="right">8</td>
 <td align="right">10</td>
 <td align="right">0</td>
@@ -3384,7 +3371,7 @@ head(citibike_df) |&gt;
 <tr class="even">
 <td align="left">gender</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
+<td align="right">1</td>
 <td align="right">4</td>
 <td align="right">7</td>
 <td align="right">0</td>
@@ -3394,58 +3381,58 @@ head(citibike_df) |&gt;
 <tr class="odd">
 <td align="left">start_station_name</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">9</td>
+<td align="right">1</td>
+<td align="right">4</td>
 <td align="right">45</td>
 <td align="right">0</td>
-<td align="right">919</td>
+<td align="right">865</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">start_uhf34_neighborhood</td>
-<td align="right">1963674</td>
-<td align="right">0.45</td>
+<td align="right">0</td>
+<td align="right">1</td>
 <td align="right">10</td>
 <td align="right">34</td>
 <td align="right">0</td>
-<td align="right">22</td>
+<td align="right">24</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">end_station_name</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">4</td>
 <td align="right">45</td>
 <td align="right">0</td>
-<td align="right">951</td>
+<td align="right">867</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">end_uhf34_neighborhood</td>
-<td align="right">1989338</td>
-<td align="right">0.44</td>
+<td align="right">0</td>
+<td align="right">1</td>
 <td align="right">10</td>
 <td align="right">34</td>
 <td align="right">0</td>
-<td align="right">22</td>
+<td align="right">24</td>
 <td align="right">0</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="21%" />
 <col width="8%" />
-<col width="11%" />
+<col width="12%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="6%" />
 <col width="7%" />
 <col width="7%" />
 <col width="7%" />
-<col width="7%" />
-<col width="7%" />
-<col width="7%" />
-<col width="8%" />
 <col width="5%" />
 </colgroup>
 <thead>
@@ -3467,102 +3454,102 @@ head(citibike_df) |&gt;
 <tr class="odd">
 <td align="left">bikeid</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">29620.51</td>
-<td align="right">7597.04</td>
+<td align="right">1</td>
+<td align="right">29753.84</td>
+<td align="right">7565.05</td>
 <td align="right">14529.00</td>
-<td align="right">25255.00</td>
-<td align="right">30887.00</td>
-<td align="right">35047.00</td>
-<td align="right">42046.00</td>
-<td align="left">▅▂▇▇▅</td>
+<td align="right">25413.0</td>
+<td align="right">31004.00</td>
+<td align="right">35087.00</td>
+<td align="right">42088.00</td>
+<td align="left">▅▂▆▇▅</td>
 </tr>
 <tr class="even">
 <td align="left">age</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">39.34</td>
-<td align="right">11.86</td>
+<td align="right">1</td>
+<td align="right">38.64</td>
+<td align="right">12.18</td>
 <td align="right">16.00</td>
-<td align="right">29.00</td>
-<td align="right">37.00</td>
-<td align="right">50.00</td>
+<td align="right">29.0</td>
+<td align="right">36.00</td>
+<td align="right">49.00</td>
 <td align="right">162.00</td>
-<td align="left">▇▅▁▁▁</td>
+<td align="left">▇▃▁▁▁</td>
 </tr>
 <tr class="odd">
 <td align="left">start_station_id</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">1719.22</td>
-<td align="right">1432.36</td>
+<td align="right">149</td>
+<td align="right">1</td>
+<td align="right">1631.53</td>
+<td align="right">1483.91</td>
 <td align="right">72.00</td>
-<td align="right">394.00</td>
-<td align="right">531.00</td>
-<td align="right">3164.00</td>
+<td align="right">379.0</td>
+<td align="right">503.00</td>
+<td align="right">3314.00</td>
 <td align="right">3911.00</td>
-<td align="left">▇▁▁▂▅</td>
+<td align="left">▇▁▁▁▅</td>
 </tr>
 <tr class="even">
 <td align="left">start_zipcode</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">11582.36</td>
-<td align="right">10411.35</td>
-<td align="right">10000.00</td>
-<td align="right">10022.00</td>
-<td align="right">10115.00</td>
-<td align="right">10463.00</td>
-<td align="right">100019.00</td>
-<td align="left">▇▁▁▁▁</td>
+<td align="right">1</td>
+<td align="right">10246.16</td>
+<td align="right">466.68</td>
+<td align="right">10001.00</td>
+<td align="right">10010.0</td>
+<td align="right">10017.00</td>
+<td align="right">10036.00</td>
+<td align="right">11415.00</td>
+<td align="left">▇▁▁▁▂</td>
 </tr>
 <tr class="odd">
 <td align="left">end_station_id</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">1715.66</td>
-<td align="right">1433.17</td>
+<td align="right">149</td>
+<td align="right">1</td>
+<td align="right">1612.93</td>
+<td align="right">1482.19</td>
 <td align="right">72.00</td>
-<td align="right">401.00</td>
-<td align="right">529.00</td>
-<td align="right">3165.00</td>
+<td align="right">376.0</td>
+<td align="right">500.00</td>
+<td align="right">3311.00</td>
 <td align="right">3911.00</td>
-<td align="left">▇▁▁▂▅</td>
+<td align="left">▇▁▁▁▅</td>
 </tr>
 <tr class="even">
 <td align="left">end_zipcode</td>
 <td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">11732.02</td>
-<td align="right">11010.30</td>
-<td align="right">7087.00</td>
-<td align="right">10023.00</td>
-<td align="right">10120.00</td>
-<td align="right">10463.00</td>
-<td align="right">100019.00</td>
-<td align="left">▇▁▁▁▁</td>
+<td align="right">1</td>
+<td align="right">10246.92</td>
+<td align="right">467.51</td>
+<td align="right">10001.00</td>
+<td align="right">10010.0</td>
+<td align="right">10017.00</td>
+<td align="right">10036.00</td>
+<td align="right">11415.00</td>
+<td align="left">▇▁▁▁▂</td>
 </tr>
 <tr class="odd">
 <td align="left">start_sdi_score</td>
-<td align="right">1963674</td>
-<td align="right">0.45</td>
-<td align="right">63.08</td>
-<td align="right">21.89</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">65.03</td>
+<td align="right">21.47</td>
 <td align="right">26.00</td>
-<td align="right">42.00</td>
+<td align="right">49.0</td>
 <td align="right">63.00</td>
-<td align="right">85.00</td>
+<td align="right">88.00</td>
 <td align="right">100.00</td>
-<td align="left">▅▆▇▂▆</td>
+<td align="left">▃▇▇▂▇</td>
 </tr>
 <tr class="even">
 <td align="left">start_percent_overweight</td>
-<td align="right">1963674</td>
-<td align="right">0.45</td>
-<td align="right">43.43</td>
-<td align="right">9.13</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">43.79</td>
+<td align="right">9.70</td>
 <td align="right">36.50</td>
-<td align="right">38.10</td>
+<td align="right">38.1</td>
 <td align="right">40.50</td>
 <td align="right">43.40</td>
 <td align="right">72.10</td>
@@ -3570,38 +3557,38 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="odd">
 <td align="left">start_aq</td>
-<td align="right">1963674</td>
-<td align="right">0.45</td>
-<td align="right">8.71</td>
-<td align="right">1.09</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8.74</td>
+<td align="right">1.11</td>
 <td align="right">6.04</td>
-<td align="right">7.44</td>
+<td align="right">7.5</td>
 <td align="right">8.67</td>
 <td align="right">10.02</td>
 <td align="right">10.02</td>
-<td align="left">▁▅▁▇▆</td>
+<td align="left">▁▅▁▇▇</td>
 </tr>
 <tr class="even">
 <td align="left">end_sdi_score</td>
-<td align="right">1989338</td>
-<td align="right">0.44</td>
-<td align="right">62.80</td>
-<td align="right">22.13</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">65.06</td>
+<td align="right">21.42</td>
 <td align="right">26.00</td>
-<td align="right">42.00</td>
+<td align="right">49.0</td>
 <td align="right">63.00</td>
-<td align="right">85.00</td>
+<td align="right">88.00</td>
 <td align="right">100.00</td>
-<td align="left">▅▆▇▂▆</td>
+<td align="left">▃▇▇▂▇</td>
 </tr>
 <tr class="odd">
 <td align="left">end_percent_overweight</td>
-<td align="right">1989338</td>
-<td align="right">0.44</td>
-<td align="right">43.52</td>
-<td align="right">9.40</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">43.74</td>
+<td align="right">9.67</td>
 <td align="right">36.50</td>
-<td align="right">38.10</td>
+<td align="right">38.1</td>
 <td align="right">40.50</td>
 <td align="right">43.40</td>
 <td align="right">72.10</td>
@@ -3609,16 +3596,16 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="even">
 <td align="left">end_aq</td>
-<td align="right">1989338</td>
-<td align="right">0.44</td>
-<td align="right">8.72</td>
-<td align="right">1.08</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8.76</td>
+<td align="right">1.11</td>
 <td align="right">6.04</td>
-<td align="right">7.44</td>
+<td align="right">7.5</td>
 <td align="right">8.67</td>
 <td align="right">10.02</td>
 <td align="right">10.02</td>
-<td align="left">▁▅▁▇▆</td>
+<td align="left">▁▅▁▇▇</td>
 </tr>
 </tbody>
 </table>
@@ -3649,23 +3636,23 @@ head(citibike_df) |&gt;
 <td align="left">start_time</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="left">2018-12-31 23:55:44</td>
-<td align="left">2019-12-31 23:53:22</td>
-<td align="left">2019-07-19 15:45:55</td>
-<td align="right">3579025</td>
+<td align="left">2018-12-31 12:42:23</td>
+<td align="left">2019-12-31 23:59:55</td>
+<td align="left">2019-07-19 16:44:35</td>
+<td align="right">13308588</td>
 </tr>
 <tr class="even">
 <td align="left">stop_time</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="left">2019-01-01 00:15:55</td>
-<td align="left">2020-01-01 16:40:26</td>
-<td align="left">2019-07-19 16:05:13</td>
-<td align="right">3579015</td>
+<td align="left">2019-01-01 00:02:55</td>
+<td align="left">2020-01-01 11:41:14</td>
+<td align="left">2019-07-19 17:00:00</td>
+<td align="right">13308410</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>write_csv(citibike_df, file = &#39;../citibike_clean/citibike_clean.csv&#39;)</code></pre>
+<pre class="r"><code>#write_csv(citibike_df, file = &#39;../citibike_clean/citibike_clean.csv&#39;)</code></pre>
 </div>
 </div>
 

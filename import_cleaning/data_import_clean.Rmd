@@ -1,5 +1,5 @@
 ---
-title: "<span style='color: blue;'>Data Sources and Overview</span>"
+title: "**Data Sources and Overview**"
 output: 
   html_document:
     toc: true
@@ -8,14 +8,6 @@ output:
     code_folding: hide
 css: styles.css
 ---
-
-<style>
-  h1 {
-     font-weight: bold;
-  }
-</style>
-
-  &nbsp;
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -38,7 +30,7 @@ knitr::opts_chunk$set(message = FALSE,
 - Add in line r code of mean values of different datasets (not just their rows)
 - Add note on missingness of AQ/SDI/Overweight at the end - this can also be in exploratory page , but needs to be addressed
 
-# <span style='color: blue;'>Data Sources</span>
+# Data Sources
 [**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html): These datasets contain monthly logs of trip, including ride ID, the user's status (subscriber or casual user), trip start/end longitude/latitude coordinates, and the trip start/stop times and duration. 
 
 [**Social Deprivation Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html): The social deprivation index (SDI) is an effort to generate a scoring system of socioeconomic factors using US census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage nonemployed adults under 65 years of age. For more details please see the webpage link.
@@ -47,9 +39,8 @@ knitr::opts_chunk$set(message = FALSE,
 
 [**Air Quality Index Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r): These data originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC.
 
-***
 
-# <span style='Invididual Dataset Imports and Cleaning</span>
+# **Invididual Dataset Imports and Cleaning**
 
 ## Citibike
 
@@ -217,9 +208,8 @@ head(air_quality_df) |>
 
 The air quality dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_quality_df)` variables. The variables in the dataframe are `r names( air_quality_df)`.
 
-***
 
-# <span style='color: blue;'>NYC Neighborhood Data Merging</span>
+# **NYC Neighborhood Data Merging**
 
 To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the least number of neighborhoods and is therefore more manageable (contains the largest area per neighborhood).
 
@@ -306,10 +296,7 @@ joined_uhf_34_42 =
 
 ```
 
-
-***
-
-# <span style='color: blue;'>Bring Neighborhood to Health Datasets</span>
+# **Bring Neighborhood to Health Datasets**
 
 Now that we have a crosswalk among all location identifiers (UHF34, UHF42, and zipcode) used in our datasets, we'll make sure they all have UHF34 so they can be merged together later. 
 
@@ -343,10 +330,7 @@ select(data_value, neighborhood ) |>
  distinct()
 ```
 
-***
-
-# <span style='color: blue;'>Bring Neighborhood to Citibike Dataset</span>
-
+# **Bring Neighborhood to Citibike Dataset**
 
 The Citibike data is coded by latitude/longitude To enable merging of Citibike data with the health datasets, we need to transform coordinates to zipcode, that can later be easily converted to UHF34 identifiers.
 
@@ -471,16 +455,15 @@ missing_enduhf = citibike_zip_neighborhoods |>
 #write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
 
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
-  filter(is.na(end_uhf34_neighborhood) | is.na(start_uhf34_neighborhood))
+  filter(!is.na(end_uhf34_neighborhood) & !is.na(start_uhf34_neighborhood))
 
 
 ```
 
 There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode do not have an associated uhf34, and  `r missing_enduhf |> pull(n) |> sum()` entries whose end zipcode do not have an associated uhf34. Manual validation showed these zipcodes are business zipcodes, where a zipcode refers to a small domain of a business. While these could be pinpointed roughly to a UHF34 neighborhood manually, it is cleaner to simply omit them, as we still retain a substantial dataset size. The resulting dataset has `r citibike_zip_neighborhoods |> nrow()` entries. 
 
-***
-# <span style='color: blue;'>Final Dataset: Merge Citibike, SDI, Overweight, and AQ</span>
- 
+
+# **Final Dataset: Merge Citibike, SDI, Overweight, and AQ** 
 
 Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
@@ -560,8 +543,7 @@ head(citibike_df) |>
   knitr::kable()
 
 skimr::skim(citibike_df)
-```
 
-```{r, eval = FALSE}
-write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
+#write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
+
 ```
