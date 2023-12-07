@@ -627,6 +627,8 @@ in 2019</li>
 variable</li>
 <li>Renaming variables</li>
 </ul>
+<p>Note: throughout the code chunks we have removed large dataframes to
+save memory.</p>
 <pre class="r"><code>citibike_df &lt;- citibike |&gt;
   janitor::clean_names() |&gt;
   select(-files, -path, -start_station_id, -end_station_id) |&gt;
