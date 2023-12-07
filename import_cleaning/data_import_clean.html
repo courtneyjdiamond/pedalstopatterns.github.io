@@ -1603,12 +1603,18 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore"><strong>Data Sources and
-Overview</strong></h1>
+<h1 class="title toc-ignore"><span style="color: blue;">Data Sources and
+Overview</span></h1>
 
 </div>
 
 
+<style>
+h1 {
+font-weight: bold;
+}
+</style>
+<p> </p>
 <div id="to-do" class="section level1">
 <h1>TO DO:</h1>
 <ul>
@@ -1619,7 +1625,7 @@ also be in exploratory page , but needs to be addressed</li>
 </ul>
 </div>
 <div id="data-sources" class="section level1">
-<h1>Data Sources</h1>
+<h1><span style="color: blue;">Data Sources</span></h1>
 <p><a href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
 Data</strong></a>: These datasets contain monthly logs of trip,
 including ride ID, the user’s status (subscriber or casual user), trip
@@ -1642,9 +1648,10 @@ NYC regarding the percent of people who are overweight per area.</p>
 Quality Index Data</strong></a>: These data originated from NYC Open
 Data, contributed by the Department of Hygiene and Mental Health and
 include air quality indexes measured across boroughs in NYC.</p>
+<hr />
 </div>
-<div id="invididual-dataset-imports-and-cleaning" class="section level1">
-<h1><strong>Invididual Dataset Imports and Cleaning</strong></h1>
+<div id="span-styleinvididual-dataset-imports-and-cleaning" class="section level1">
+<h1>&lt;span style=’Invididual Dataset Imports and Cleaning</span></h1>
 <div id="citibike" class="section level2">
 <h2>Citibike</h2>
 <p>The citibike data was a collection of csv files that we downloaded
@@ -2387,11 +2394,12 @@ head(air_quality_df) |&gt;
 variables in the dataframe are unique_id, indicator_id, name, measure,
 measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
 start_date, data_value, message, year.</p>
+<hr />
 </div>
 </div>
 </div>
 <div id="nyc-neighborhood-data-merging" class="section level1">
-<h1><strong>NYC Neighborhood Data Merging</strong></h1>
+<h1><span style="color: blue;">NYC Neighborhood Data Merging</span></h1>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
@@ -2478,9 +2486,11 @@ dataframes and zipcode to create a neighborhood crosswalk.</li>
   rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
          &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
+<hr />
 </div>
 <div id="bring-neighborhood-to-health-datasets" class="section level1">
-<h1><strong>Bring Neighborhood to Health Datasets</strong></h1>
+<h1><span style="color: blue;">Bring Neighborhood to Health
+Datasets</span></h1>
 <p>Now that we have a crosswalk among all location identifiers (UHF34,
 UHF42, and zipcode) used in our datasets, we’ll make sure they all have
 UHF34 so they can be merged together later.</p>
@@ -2509,10 +2519,12 @@ air_quality_df =
   air_quality_df |&gt;
 select(data_value, neighborhood ) |&gt;
  distinct()</code></pre>
+<hr />
 </div>
 </div>
 <div id="bring-neighborhood-to-citibike-dataset" class="section level1">
-<h1><strong>Bring Neighborhood to Citibike Dataset</strong></h1>
+<h1><span style="color: blue;">Bring Neighborhood to Citibike
+Dataset</span></h1>
 <p>The Citibike data is coded by latitude/longitude To enable merging of
 Citibike data with the health datasets, we need to transform coordinates
 to zipcode, that can later be easily converted to UHF34 identifiers.</p>
@@ -3025,12 +3037,13 @@ zipcodes, where a zipcode refers to a small domain of a business. While
 these could be pinpointed roughly to a UHF34 neighborhood manually, it
 is cleaner to simply omit them, as we still retain a substantial dataset
 size. The resulting dataset has 3579463 entries.</p>
+<hr />
 </div>
 </div>
 </div>
 <div id="final-dataset-merge-citibike-sdi-overweight-and-aq" class="section level1">
-<h1><strong>Final Dataset: Merge Citibike, SDI, Overweight, and
-AQ</strong></h1>
+<h1><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
+Overweight, and AQ</span></h1>
 <p>Next we needed to create one large dataframe that merged the citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level2">
