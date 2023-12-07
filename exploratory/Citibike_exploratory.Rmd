@@ -41,7 +41,7 @@ setwd(path)
 ```
 
 
-# Citibanks Dataset
+# Citibike Dataset
 Jan/2019 ~ Dec/2019
 ```{r import_citibike, echo = FALSE}
 citibike <- 
@@ -82,7 +82,6 @@ citibike_df <- citibike |>
 
 
 Citibike to Neighborhood
-
 ```{r citibike_neighborhood, echo = FALSE}
 latlong_zip = read_csv('../data/geocoding/citibike_latlong_zip.csv')
 joined_uhf_34_42 = read_csv('../data/geocoding/joined_uhf_34_42.csv')
@@ -180,6 +179,7 @@ user_type_counts <- citibike_zip_neighborhoods %>%
 # Plot the user type distribution
 ggplot(user_type_counts, aes(x = user_type, y = n_rides, fill = user_type)) +
   geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma_format()) +
   labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
 
 # Count the number of rides for each gender
@@ -190,11 +190,20 @@ gender_counts <- citibike_zip_neighborhoods %>%
 # Plot the gender distribution
 ggplot(gender_counts, aes(x = gender, y = n_rides, fill = gender)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "red", "Unknown" = "yellow")) +
+  scale_y_continuous(labels = scales::comma_format()) +
   labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
 
-# Plot a histogram of birth years
-ggplot(citibike_zip_neighborhoods, aes(x = birth_year)) +
+# Calculate age from birth year
+current_year <- as.numeric(format(Sys.Date(), "%Y"))
+citibike_zip_neighborhoods <- citibike_zip_neighborhoods %>%
+  mutate(age = current_year - birth_year)
+
+# Plot a histogram of age
+ggplot(citibike_zip_neighborhoods, aes(x = age)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
-  labs(x = "Birth Year", y = "Number of Rides", title = "Birth Years Distribution")
+   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Age", y = "Number of Rides", title = "Age Distribution")
 ```
 
