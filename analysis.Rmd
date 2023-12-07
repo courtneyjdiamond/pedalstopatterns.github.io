@@ -5,6 +5,7 @@ output:
     toc: true
     toc_float: true
     theme: yeti
+    code_folding: hide
 css: styles.css
 ---
 

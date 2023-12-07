@@ -1,6 +1,12 @@
 ---
 title: "Modeling"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
 ---
 
 To better characterize and understand the relationships between our data, we sought to create models:
@@ -84,11 +90,9 @@ cv_df =
   cv_df |> 
   mutate(
     fit_model  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight, data = df)), 
-    #fit_two  = map(train, \(df) lm(n_rides ~ mean_end_aq + mean_end_sdi + mean_end_overweight, data = df)), 
     fit_model_interactions  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight + mean_aq*mean_sdi + mean_aq*mean_overweight + mean_aq*mean_sdi*mean_overweight, data = df))) |>  
   mutate(
     rmse_model = map2_dbl(fit_model, test, \(mod, df) rmse(model = mod, data = df)),
-    #rmse_two = map2_dbl(fit_two, test, \(mod, df) rmse(model = mod, data = df)),
     rmse_model_interactions = map2_dbl(fit_model_interactions, test, \(mod, df) rmse(model = mod, data = df)))
 ```
 
@@ -105,6 +109,10 @@ cv_df |>
   labs(title = "Density Plot of RMSE values", 
        x = "Model",
        y = "Frequency")
+```
+
+```{r, eval = FALSE}
+check_model(fit_model, check = c("linearity", "outliers", "qq", "normality"))
 ```
 
 
