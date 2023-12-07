@@ -19,7 +19,11 @@ css: styles.css
 
 # Courtney Diamond
 
-[Learn more about Courtney]
+Courtney is a third year PhD student in the Department of Biomedical Informatics at Columbia University. 
+
+[Learn more about Courtney](https://courtneyjdiamond.github.io/)
+
+[Linkedin](https://www.linkedin.com/in/courtneyjdiamond/)
 
  &nbsp;
 
