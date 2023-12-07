@@ -647,7 +647,9 @@ variable</li>
     as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
     as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
   )  |&gt;
-  select(trip_duration_sec, trip_duration_min, everything())</code></pre>
+  select(trip_duration_sec, trip_duration_min, everything())
+
+remove(citibike)</code></pre>
 <p>The table below displays the citibike tidied data.</p>
 <pre class="r"><code>citibike_df |&gt;
   head() |&gt;
@@ -819,7 +821,7 @@ social deprivation in that area.</li>
   select(zcta5_fips, sdi_score)|&gt;
   rename(zip=zcta5_fips)</code></pre>
 <pre><code>## Rows: 32989 Columns: 18
-## ── Column specification ───────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (1): ZCTA5_FIPS
 ## dbl (17): ZCTA5_population, SDI_score, PovertyLT100_FPL_score, Single_Parent...
@@ -878,7 +880,7 @@ available.</p>
 <pre class="r"><code>overweight = read_csv(&#39;./data/SDI_data/nyc_overweight_or_obesity_adults.csv&#39;) |&gt;
     janitor::clean_names()</code></pre>
 <pre><code>## Rows: 720 Columns: 7
-## ── Column specification ───────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (4): GeoType, Geography, Number, Percent
 ## dbl (3): Time, GeoID, GeoRank
@@ -1021,7 +1023,7 @@ geography, number, percent, percent_low, percent_high.</p>
 <p>The air quality data was a csv files.</p>
 <pre class="r"><code>air &lt;- read_csv(&quot;data/air_quality/Air_Quality_20231126.csv&quot;) </code></pre>
 <pre><code>## Rows: 16218 Columns: 12
-## ── Column specification ───────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (7): Name, Measure, Measure Info, Geo Type Name, Geo Place Name, Time Pe...
 ## dbl (4): Unique ID, Indicator ID, Geo Join ID, Data Value
@@ -1294,7 +1296,7 @@ href="latlong_to_zip.html">can be found here</a>.</li>
 </ol>
 <pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)</code></pre>
 <pre><code>## Rows: 1090 Columns: 3
-## ── Column specification ───────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (3): latitude, longitude, postcode
 ## 
@@ -1309,7 +1311,9 @@ href="latlong_to_zip.html">can be found here</a>.</li>
   left_join(latlong_zip, 
             by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
                    &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
-  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) </code></pre>
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
+
+remove(citibike_df)</code></pre>
 <p>There are 804243 entries missing either the start or end zipcode.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>So next, we manually added the missing zipcodes into the
@@ -1349,7 +1353,9 @@ dataframe by zip code.</li>
   left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
             by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt; 
   rename(&quot;end_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
-         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)</code></pre>
+         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)
+
+remove(citibike_zip)</code></pre>
 <p>We performed a check to see if there were missing UHF 34 codes.</p>
 <pre class="r"><code>missing_startuhf = citibike_zip_neighborhoods |&gt;
   filter(is.na(start_uhf34_neighborhood)) |&gt;
@@ -1410,7 +1416,12 @@ neighborhood.</p>
   select(&quot;zip&quot;,&quot;uhf34&quot;,&quot;uhf34_neighborhood.x&quot;,&quot;uhf42&quot;,&quot;uhf42_neighborhood&quot;,
          &quot;sdi_score&quot;,&quot;percent_overweight&quot;) |&gt;
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |&gt;
-  filter(!is.na(zip)) </code></pre>
+  filter(!is.na(zip)) 
+
+remove(joined_overweight_zip_neighborhood)
+remove(joined_SDI_zip_neighborhood)
+remove(SDI_df)
+remove(overweight_df)</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Join air quality to neighborhood datafame</li>
 </ol>

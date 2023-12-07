@@ -116,6 +116,8 @@ citibike_df <- citibike |>
   )  |>
   select(trip_duration_sec, trip_duration_min, everything())
 
+remove(citibike)
+
 ```
 
 The table below displays the citibike tidied data.
@@ -360,6 +362,8 @@ citibike_zip =
             by = c("end_station_latitude" = "latitude",
                    "end_station_longitude" = "longitude")) |>
   rename("end_zipcode" = "postcode") 
+
+remove(citibike_df)
 ```
 
 There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
@@ -403,6 +407,8 @@ citibike_zip_neighborhoods =
             by = join_by("end_zipcode" == "zip")) |> 
   rename("end_uhf34_neighborhood" = "uhf34_neighborhood",
          "end_uhf42_neighborhood" = "uhf42_neighborhood")
+
+remove(citibike_zip)
 ```
 
 We performed a check to see if there were missing UHF 34 codes.
@@ -464,6 +470,11 @@ sdi_overweight =
   rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
   filter(!is.na(zip)) 
 
+remove(joined_overweight_zip_neighborhood)
+remove(joined_SDI_zip_neighborhood)
+remove(SDI_df)
+remove(overweight_df)
+
 ```
 
 4. Join air quality to neighborhood datafame
@@ -497,7 +508,7 @@ citibike_df = citibike_df |>
 
 6. Join air quality dataframe with citibike dataframe
 
-```{r AQ_join, eval = TRUE}
+```{r AQ_join, eval = FALSE}
 citibike_df =
   citibike_df |>
   left_join(y = air_quality_df,
@@ -513,7 +524,7 @@ citibike_df = citibike_df |>
 
 7. Perform final Tidy of Citibike Data 
 
-```{r final_citibike_tidy, eval = TRUE}
+```{r final_citibike_tidy, eval = FALSE}
 citibike_df = citibike_df |>
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
@@ -526,7 +537,7 @@ citibike_df = citibike_df |>
 ```
 
 The table below shows the first few rows of the final version of the citibike dataframe. 
-```{r final dataframe table, eval = TRUE}
+```{r final dataframe table, eval = FALSE}
 head(citibike_df) |>
   knitr::kable()
 ```
