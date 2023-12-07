@@ -28,7 +28,6 @@ knitr::opts_chunk$set(message = FALSE,
 # TO DO: 
 
 - Add in line r code of mean values of different datasets (not just their rows)
-- Add note on missingness of AQ/SDI/Overweight at the end - this can also be in exploratory page , but needs to be addressed
 
 # Data Sources
 [**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html): These datasets contain monthly logs of trip, including ride ID, the user's status (subscriber or casual user), trip start/end longitude/latitude coordinates, and the trip start/stop times and duration. 
@@ -544,6 +543,6 @@ head(citibike_df) |>
 
 skimr::skim(citibike_df)
 
-#write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
+write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
 
 ```
