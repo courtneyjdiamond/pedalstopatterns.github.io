@@ -63,6 +63,22 @@ citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborho
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
 ```
 
+Here is a table of the number of stations per neighborhood.
+
+```{r table of stations per neighborhoods, eval = FALSE}
+station = citibike_zip_neighborhoods %>%
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood) %>%
+  distinct(Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+           Station_Name = coalesce(end_station_name, start_station_name))
+
+  station %>%
+  group_by(Neighborhood) %>%
+  summarize(Number_of_Stations = n())|>
+  arrange(desc(Number_of_Stations))|>
+     knitr:: kable()
+```
+
 Here is a table of the number of rides per start neighborhood.
 
 ```{r table of start neighborhoods, eval = FALSE}
@@ -78,7 +94,6 @@ Here is a table of the number of rides per end neighborhood.
 
 ```{r table of end neighborhoods, eval= FALSE}
 citibike_zip_neighborhoods |>
- filter(! is.na(end_uhf34_neighborhood)) |>
 group_by(end_uhf34_neighborhood) |>
   summarize(Number_Rides = n()) |>
   rename("End_Neighborhood" = end_uhf34_neighborhood) |>
@@ -98,7 +113,55 @@ popular_stations <- citibike_zip_neighborhoods %>%
 # Plot the most popular landmark stations
 ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
   geom_bar(stat = "identity") +
-  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Landmark Stations") +
+  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Start Stations") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Here is a graph of the most popular end stations
+
+```{r, eval = FALSE}
+# Count the number of rides for each start station
+popular_stations <- citibike_zip_neighborhoods %>%
+  group_by(end_station_name) %>%
+  summarise(n_rides = n()) %>%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = "identity") +
+  labs(x = "End Station", y = "Number of Rides", title = "Top 10 Most Popular End Stations") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Here is a graph of the number of rides per neighborhood per month
+
+```{r neighborhood_month, eval = FALSE}
+citibike_zip_neighborhoods |>
+  select(start_time, start_uhf34_neighborhood) |>
+  mutate(month = as.factor(month(start_time))) |>
+  group_by(start_uhf34_neighborhood, month) |>
+  summarize(n_rides = n()) |>
+  ggplot(aes(x = month, y = n_rides, color = start_uhf34_neighborhood, group = start_uhf34_neighborhood)) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Month", y = "Number of Rides")
+```
+
+
+```{r , eval = FALSE}
+
+rides_by_month <- citibike_zip_neighborhoods %>%
+  mutate(month = format(start_time, "%Y-%m")) %>%
+  group_by(month) %>%
+  summarise(n_rides = n())
+
+# Plot the number of rides by month
+ggplot(rides_by_month, aes(x = month, y = n_rides)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month", y = "Number of Rides", title = "Number of Rides by Month") +
+  scale_y_continuous(labels = scales::comma_format()) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
