@@ -329,7 +329,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
+  <a href="data_import_clean.html">Data Sources</a>
 </li>
 <li>
   <a href="analysis.html">Analysis</a>
@@ -432,8 +432,8 @@ through January 2020.</p>
 <p>A look at the raw data:</p>
 <pre class="r"><code>citibike = 
   tibble(
-    files = list.files(&quot;./citibike_alt/&quot;),
-    path = str_c(&quot;./citibike_alt/&quot;, files)
+    files = list.files(&quot;./citibike/&quot;),
+    path = str_c(&quot;./citibike/&quot;, files)
   ) |&gt;
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     &#39;end station id&#39; = col_double(),
@@ -447,12 +447,12 @@ citibike |&gt;
 <table>
 <colgroup>
 <col width="8%" />
-<col width="13%" />
+<col width="11%" />
 <col width="3%" />
 <col width="5%" />
 <col width="5%" />
 <col width="5%" />
-<col width="7%" />
+<col width="8%" />
 <col width="6%" />
 <col width="7%" />
 <col width="4%" />
@@ -487,121 +487,122 @@ citibike |&gt;
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">897</td>
-<td align="left">2019-07-01 00:00:00</td>
-<td align="left">2019-07-01 00:14:58</td>
-<td align="right">493</td>
-<td align="left">W 45 St &amp; 6 Ave</td>
-<td align="right">40.75680</td>
-<td align="right">-73.98291</td>
-<td align="right">454</td>
-<td align="left">E 51 St &amp; 1 Ave</td>
-<td align="right">40.75456</td>
-<td align="right">-73.96593</td>
-<td align="right">18340</td>
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">689</td>
+<td align="left">2018-12-01 00:00:04</td>
+<td align="left">2018-12-01 00:11:33</td>
+<td align="right">3359</td>
+<td align="left">E 68 St &amp; Madison Ave</td>
+<td align="right">40.76916</td>
+<td align="right">-73.96703</td>
+<td align="right">164</td>
+<td align="left">E 47 St &amp; 2 Ave</td>
+<td align="right">40.75323</td>
+<td align="right">-73.97033</td>
+<td align="right">35033</td>
+<td align="left">Subscriber</td>
+<td align="right">1989</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">204</td>
+<td align="left">2018-12-01 00:00:05</td>
+<td align="left">2018-12-01 00:03:30</td>
+<td align="right">3504</td>
+<td align="left">E 123 St &amp; Lexington Ave</td>
+<td align="right">40.80293</td>
+<td align="right">-73.93790</td>
+<td align="right">3490</td>
+<td align="left">E 116 St &amp; 2 Ave</td>
+<td align="right">40.79688</td>
+<td align="right">-73.93726</td>
+<td align="right">20501</td>
 <td align="left">Subscriber</td>
 <td align="right">1966</td>
 <td align="right">1</td>
 </tr>
+<tr class="odd">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">316</td>
+<td align="left">2018-12-01 00:00:10</td>
+<td align="left">2018-12-01 00:05:27</td>
+<td align="right">270</td>
+<td align="left">Adelphi St &amp; Myrtle Ave</td>
+<td align="right">40.69308</td>
+<td align="right">-73.97179</td>
+<td align="right">243</td>
+<td align="left">Fulton St &amp; Rockwell Pl</td>
+<td align="right">40.68823</td>
+<td align="right">-73.97938</td>
+<td align="right">18386</td>
+<td align="left">Subscriber</td>
+<td align="right">1984</td>
+<td align="right">1</td>
+</tr>
 <tr class="even">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">267</td>
-<td align="left">2019-07-01 00:00:05</td>
-<td align="left">2019-07-01 00:04:32</td>
-<td align="right">3143</td>
-<td align="left">5 Ave &amp; E 78 St</td>
-<td align="right">40.77632</td>
-<td align="right">-73.96427</td>
-<td align="right">3226</td>
-<td align="left">W 82 St &amp; Central Park West</td>
-<td align="right">40.78275</td>
-<td align="right">-73.97137</td>
-<td align="right">21458</td>
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">726</td>
+<td align="left">2018-12-01 00:00:21</td>
+<td align="left">2018-12-01 00:12:28</td>
+<td align="right">495</td>
+<td align="left">W 47 St &amp; 10 Ave</td>
+<td align="right">40.76270</td>
+<td align="right">-73.99301</td>
+<td align="right">3660</td>
+<td align="left">W 16 St &amp; 8 Ave</td>
+<td align="right">40.74102</td>
+<td align="right">-74.00138</td>
+<td align="right">27616</td>
+<td align="left">Subscriber</td>
+<td align="right">1983</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">397</td>
+<td align="left">2018-12-01 00:00:29</td>
+<td align="left">2018-12-01 00:07:07</td>
+<td align="right">473</td>
+<td align="left">Rivington St &amp; Chrystie St</td>
+<td align="right">40.72110</td>
+<td align="right">-73.99193</td>
+<td align="right">3467</td>
+<td align="left">W Broadway &amp; Spring Street</td>
+<td align="right">40.72495</td>
+<td align="right">-74.00166</td>
+<td align="right">35096</td>
+<td align="left">Subscriber</td>
+<td align="right">1976</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201812-citibike-tripdata.csv</td>
+<td align="left">./citibike/201812-citibike-tripdata.csv</td>
+<td align="right">299</td>
+<td align="left">2018-12-01 00:00:30</td>
+<td align="left">2018-12-01 00:05:30</td>
+<td align="right">237</td>
+<td align="left">E 11 St &amp; 2 Ave</td>
+<td align="right">40.73047</td>
+<td align="right">-73.98672</td>
+<td align="right">237</td>
+<td align="left">E 11 St &amp; 2 Ave</td>
+<td align="right">40.73047</td>
+<td align="right">-73.98672</td>
+<td align="right">15087</td>
 <td align="left">Customer</td>
-<td align="right">1996</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">2201</td>
-<td align="left">2019-07-01 00:00:05</td>
-<td align="left">2019-07-01 00:36:46</td>
-<td align="right">317</td>
-<td align="left">E 6 St &amp; Avenue B</td>
-<td align="right">40.72454</td>
-<td align="right">-73.98185</td>
-<td align="right">3469</td>
-<td align="left">India St &amp; West St</td>
-<td align="right">40.73181</td>
-<td align="right">-73.95995</td>
-<td align="right">39874</td>
-<td align="left">Subscriber</td>
-<td align="right">1986</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">1660</td>
-<td align="left">2019-07-01 00:00:08</td>
-<td align="left">2019-07-01 00:27:48</td>
-<td align="right">249</td>
-<td align="left">Harrison St &amp; Hudson St</td>
-<td align="right">40.71871</td>
-<td align="right">-74.00900</td>
-<td align="right">369</td>
-<td align="left">Washington Pl &amp; 6 Ave</td>
-<td align="right">40.73224</td>
-<td align="right">-74.00026</td>
-<td align="right">38865</td>
-<td align="left">Subscriber</td>
-<td align="right">1988</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">109</td>
-<td align="left">2019-07-01 00:00:12</td>
-<td align="left">2019-07-01 00:02:01</td>
-<td align="right">3552</td>
-<td align="left">W 113 St &amp; Broadway</td>
-<td align="right">40.80597</td>
-<td align="right">-73.96493</td>
-<td align="right">3538</td>
-<td align="left">W 110 St &amp; Amsterdam Ave</td>
-<td align="right">40.80269</td>
-<td align="right">-73.96295</td>
-<td align="right">30256</td>
-<td align="left">Subscriber</td>
-<td align="right">1997</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">201907-citibike-tripdata.csv</td>
-<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
-<td align="right">106</td>
-<td align="left">2019-07-01 00:00:12</td>
-<td align="left">2019-07-01 00:01:59</td>
-<td align="right">3593</td>
-<td align="left">31 St &amp; Broadway</td>
-<td align="right">40.76158</td>
-<td align="right">-73.92592</td>
-<td align="right">3592</td>
-<td align="left">Crescent St &amp; Broadway</td>
-<td align="right">40.76336</td>
-<td align="right">-73.92865</td>
-<td align="right">16875</td>
-<td align="left">Subscriber</td>
-<td align="right">1988</td>
+<td align="right">1994</td>
 <td align="right">1</td>
 </tr>
 </tbody>
 </table>
+<p>Viewing rides overtime:</p>
 <p>The cleaning of the citibike data included the following steps:</p>
 <ul>
 <li>Recoding gender from numeric to text</li>
@@ -618,9 +619,10 @@ variable</li>
 <p>Note: throughout the code chunks we have removed large dataframes to
 save memory.</p>
 <p>A look at the tidied dataframe:</p>
-<pre class="r"><code>citibike_df &lt;- citibike |&gt;
+<pre class="r"><code>citibike_df = citibike |&gt;
   janitor::clean_names() |&gt;
   select(-files, -path) |&gt;
+  mutate(month = as.factor(month(starttime))) |&gt;
   rename(trip_duration_sec = tripduration,
          start_time = starttime,
          stop_time = stoptime,
@@ -651,16 +653,17 @@ head(citibike_df) |&gt;
 <col width="6%" />
 <col width="6%" />
 <col width="5%" />
-<col width="8%" />
+<col width="9%" />
 <col width="7%" />
 <col width="8%" />
 <col width="5%" />
-<col width="11%" />
+<col width="8%" />
 <col width="7%" />
 <col width="7%" />
 <col width="2%" />
 <col width="3%" />
 <col width="3%" />
+<col width="2%" />
 <col width="2%" />
 <col width="1%" />
 </colgroup>
@@ -682,132 +685,156 @@ head(citibike_df) |&gt;
 <th align="left">user_type</th>
 <th align="right">birth_year</th>
 <th align="left">gender</th>
+<th align="left">month</th>
 <th align="right">age</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">897</td>
-<td align="right">14.950000</td>
-<td align="left">2019-07-01 00:00:00</td>
-<td align="left">2019-07-01 00:14:58</td>
-<td align="right">493</td>
-<td align="left">W 45 St &amp; 6 Ave</td>
-<td align="right">40.75680</td>
-<td align="right">-73.98291</td>
-<td align="right">454</td>
-<td align="left">E 51 St &amp; 1 Ave</td>
-<td align="right">40.75456</td>
-<td align="right">-73.96593</td>
-<td align="right">18340</td>
-<td align="left">Subscriber</td>
-<td align="right">1966</td>
-<td align="left">Male</td>
-<td align="right">53</td>
+<td align="right">62663</td>
+<td align="right">1044.3833</td>
+<td align="left">2018-12-31 12:42:23</td>
+<td align="left">2019-01-01 06:06:47</td>
+<td align="right">3427</td>
+<td align="left">Lafayette St &amp; Jersey St</td>
+<td align="right">40.72431</td>
+<td align="right">-73.99601</td>
+<td align="right">529</td>
+<td align="left">W 42 St &amp; 8 Ave</td>
+<td align="right">40.75757</td>
+<td align="right">-73.99099</td>
+<td align="right">19573</td>
+<td align="left">Customer</td>
+<td align="right">2000</td>
+<td align="left">Female</td>
+<td align="left">12</td>
+<td align="right">19</td>
 </tr>
 <tr class="even">
-<td align="right">2201</td>
-<td align="right">36.683333</td>
-<td align="left">2019-07-01 00:00:05</td>
-<td align="left">2019-07-01 00:36:46</td>
-<td align="right">317</td>
-<td align="left">E 6 St &amp; Avenue B</td>
-<td align="right">40.72454</td>
-<td align="right">-73.98185</td>
-<td align="right">3469</td>
-<td align="left">India St &amp; West St</td>
-<td align="right">40.73181</td>
-<td align="right">-73.95995</td>
-<td align="right">39874</td>
-<td align="left">Subscriber</td>
-<td align="right">1986</td>
-<td align="left">Male</td>
-<td align="right">33</td>
-</tr>
-<tr class="odd">
-<td align="right">1660</td>
-<td align="right">27.666667</td>
-<td align="left">2019-07-01 00:00:08</td>
-<td align="left">2019-07-01 00:27:48</td>
-<td align="right">249</td>
-<td align="left">Harrison St &amp; Hudson St</td>
-<td align="right">40.71871</td>
-<td align="right">-74.00900</td>
-<td align="right">369</td>
-<td align="left">Washington Pl &amp; 6 Ave</td>
-<td align="right">40.73224</td>
-<td align="right">-74.00026</td>
-<td align="right">38865</td>
-<td align="left">Subscriber</td>
-<td align="right">1988</td>
-<td align="left">Male</td>
-<td align="right">31</td>
-</tr>
-<tr class="even">
-<td align="right">550</td>
-<td align="right">9.166667</td>
-<td align="left">2019-07-01 00:00:14</td>
-<td align="left">2019-07-01 00:09:25</td>
-<td align="right">3507</td>
-<td align="left">Park Ave &amp; E 124 St</td>
-<td align="right">40.80456</td>
-<td align="right">-73.93969</td>
-<td align="right">3553</td>
-<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
-<td align="right">40.80169</td>
-<td align="right">-73.95714</td>
-<td align="right">34139</td>
-<td align="left">Subscriber</td>
-<td align="right">1992</td>
-<td align="left">Male</td>
-<td align="right">27</td>
-</tr>
-<tr class="odd">
-<td align="right">338</td>
-<td align="right">5.633333</td>
-<td align="left">2019-07-01 00:00:18</td>
-<td align="left">2019-07-01 00:05:56</td>
-<td align="right">478</td>
-<td align="left">11 Ave &amp; W 41 St</td>
-<td align="right">40.76030</td>
-<td align="right">-73.99884</td>
-<td align="right">388</td>
-<td align="left">W 26 St &amp; 10 Ave</td>
-<td align="right">40.74972</td>
-<td align="right">-74.00295</td>
-<td align="right">39703</td>
-<td align="left">Subscriber</td>
-<td align="right">1995</td>
-<td align="left">Male</td>
-<td align="right">24</td>
-</tr>
-<tr class="even">
-<td align="right">469</td>
-<td align="right">7.816667</td>
-<td align="left">2019-07-01 00:00:25</td>
-<td align="left">2019-07-01 00:08:14</td>
-<td align="right">514</td>
-<td align="left">12 Ave &amp; W 40 St</td>
-<td align="right">40.76087</td>
-<td align="right">-74.00278</td>
+<td align="right">86324</td>
+<td align="right">1438.7333</td>
+<td align="left">2018-12-31 13:21:55</td>
+<td align="left">2019-01-01 13:20:39</td>
 <td align="right">458</td>
 <td align="left">11 Ave &amp; W 27 St</td>
 <td align="right">40.75140</td>
 <td align="right">-74.00523</td>
-<td align="right">28266</td>
+<td align="right">127</td>
+<td align="left">Barrow St &amp; Hudson St</td>
+<td align="right">40.73172</td>
+<td align="right">-74.00674</td>
+<td align="right">16996</td>
 <td align="left">Subscriber</td>
-<td align="right">1989</td>
+<td align="right">1953</td>
+<td align="left">Female</td>
+<td align="left">12</td>
+<td align="right">66</td>
+</tr>
+<tr class="odd">
+<td align="right">77833</td>
+<td align="right">1297.2167</td>
+<td align="left">2018-12-31 16:54:58</td>
+<td align="left">2019-01-01 14:32:11</td>
+<td align="right">3055</td>
+<td align="left">Greene Ave &amp; Nostrand Ave</td>
+<td align="right">40.68833</td>
+<td align="right">-73.95092</td>
+<td align="right">437</td>
+<td align="left">Macon St &amp; Nostrand Ave</td>
+<td align="right">40.68098</td>
+<td align="right">-73.95005</td>
+<td align="right">15420</td>
+<td align="left">Customer</td>
+<td align="right">1969</td>
+<td align="left">Unknown</td>
+<td align="left">12</td>
+<td align="right">50</td>
+</tr>
+<tr class="even">
+<td align="right">52587</td>
+<td align="right">876.4500</td>
+<td align="left">2018-12-31 17:37:05</td>
+<td align="left">2019-01-01 08:13:33</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
+<td align="right">40.76303</td>
+<td align="right">-73.97210</td>
+<td align="right">3457</td>
+<td align="left">E 58 St &amp; Madison Ave</td>
+<td align="right">40.76303</td>
+<td align="right">-73.97210</td>
+<td align="right">28349</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="left">Female</td>
+<td align="left">12</td>
+<td align="right">53</td>
+</tr>
+<tr class="odd">
+<td align="right">76290</td>
+<td align="right">1271.5000</td>
+<td align="left">2018-12-31 18:00:44</td>
+<td align="left">2019-01-01 15:12:14</td>
+<td align="right">3521</td>
+<td align="left">Lenox Ave &amp; W 111 St</td>
+<td align="right">40.79879</td>
+<td align="right">-73.95230</td>
+<td align="right">3164</td>
+<td align="left">Columbus Ave &amp; W 72 St</td>
+<td align="right">40.77706</td>
+<td align="right">-73.97898</td>
+<td align="right">14710</td>
+<td align="left">Subscriber</td>
+<td align="right">1995</td>
+<td align="left">Female</td>
+<td align="left">12</td>
+<td align="right">24</td>
+</tr>
+<tr class="even">
+<td align="right">51131</td>
+<td align="right">852.1833</td>
+<td align="left">2018-12-31 18:40:45</td>
+<td align="left">2019-01-01 08:52:56</td>
+<td align="right">3581</td>
+<td align="left">Underhill Ave &amp; Lincoln Pl</td>
+<td align="right">40.67401</td>
+<td align="right">-73.96715</td>
+<td align="right">3576</td>
+<td align="left">Park Pl &amp; Vanderbilt Ave</td>
+<td align="right">40.67670</td>
+<td align="right">-73.96902</td>
+<td align="right">16935</td>
+<td align="left">Customer</td>
+<td align="right">1987</td>
 <td align="left">Male</td>
-<td align="right">30</td>
+<td align="left">12</td>
+<td align="right">32</td>
 </tr>
 </tbody>
 </table>
-<p>The citibike dataframe includes 1834241 trips and 17 variables. The
+<p>Due to large sample size that limits technical processing
+feasibility, we decided to focus on only a month of Citibike data. To do
+so, we look at the distribution of number of rides by month.</p>
+<pre class="r"><code>citibike_df |&gt;
+  group_by(month) |&gt;
+  summarize(n_rides = n()) |&gt;
+  arrange(month) |&gt;
+  ggplot(aes(x = month, y = n_rides, group = 1)) +
+  geom_point() +
+  geom_line() </code></pre>
+<p><img src="data_import_clean_files/figure-html/citibike_plot-1.png" width="90%" /></p>
+<div id="filter-to-september" class="section level3">
+<h3>Filter to September</h3>
+<p>Since September is the month of highest usage, we focus on
+September</p>
+<pre class="r"><code>citibike_df = citibike_df |&gt; filter(month == 9)</code></pre>
+<p>The citibike dataframe includes 2069707 trips and 18 variables. The
 variables in the dataframe are trip_duration_sec, trip_duration_min,
 start_time, stop_time, start_station_id, start_station_name,
 start_station_latitude, start_station_longitude, end_station_id,
 end_station_name, end_station_latitude, end_station_longitude, bikeid,
-user_type, birth_year, gender, age.</p>
+user_type, birth_year, gender, month, age.</p>
+</div>
 </div>
 <div id="social-deprivation-index" class="section level2">
 <h2>Social Deprivation Index</h2>
@@ -1319,7 +1346,7 @@ citibike_zip =
   rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
 
 remove(citibike_df)</code></pre>
-<p>There are 81354 entries missing either the start or end zipcode.</p>
+<p>There are 83953 entries missing either the start or end zipcode.</p>
 <div id="missing-zipcodes" class="section level3">
 <h3><em>Missing Zipcodes</em></h3>
 <p>A look at the start coordinates with missing zipcodes below:</p>
@@ -1348,61 +1375,61 @@ remove(citibike_df)</code></pre>
 <td align="left">Broadway &amp; W 36 St</td>
 <td align="right">40.75098</td>
 <td align="right">-73.98765</td>
-<td align="right">2750</td>
+<td align="right">3305</td>
 </tr>
 <tr class="even">
 <td align="left">Broadway &amp; W 37 St</td>
 <td align="right">40.75173</td>
 <td align="right">-73.98754</td>
-<td align="right">3301</td>
+<td align="right">2830</td>
 </tr>
 <tr class="odd">
 <td align="left">Broadway &amp; W 38 St</td>
 <td align="right">40.75300</td>
 <td align="right">-73.98722</td>
-<td align="right">4325</td>
+<td align="right">4207</td>
 </tr>
 <tr class="even">
 <td align="left">Broadway &amp; W 41 St</td>
 <td align="right">40.75514</td>
 <td align="right">-73.98658</td>
-<td align="right">7415</td>
+<td align="right">8446</td>
 </tr>
 <tr class="odd">
 <td align="left">Cooper Square &amp; Astor Pl</td>
 <td align="right">40.72951</td>
 <td align="right">-73.99075</td>
-<td align="right">6576</td>
+<td align="right">7993</td>
 </tr>
 <tr class="even">
 <td align="left">E 47 St &amp; 1 Ave</td>
 <td align="right">40.75207</td>
 <td align="right">-73.96784</td>
-<td align="right">2152</td>
+<td align="right">1622</td>
 </tr>
 <tr class="odd">
 <td align="left">Roebling St &amp; N 4 St</td>
 <td align="right">40.71469</td>
 <td align="right">-73.95739</td>
-<td align="right">1649</td>
+<td align="right">1758</td>
 </tr>
 <tr class="even">
 <td align="left">South St &amp; Gouverneur Ln</td>
 <td align="right">40.70355</td>
 <td align="right">-74.00670</td>
-<td align="right">5416</td>
+<td align="right">6047</td>
 </tr>
 <tr class="odd">
 <td align="left">W 52 St &amp; 6 Ave</td>
 <td align="right">40.76133</td>
 <td align="right">-73.97982</td>
-<td align="right">5238</td>
+<td align="right">4100</td>
 </tr>
 <tr class="even">
 <td align="left">William St &amp; Pine St</td>
 <td align="right">40.70718</td>
 <td align="right">-74.00887</td>
-<td align="right">2260</td>
+<td align="right">2582</td>
 </tr>
 </tbody>
 </table>
@@ -1429,70 +1456,64 @@ remove(citibike_df)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Broadway &amp; W 32 St</td>
-<td align="right">40.74855</td>
-<td align="right">-73.98808</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
 <td align="left">Broadway &amp; W 36 St</td>
 <td align="right">40.75098</td>
 <td align="right">-73.98765</td>
-<td align="right">2667</td>
+<td align="right">3045</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Broadway &amp; W 37 St</td>
 <td align="right">40.75173</td>
 <td align="right">-73.98754</td>
-<td align="right">3249</td>
+<td align="right">2705</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Broadway &amp; W 38 St</td>
 <td align="right">40.75300</td>
 <td align="right">-73.98722</td>
-<td align="right">4251</td>
+<td align="right">4341</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Broadway &amp; W 41 St</td>
 <td align="right">40.75514</td>
 <td align="right">-73.98658</td>
-<td align="right">7796</td>
+<td align="right">8530</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Cooper Square &amp; Astor Pl</td>
 <td align="right">40.72951</td>
 <td align="right">-73.99075</td>
-<td align="right">6209</td>
+<td align="right">7581</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">E 47 St &amp; 1 Ave</td>
 <td align="right">40.75207</td>
 <td align="right">-73.96784</td>
-<td align="right">2141</td>
+<td align="right">1672</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Roebling St &amp; N 4 St</td>
 <td align="right">40.71469</td>
 <td align="right">-73.95739</td>
-<td align="right">1651</td>
+<td align="right">1805</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">South St &amp; Gouverneur Ln</td>
 <td align="right">40.70355</td>
 <td align="right">-74.00670</td>
-<td align="right">5318</td>
+<td align="right">5718</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">W 52 St &amp; 6 Ave</td>
 <td align="right">40.76133</td>
 <td align="right">-73.97982</td>
-<td align="right">6237</td>
+<td align="right">4437</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">William St &amp; Pine St</td>
 <td align="right">40.70718</td>
 <td align="right">-74.00887</td>
-<td align="right">2371</td>
+<td align="right">2626</td>
 </tr>
 </tbody>
 </table>
@@ -1557,16 +1578,17 @@ head(citibike_zip_neighborhoods) |&gt;
 <col width="4%" />
 <col width="4%" />
 <col width="3%" />
-<col width="5%" />
+<col width="6%" />
 <col width="5%" />
 <col width="5%" />
 <col width="3%" />
-<col width="7%" />
+<col width="6%" />
 <col width="4%" />
 <col width="4%" />
 <col width="1%" />
 <col width="2%" />
 <col width="2%" />
+<col width="1%" />
 <col width="1%" />
 <col width="0%" />
 <col width="3%" />
@@ -1594,6 +1616,7 @@ head(citibike_zip_neighborhoods) |&gt;
 <th align="left">user_type</th>
 <th align="right">birth_year</th>
 <th align="left">gender</th>
+<th align="left">month</th>
 <th align="right">age</th>
 <th align="right">start_zipcode</th>
 <th align="right">end_zipcode</th>
@@ -1605,154 +1628,160 @@ head(citibike_zip_neighborhoods) |&gt;
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">897</td>
-<td align="right">14.950000</td>
-<td align="left">2019-07-01 00:00:00</td>
-<td align="left">2019-07-01 00:14:58</td>
-<td align="right">493</td>
-<td align="left">W 45 St &amp; 6 Ave</td>
-<td align="right">40.75680</td>
-<td align="right">-73.98291</td>
-<td align="right">454</td>
-<td align="left">E 51 St &amp; 1 Ave</td>
-<td align="right">40.75456</td>
-<td align="right">-73.96593</td>
-<td align="right">18340</td>
+<td align="right">327</td>
+<td align="right">5.450000</td>
+<td align="left">2019-09-01 00:00:01</td>
+<td align="left">2019-09-01 00:05:29</td>
+<td align="right">3733</td>
+<td align="left">Avenue C &amp; E 18 St</td>
+<td align="right">40.73056</td>
+<td align="right">-73.97398</td>
+<td align="right">504</td>
+<td align="left">1 Ave &amp; E 16 St</td>
+<td align="right">40.73222</td>
+<td align="right">-73.98166</td>
+<td align="right">39213</td>
 <td align="left">Subscriber</td>
-<td align="right">1966</td>
+<td align="right">1968</td>
 <td align="left">Male</td>
-<td align="right">53</td>
-<td align="right">10036</td>
-<td align="right">10022</td>
-<td align="left">Chelsea Clinton</td>
-<td align="left">Chelsea Village</td>
-<td align="left">Gramercy Park Murray Hill</td>
-<td align="left">Upper East Side Gramercy</td>
-</tr>
-<tr class="even">
-<td align="right">2201</td>
-<td align="right">36.683333</td>
-<td align="left">2019-07-01 00:00:05</td>
-<td align="left">2019-07-01 00:36:46</td>
-<td align="right">317</td>
-<td align="left">E 6 St &amp; Avenue B</td>
-<td align="right">40.72454</td>
-<td align="right">-73.98185</td>
-<td align="right">3469</td>
-<td align="left">India St &amp; West St</td>
-<td align="right">40.73181</td>
-<td align="right">-73.95995</td>
-<td align="right">39874</td>
-<td align="left">Subscriber</td>
-<td align="right">1986</td>
-<td align="left">Male</td>
-<td align="right">33</td>
+<td align="left">9</td>
+<td align="right">51</td>
 <td align="right">10009</td>
-<td align="right">11222</td>
+<td align="right">10009</td>
 <td align="left">Union Square Lower East Side</td>
 <td align="left">Union Square, Lower Manhattan</td>
-<td align="left">Greenpoint</td>
-<td align="left">Greenpoint</td>
+<td align="left">Union Square Lower East Side</td>
+<td align="left">Union Square, Lower Manhattan</td>
+</tr>
+<tr class="even">
+<td align="right">1145</td>
+<td align="right">19.083333</td>
+<td align="left">2019-09-01 00:00:04</td>
+<td align="left">2019-09-01 00:19:09</td>
+<td align="right">3329</td>
+<td align="left">Degraw St &amp; Smith St</td>
+<td align="right">40.68292</td>
+<td align="right">-73.99318</td>
+<td align="right">270</td>
+<td align="left">Adelphi St &amp; Myrtle Ave</td>
+<td align="right">40.69308</td>
+<td align="right">-73.97179</td>
+<td align="right">21257</td>
+<td align="left">Customer</td>
+<td align="right">1969</td>
+<td align="left">Unknown</td>
+<td align="left">9</td>
+<td align="right">50</td>
+<td align="right">11217</td>
+<td align="right">11238</td>
+<td align="left">Downtown Heights Park Slope</td>
+<td align="left">Downtown Heights Slope</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
 </tr>
 <tr class="odd">
-<td align="right">1660</td>
-<td align="right">27.666667</td>
-<td align="left">2019-07-01 00:00:08</td>
-<td align="left">2019-07-01 00:27:48</td>
-<td align="right">249</td>
-<td align="left">Harrison St &amp; Hudson St</td>
-<td align="right">40.71871</td>
-<td align="right">-74.00900</td>
-<td align="right">369</td>
-<td align="left">Washington Pl &amp; 6 Ave</td>
-<td align="right">40.73224</td>
-<td align="right">-74.00026</td>
-<td align="right">38865</td>
-<td align="left">Subscriber</td>
-<td align="right">1988</td>
-<td align="left">Male</td>
-<td align="right">31</td>
-<td align="right">10013</td>
-<td align="right">10011</td>
-<td align="left">Greenwich Village SoHo</td>
-<td align="left">Chelsea Village</td>
+<td align="right">1293</td>
+<td align="right">21.550000</td>
+<td align="left">2019-09-01 00:00:07</td>
+<td align="left">2019-09-01 00:21:40</td>
+<td align="right">3168</td>
+<td align="left">Central Park West &amp; W 85 St</td>
+<td align="right">40.78473</td>
+<td align="right">-73.96962</td>
+<td align="right">423</td>
+<td align="left">W 54 St &amp; 9 Ave</td>
+<td align="right">40.76585</td>
+<td align="right">-73.98691</td>
+<td align="right">15242</td>
+<td align="left">Customer</td>
+<td align="right">1969</td>
+<td align="left">Unknown</td>
+<td align="left">9</td>
+<td align="right">50</td>
+<td align="right">10024</td>
+<td align="right">10019</td>
+<td align="left">Upper West Side</td>
+<td align="left">Upper West Side</td>
 <td align="left">Chelsea Clinton</td>
 <td align="left">Chelsea Village</td>
 </tr>
 <tr class="even">
-<td align="right">550</td>
-<td align="right">9.166667</td>
-<td align="left">2019-07-01 00:00:14</td>
-<td align="left">2019-07-01 00:09:25</td>
-<td align="right">3507</td>
-<td align="left">Park Ave &amp; E 124 St</td>
-<td align="right">40.80456</td>
-<td align="right">-73.93969</td>
-<td align="right">3553</td>
-<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
-<td align="right">40.80169</td>
-<td align="right">-73.95714</td>
-<td align="right">34139</td>
+<td align="right">1753</td>
+<td align="right">29.216667</td>
+<td align="left">2019-09-01 00:00:08</td>
+<td align="left">2019-09-01 00:29:21</td>
+<td align="right">3299</td>
+<td align="left">E 98 St &amp; Park Ave</td>
+<td align="right">40.78813</td>
+<td align="right">-73.95206</td>
+<td align="right">3160</td>
+<td align="left">Central Park West &amp; W 76 St</td>
+<td align="right">40.77897</td>
+<td align="right">-73.97375</td>
+<td align="right">38760</td>
 <td align="left">Subscriber</td>
-<td align="right">1992</td>
+<td align="right">1990</td>
 <td align="left">Male</td>
-<td align="right">27</td>
-<td align="right">10035</td>
-<td align="right">10026</td>
-<td align="left">East Harlem</td>
-<td align="left">East Harlem</td>
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="left">Central Harlem Morningside Heights</td>
+<td align="left">9</td>
+<td align="right">29</td>
+<td align="right">10129</td>
+<td align="right">10024</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Upper West Side</td>
+<td align="left">Upper West Side</td>
 </tr>
 <tr class="odd">
-<td align="right">338</td>
-<td align="right">5.633333</td>
-<td align="left">2019-07-01 00:00:18</td>
-<td align="left">2019-07-01 00:05:56</td>
+<td align="right">613</td>
+<td align="right">10.216667</td>
+<td align="left">2019-09-01 00:00:12</td>
+<td align="left">2019-09-01 00:10:26</td>
+<td align="right">486</td>
+<td align="left">Broadway &amp; W 29 St</td>
+<td align="right">40.74620</td>
+<td align="right">-73.98856</td>
 <td align="right">478</td>
 <td align="left">11 Ave &amp; W 41 St</td>
 <td align="right">40.76030</td>
 <td align="right">-73.99884</td>
-<td align="right">388</td>
-<td align="left">W 26 St &amp; 10 Ave</td>
-<td align="right">40.74972</td>
-<td align="right">-74.00295</td>
-<td align="right">39703</td>
+<td align="right">32094</td>
 <td align="left">Subscriber</td>
-<td align="right">1995</td>
+<td align="right">1992</td>
 <td align="left">Male</td>
-<td align="right">24</td>
+<td align="left">9</td>
+<td align="right">27</td>
+<td align="right">10019</td>
 <td align="right">10018</td>
-<td align="right">10001</td>
 <td align="left">Chelsea Clinton</td>
 <td align="left">Chelsea Village</td>
 <td align="left">Chelsea Clinton</td>
 <td align="left">Chelsea Village</td>
 </tr>
 <tr class="even">
-<td align="right">469</td>
-<td align="right">7.816667</td>
-<td align="left">2019-07-01 00:00:25</td>
-<td align="left">2019-07-01 00:08:14</td>
-<td align="right">514</td>
-<td align="left">12 Ave &amp; W 40 St</td>
-<td align="right">40.76087</td>
-<td align="right">-74.00278</td>
-<td align="right">458</td>
-<td align="left">11 Ave &amp; W 27 St</td>
-<td align="right">40.75140</td>
-<td align="right">-74.00523</td>
-<td align="right">28266</td>
-<td align="left">Subscriber</td>
-<td align="right">1989</td>
-<td align="left">Male</td>
-<td align="right">30</td>
-<td align="right">10199</td>
-<td align="right">10001</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">Chelsea Clinton</td>
-<td align="left">Chelsea Village</td>
+<td align="right">482</td>
+<td align="right">8.033333</td>
+<td align="left">2019-09-01 00:00:16</td>
+<td align="left">2019-09-01 00:08:19</td>
+<td align="right">3775</td>
+<td align="left">Suydam St &amp; Knickerbocker Ave</td>
+<td align="right">40.70201</td>
+<td align="right">-73.92377</td>
+<td align="right">3771</td>
+<td align="left">McKibbin St &amp; Bogart St</td>
+<td align="right">40.70624</td>
+<td align="right">-73.93387</td>
+<td align="right">28271</td>
+<td align="left">Customer</td>
+<td align="right">1969</td>
+<td align="left">Unknown</td>
+<td align="left">9</td>
+<td align="right">50</td>
+<td align="right">11237</td>
+<td align="right">11206</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="left">Williamsburg Bushwick</td>
 </tr>
 </tbody>
 </table>
@@ -1776,13 +1805,13 @@ missing_enduhf = citibike_zip_neighborhoods |&gt;
 
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
   filter(!is.na(end_uhf34_neighborhood) &amp; !is.na(start_uhf34_neighborhood))</code></pre>
-<p>There are 227180 entries whose start zipcode do not have an
-associated uhf34, and 228910 entries whose end zipcode do not have an
+<p>There are 241988 entries whose start zipcode do not have an
+associated uhf34, and 244314 entries whose end zipcode do not have an
 associated uhf34. Manual validation showed these zipcodes are business
 zipcodes, where a zipcode refers to a small domain of a business. While
 these could be pinpointed roughly to a UHF34 neighborhood manually, it
 is cleaner to simply omit them, as we still retain a substantial dataset
-size. The resulting dataset has 1424096 entries.</p>
+size. The resulting dataset has 1628960 entries.</p>
 <hr />
 </div>
 </div>
@@ -1868,7 +1897,7 @@ included and their missingness:</p>
 
 head(citibike_df) |&gt;
   knitr::kable()</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
 <col width="1%" />
 <col width="2%" />
@@ -1880,11 +1909,11 @@ head(citibike_df) |&gt;
 <col width="5%" />
 <col width="5%" />
 <col width="4%" />
-<col width="5%" />
+<col width="7%" />
 <col width="3%" />
 <col width="7%" />
 <col width="3%" />
-<col width="8%" />
+<col width="5%" />
 <col width="2%" />
 <col width="8%" />
 <col width="3%" />
@@ -1923,154 +1952,154 @@ head(citibike_df) |&gt;
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">18340</td>
+<td align="right">39213</td>
 <td align="left">Subscriber</td>
 <td align="left">Male</td>
-<td align="right">53</td>
-<td align="left">2019-07-01 00:00:00</td>
-<td align="left">2019-07-01 00:14:58</td>
-<td align="right">40.75680</td>
-<td align="right">-73.98291</td>
-<td align="right">40.75456</td>
-<td align="right">493</td>
-<td align="left">W 45 St &amp; 6 Ave</td>
-<td align="right">10036</td>
-<td align="left">Chelsea Village</td>
-<td align="right">454</td>
-<td align="left">E 51 St &amp; 1 Ave</td>
-<td align="right">10022</td>
-<td align="left">Upper East Side Gramercy</td>
-<td align="right">69</td>
-<td align="right">38.1</td>
-<td align="right">10.02</td>
-<td align="right">26</td>
-<td align="right">36.5</td>
-<td align="right">8.98</td>
-</tr>
-<tr class="even">
-<td align="right">39874</td>
-<td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">33</td>
-<td align="left">2019-07-01 00:00:05</td>
-<td align="left">2019-07-01 00:36:46</td>
-<td align="right">40.72454</td>
-<td align="right">-73.98185</td>
-<td align="right">40.73181</td>
-<td align="right">317</td>
-<td align="left">E 6 St &amp; Avenue B</td>
+<td align="right">51</td>
+<td align="left">2019-09-01 00:00:01</td>
+<td align="left">2019-09-01 00:05:29</td>
+<td align="right">40.73056</td>
+<td align="right">-73.97398</td>
+<td align="right">40.73222</td>
+<td align="right">3733</td>
+<td align="left">Avenue C &amp; E 18 St</td>
 <td align="right">10009</td>
 <td align="left">Union Square, Lower Manhattan</td>
-<td align="right">3469</td>
-<td align="left">India St &amp; West St</td>
-<td align="right">11222</td>
-<td align="left">Greenpoint</td>
+<td align="right">504</td>
+<td align="left">1 Ave &amp; E 16 St</td>
+<td align="right">10009</td>
+<td align="left">Union Square, Lower Manhattan</td>
 <td align="right">88</td>
 <td align="right">40.5</td>
 <td align="right">8.67</td>
-<td align="right">61</td>
-<td align="right">41.8</td>
-<td align="right">8.56</td>
+<td align="right">88</td>
+<td align="right">40.5</td>
+<td align="right">8.67</td>
+</tr>
+<tr class="even">
+<td align="right">21257</td>
+<td align="left">Customer</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+<td align="left">2019-09-01 00:00:04</td>
+<td align="left">2019-09-01 00:19:09</td>
+<td align="right">40.68292</td>
+<td align="right">-73.99318</td>
+<td align="right">40.69308</td>
+<td align="right">3329</td>
+<td align="left">Degraw St &amp; Smith St</td>
+<td align="right">11217</td>
+<td align="left">Downtown Heights Slope</td>
+<td align="right">270</td>
+<td align="left">Adelphi St &amp; Myrtle Ave</td>
+<td align="right">11238</td>
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">74</td>
+<td align="right">50.8</td>
+<td align="right">7.44</td>
+<td align="right">70</td>
+<td align="right">62.9</td>
+<td align="right">6.61</td>
 </tr>
 <tr class="odd">
-<td align="right">38865</td>
-<td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">31</td>
-<td align="left">2019-07-01 00:00:08</td>
-<td align="left">2019-07-01 00:27:48</td>
-<td align="right">40.71871</td>
-<td align="right">-74.00900</td>
-<td align="right">40.73224</td>
-<td align="right">249</td>
-<td align="left">Harrison St &amp; Hudson St</td>
-<td align="right">10013</td>
+<td align="right">15242</td>
+<td align="left">Customer</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+<td align="left">2019-09-01 00:00:07</td>
+<td align="left">2019-09-01 00:21:40</td>
+<td align="right">40.78473</td>
+<td align="right">-73.96962</td>
+<td align="right">40.76585</td>
+<td align="right">3168</td>
+<td align="left">Central Park West &amp; W 85 St</td>
+<td align="right">10024</td>
+<td align="left">Upper West Side</td>
+<td align="right">423</td>
+<td align="left">W 54 St &amp; 9 Ave</td>
+<td align="right">10019</td>
 <td align="left">Chelsea Village</td>
-<td align="right">369</td>
-<td align="left">Washington Pl &amp; 6 Ave</td>
-<td align="right">10011</td>
-<td align="left">Chelsea Village</td>
-<td align="right">69</td>
-<td align="right">38.1</td>
-<td align="right">10.02</td>
-<td align="right">51</td>
+<td align="right">41</td>
+<td align="right">43.4</td>
+<td align="right">7.38</td>
+<td align="right">63</td>
 <td align="right">38.1</td>
 <td align="right">10.02</td>
 </tr>
 <tr class="even">
-<td align="right">34139</td>
+<td align="right">32094</td>
 <td align="left">Subscriber</td>
 <td align="left">Male</td>
 <td align="right">27</td>
-<td align="left">2019-07-01 00:00:14</td>
-<td align="left">2019-07-01 00:09:25</td>
-<td align="right">40.80456</td>
-<td align="right">-73.93969</td>
-<td align="right">40.80169</td>
-<td align="right">3507</td>
-<td align="left">Park Ave &amp; E 124 St</td>
-<td align="right">10035</td>
-<td align="left">East Harlem</td>
-<td align="right">3553</td>
-<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
-<td align="right">10026</td>
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">100</td>
-<td align="right">70.1</td>
-<td align="right">7.11</td>
-<td align="right">95</td>
-<td align="right">68.7</td>
-<td align="right">7.00</td>
-</tr>
-<tr class="odd">
-<td align="right">39703</td>
-<td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">24</td>
-<td align="left">2019-07-01 00:00:18</td>
-<td align="left">2019-07-01 00:05:56</td>
+<td align="left">2019-09-01 00:00:12</td>
+<td align="left">2019-09-01 00:10:26</td>
+<td align="right">40.74620</td>
+<td align="right">-73.98856</td>
 <td align="right">40.76030</td>
-<td align="right">-73.99884</td>
-<td align="right">40.74972</td>
+<td align="right">486</td>
+<td align="left">Broadway &amp; W 29 St</td>
+<td align="right">10019</td>
+<td align="left">Chelsea Village</td>
 <td align="right">478</td>
 <td align="left">11 Ave &amp; W 41 St</td>
 <td align="right">10018</td>
 <td align="left">Chelsea Village</td>
-<td align="right">388</td>
-<td align="left">W 26 St &amp; 10 Ave</td>
-<td align="right">10001</td>
-<td align="left">Chelsea Village</td>
+<td align="right">63</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
 <td align="right">65</td>
 <td align="right">38.1</td>
 <td align="right">10.02</td>
-<td align="right">70</td>
-<td align="right">38.1</td>
-<td align="right">10.02</td>
+</tr>
+<tr class="odd">
+<td align="right">28271</td>
+<td align="left">Customer</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+<td align="left">2019-09-01 00:00:16</td>
+<td align="left">2019-09-01 00:08:19</td>
+<td align="right">40.70201</td>
+<td align="right">-73.92377</td>
+<td align="right">40.70624</td>
+<td align="right">3775</td>
+<td align="left">Suydam St &amp; Knickerbocker Ave</td>
+<td align="right">11237</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">3771</td>
+<td align="left">McKibbin St &amp; Bogart St</td>
+<td align="right">11206</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">98</td>
+<td align="right">61.8</td>
+<td align="right">7.50</td>
+<td align="right">100</td>
+<td align="right">61.8</td>
+<td align="right">7.50</td>
 </tr>
 <tr class="even">
-<td align="right">26757</td>
-<td align="left">Subscriber</td>
-<td align="left">Male</td>
-<td align="right">54</td>
-<td align="left">2019-07-01 00:00:26</td>
-<td align="left">2019-07-01 00:09:49</td>
-<td align="right">40.74178</td>
-<td align="right">-74.00150</td>
-<td align="right">40.74692</td>
-<td align="right">116</td>
-<td align="left">W 17 St &amp; 8 Ave</td>
-<td align="right">10011</td>
-<td align="left">Chelsea Village</td>
-<td align="right">462</td>
-<td align="left">W 22 St &amp; 10 Ave</td>
-<td align="right">10011</td>
-<td align="left">Chelsea Village</td>
-<td align="right">51</td>
-<td align="right">38.1</td>
-<td align="right">10.02</td>
-<td align="right">51</td>
-<td align="right">38.1</td>
-<td align="right">10.02</td>
+<td align="right">39424</td>
+<td align="left">Customer</td>
+<td align="left">Unknown</td>
+<td align="right">50</td>
+<td align="left">2019-09-01 00:00:17</td>
+<td align="left">2019-09-01 00:08:27</td>
+<td align="right">40.70201</td>
+<td align="right">-73.92377</td>
+<td align="right">40.70624</td>
+<td align="right">3775</td>
+<td align="left">Suydam St &amp; Knickerbocker Ave</td>
+<td align="right">11237</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">3771</td>
+<td align="left">McKibbin St &amp; Bogart St</td>
+<td align="right">11206</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">98</td>
+<td align="right">61.8</td>
+<td align="right">7.50</td>
+<td align="right">100</td>
+<td align="right">61.8</td>
+<td align="right">7.50</td>
 </tr>
 </tbody>
 </table>
@@ -2084,7 +2113,7 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">1424096</td>
+<td align="left">1628960</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
@@ -2169,10 +2198,10 @@ head(citibike_df) |&gt;
 <td align="left">start_station_name</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">4</td>
+<td align="right">9</td>
 <td align="right">45</td>
 <td align="right">0</td>
-<td align="right">716</td>
+<td align="right">732</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -2182,17 +2211,17 @@ head(citibike_df) |&gt;
 <td align="right">10</td>
 <td align="right">34</td>
 <td align="right">0</td>
-<td align="right">22</td>
+<td align="right">20</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">end_station_name</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">4</td>
+<td align="right">9</td>
 <td align="right">45</td>
 <td align="right">0</td>
-<td align="right">719</td>
+<td align="right">734</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -2202,7 +2231,7 @@ head(citibike_df) |&gt;
 <td align="right">10</td>
 <td align="right">34</td>
 <td align="right">0</td>
-<td align="right">22</td>
+<td align="right">20</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -2242,26 +2271,26 @@ head(citibike_df) |&gt;
 <td align="left">bikeid</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">29831.33</td>
-<td align="right">7688.88</td>
+<td align="right">30704.72</td>
+<td align="right">8091.71</td>
 <td align="right">14529.00</td>
-<td align="right">25271.00</td>
-<td align="right">31075.00</td>
-<td align="right">35386.00</td>
-<td align="right">40002.00</td>
-<td align="left">▅▂▅▇▇</td>
+<td align="right">25653.00</td>
+<td align="right">31820.00</td>
+<td align="right">38666.00</td>
+<td align="right">42046.00</td>
+<td align="left">▅▂▆▆▇</td>
 </tr>
 <tr class="even">
 <td align="left">age</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">38.19</td>
-<td align="right">12.05</td>
+<td align="right">37.99</td>
+<td align="right">12.12</td>
 <td align="right">16.00</td>
-<td align="right">29.00</td>
+<td align="right">28.00</td>
 <td align="right">35.00</td>
 <td align="right">49.00</td>
-<td align="right">134.00</td>
+<td align="right">145.00</td>
 <td align="left">▇▅▁▁▁</td>
 </tr>
 <tr class="odd">
@@ -2274,8 +2303,8 @@ head(citibike_df) |&gt;
 <td align="right">40.72</td>
 <td align="right">40.74</td>
 <td align="right">40.76</td>
-<td align="right">40.87</td>
-<td align="left">▂▇▇▂▁</td>
+<td align="right">40.81</td>
+<td align="left">▂▃▇▅▂</td>
 </tr>
 <tr class="even">
 <td align="left">start_station_longitude</td>
@@ -2287,8 +2316,8 @@ head(citibike_df) |&gt;
 <td align="right">-74.00</td>
 <td align="right">-73.99</td>
 <td align="right">-73.97</td>
-<td align="right">-73.88</td>
-<td align="left">▃▇▂▁▁</td>
+<td align="right">-73.91</td>
+<td align="left">▂▇▃▂▁</td>
 </tr>
 <tr class="odd">
 <td align="left">end_station_latitude</td>
@@ -2299,59 +2328,59 @@ head(citibike_df) |&gt;
 <td align="right">40.66</td>
 <td align="right">40.72</td>
 <td align="right">40.74</td>
-<td align="right">40.76</td>
-<td align="right">40.87</td>
-<td align="left">▂▇▇▂▁</td>
+<td align="right">40.75</td>
+<td align="right">40.81</td>
+<td align="left">▂▃▇▅▁</td>
 </tr>
 <tr class="even">
 <td align="left">start_station_id</td>
-<td align="right">42</td>
+<td align="right">0</td>
 <td align="right">1</td>
-<td align="right">1652.79</td>
-<td align="right">1486.59</td>
+<td align="right">1639.02</td>
+<td align="right">1492.10</td>
 <td align="right">72.00</td>
-<td align="right">379.00</td>
-<td align="right">504.00</td>
+<td align="right">369.00</td>
+<td align="right">501.00</td>
 <td align="right">3320.00</td>
-<td align="right">3798.00</td>
-<td align="left">▇▁▁▁▆</td>
+<td align="right">3858.00</td>
+<td align="left">▇▁▁▁▅</td>
 </tr>
 <tr class="odd">
 <td align="left">start_zipcode</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">10258.49</td>
-<td align="right">475.48</td>
+<td align="right">10245.96</td>
+<td align="right">466.13</td>
 <td align="right">10001.00</td>
 <td align="right">10010.00</td>
-<td align="right">10018.00</td>
-<td align="right">10037.00</td>
+<td align="right">10017.00</td>
+<td align="right">10036.00</td>
 <td align="right">11385.00</td>
 <td align="left">▇▁▁▁▂</td>
 </tr>
 <tr class="even">
 <td align="left">end_station_id</td>
-<td align="right">42</td>
+<td align="right">0</td>
 <td align="right">1</td>
-<td align="right">1640.10</td>
-<td align="right">1486.78</td>
+<td align="right">1622.52</td>
+<td align="right">1490.86</td>
 <td align="right">72.00</td>
-<td align="right">377.00</td>
-<td align="right">501.00</td>
-<td align="right">3321.00</td>
-<td align="right">3798.00</td>
-<td align="left">▇▁▁▁▆</td>
+<td align="right">366.00</td>
+<td align="right">499.00</td>
+<td align="right">3319.00</td>
+<td align="right">3858.00</td>
+<td align="left">▇▁▁▁▅</td>
 </tr>
 <tr class="odd">
 <td align="left">end_zipcode</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">10261.18</td>
-<td align="right">477.71</td>
+<td align="right">10247.44</td>
+<td align="right">467.52</td>
 <td align="right">10001.00</td>
 <td align="right">10010.00</td>
-<td align="right">10018.00</td>
-<td align="right">10037.00</td>
+<td align="right">10017.00</td>
+<td align="right">10036.00</td>
 <td align="right">11385.00</td>
 <td align="left">▇▁▁▁▂</td>
 </tr>
@@ -2359,21 +2388,21 @@ head(citibike_df) |&gt;
 <td align="left">start_sdi_score</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">65.33</td>
-<td align="right">21.61</td>
+<td align="right">64.91</td>
+<td align="right">21.57</td>
 <td align="right">26.00</td>
 <td align="right">49.00</td>
-<td align="right">64.00</td>
+<td align="right">63.00</td>
 <td align="right">88.00</td>
 <td align="right">100.00</td>
-<td align="left">▃▇▇▃▇</td>
+<td align="left">▃▇▇▂▇</td>
 </tr>
 <tr class="odd">
 <td align="left">start_percent_overweight</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">44.04</td>
-<td align="right">9.82</td>
+<td align="right">43.78</td>
+<td align="right">9.67</td>
 <td align="right">36.50</td>
 <td align="right">38.10</td>
 <td align="right">40.50</td>
@@ -2385,10 +2414,10 @@ head(citibike_df) |&gt;
 <td align="left">start_aq</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">8.71</td>
-<td align="right">1.11</td>
+<td align="right">8.74</td>
+<td align="right">1.10</td>
 <td align="right">6.04</td>
-<td align="right">7.44</td>
+<td align="right">7.50</td>
 <td align="right">8.67</td>
 <td align="right">10.02</td>
 <td align="right">10.02</td>
@@ -2398,21 +2427,21 @@ head(citibike_df) |&gt;
 <td align="left">end_sdi_score</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">65.49</td>
-<td align="right">21.57</td>
+<td align="right">65.00</td>
+<td align="right">21.52</td>
 <td align="right">26.00</td>
 <td align="right">49.00</td>
-<td align="right">64.00</td>
+<td align="right">63.00</td>
 <td align="right">88.00</td>
 <td align="right">100.00</td>
-<td align="left">▃▇▇▃▇</td>
+<td align="left">▃▇▇▂▇</td>
 </tr>
 <tr class="even">
 <td align="left">end_percent_overweight</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">44.04</td>
-<td align="right">9.81</td>
+<td align="right">43.74</td>
+<td align="right">9.64</td>
 <td align="right">36.50</td>
 <td align="right">38.10</td>
 <td align="right">40.50</td>
@@ -2424,8 +2453,8 @@ head(citibike_df) |&gt;
 <td align="left">end_aq</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">8.72</td>
-<td align="right">1.11</td>
+<td align="right">8.75</td>
+<td align="right">1.10</td>
 <td align="right">6.04</td>
 <td align="right">7.50</td>
 <td align="right">8.67</td>
@@ -2462,19 +2491,19 @@ head(citibike_df) |&gt;
 <td align="left">start_time</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="left">2019-07-01 00:00:00</td>
-<td align="left">2019-07-31 23:59:57</td>
-<td align="left">2019-07-16 14:29:28</td>
-<td align="right">1423532</td>
+<td align="left">2019-09-01 00:00:01</td>
+<td align="left">2019-09-30 23:59:55</td>
+<td align="left">2019-09-17 08:08:46</td>
+<td align="right">1628135</td>
 </tr>
 <tr class="even">
 <td align="left">stop_time</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="left">2019-07-01 00:05:52</td>
-<td align="left">2019-08-01 18:30:37</td>
-<td align="left">2019-07-16 14:46:04</td>
-<td align="right">1423510</td>
+<td align="left">2019-09-01 00:05:29</td>
+<td align="left">2019-10-01 15:50:20</td>
+<td align="left">2019-09-17 08:23:05</td>
+<td align="right">1628096</td>
 </tr>
 </tbody>
 </table>

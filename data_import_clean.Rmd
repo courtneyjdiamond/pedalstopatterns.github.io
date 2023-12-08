@@ -32,6 +32,7 @@ knitr::opts_chunk$set(message = FALSE,
 )
 
 ```
+  
   ***
   
 ## <span style='color: blue;'>Data Sources</span>
@@ -57,8 +58,8 @@ A look at the raw data:
 ```{r import citibike}
 citibike = 
   tibble(
-    files = list.files("./citibike_alt/"),
-    path = str_c("./citibike_alt/", files)
+    files = list.files("./citibike/"),
+    path = str_c("./citibike/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
@@ -70,6 +71,11 @@ citibike |>
   head() |>
   knitr::kable()
 ```
+
+
+Viewing rides overtime:
+
+
 
 The cleaning of the citibike data included the following steps:
 
@@ -85,9 +91,10 @@ The cleaning of the citibike data included the following steps:
  A look at the tidied dataframe: 
  
 ```{r tidy citibike}
-citibike_df <- citibike |>
+citibike_df = citibike |>
   janitor::clean_names() |>
   select(-files, -path) |>
+  mutate(month = as.factor(month(starttime))) |>
   rename(trip_duration_sec = tripduration,
          start_time = starttime,
          stop_time = stoptime,
@@ -113,6 +120,25 @@ head(citibike_df) |>
   knitr::kable()
 
 ```
+
+Due to large sample size that limits technical processing feasibility, we decided to focus on only a month of Citibike data. To do so, we look at the distribution of number of rides by month. 
+
+```{r citibike_plot}
+citibike_df |>
+  group_by(month) |>
+  summarize(n_rides = n()) |>
+  arrange(month) |>
+  ggplot(aes(x = month, y = n_rides, group = 1)) +
+  geom_point() +
+  geom_line() 
+```
+
+### Filter to September
+Since September is the month of highest usage, we focus on September
+```{r filter_month}
+citibike_df = citibike_df |> filter(month == 9)
+```
+
 
 The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
 
