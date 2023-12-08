@@ -33,6 +33,9 @@ This page includes a few summary tables of the Citibike data, links to view deep
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(pdftools)
+library(magrittr)
+library(here)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -55,11 +58,11 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-```{r, eval = FALSE}
+```{r}
 citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
 ```
 
-```{r}
+```{r, eval = FALSE}
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
 ```
 
@@ -81,7 +84,7 @@ station = citibike_zip_neighborhoods %>%
 
 Here is a table of the number of rides per start neighborhood.
 
-```{r table of start neighborhoods, eval = FALSE}
+```{r table of start neighborhoods}
 citibike_zip_neighborhoods |>
 group_by(start_uhf34_neighborhood) |>
   rename("Start_Neighborhood" = start_uhf34_neighborhood) |>
@@ -92,7 +95,7 @@ group_by(start_uhf34_neighborhood) |>
 
 Here is a table of the number of rides per end neighborhood.
 
-```{r table of end neighborhoods, eval= FALSE}
+```{r table of end neighborhoods}
 citibike_zip_neighborhoods |>
 group_by(end_uhf34_neighborhood) |>
   summarize(Number_Rides = n()) |>
@@ -103,7 +106,7 @@ group_by(end_uhf34_neighborhood) |>
 
 Here are the most popular start stations.
 
-```{r, eval = FALSE}
+```{r}
 # Count the number of rides for each start station
 popular_stations <- citibike_zip_neighborhoods %>%
   group_by(start_station_name) %>%
@@ -119,7 +122,7 @@ ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rid
 
 Here is a graph of the most popular end stations
 
-```{r, eval = FALSE}
+```{r}
 # Count the number of rides for each start station
 popular_stations <- citibike_zip_neighborhoods %>%
   group_by(end_station_name) %>%
@@ -135,7 +138,7 @@ ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides
 
 Here is a graph of the number of rides per neighborhood per month
 
-```{r neighborhood_month, eval = FALSE}
+```{r neighborhood_month}
 citibike_zip_neighborhoods |>
   select(start_time, start_uhf34_neighborhood) |>
   mutate(month = as.factor(month(start_time))) |>
@@ -153,7 +156,7 @@ citibike_zip_neighborhoods |>
 
 Here is a graph of user type distribution: Subsribers take more rides!
 
-```{r, eval = FALSE}
+```{r}
 # Count the number of rides for each user type
 citibike_zip_neighborhoods %>%
   group_by(user_type) %>%
@@ -166,7 +169,7 @@ ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
 
 Here is a graph of number of rides per gender: Males take the most rides!
 
-```{r, eval = FALSE}
+```{r}
 
 citibike_zip_neighborhoods %>%
   group_by(gender) %>%
@@ -179,7 +182,7 @@ citibike_zip_neighborhoods %>%
 
 This graph shows the distribution of ages: 30 year olds and 50 year olds use citibike the most!
 
-```{r, eval = FALSE}
+```{r}
 ggplot(citibike_zip_neighborhoods, aes(x = age)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
    scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
@@ -190,7 +193,9 @@ ggplot(citibike_zip_neighborhoods, aes(x = age)) +
 
 [Citibike](exploratory/Citibike_exploratory.html)
 
-## Exploring Subsets
+
+# <span style='color: blue;'>Exploring Subsets</span>
+
 
 [Air Quality index](exploratory/AirQual_exploratory.html)
 
@@ -204,8 +209,7 @@ And we made an interactive [dashboard](Dashboard_Shiny.html) to visualize some o
  
  ***
  
- # <span style='color: blue;'>Modeling Outcomes</span>
-
+# <span style='color: blue;'>Modelling</span>
 
 We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
 
