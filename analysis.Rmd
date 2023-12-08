@@ -71,26 +71,42 @@ stations_df = read_csv("./citibike_clean/stations.csv")
  &nbsp;
  
 
-**This table shows the number of stations per neighborhood used in September.**
-```{r table of stations per neighborhoods}
-citibike_df %>%
+**This table shows the number of stations per neighborhood available and used in September.**
+
+```{r station_usage}
+stations_available = stations_df |>
+  group_by(borough, uhf34_neighborhood) |>
+  summarize(Stations_Available = n()) 
+
+station_usage = citibike_df |>
   filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
-  select(
-    end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood,
-    start_borough, end_borough
-  ) %>%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough) |>
   distinct(
     Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
     Station_Name = coalesce(end_station_name, start_station_name),
     Borough = coalesce(end_borough, start_borough)
-  ) |>
- group_by(Borough, Neighborhood) %>%
-  summarize(Number_of_Stations = n()) %>%
-  arrange(Borough, desc(Number_of_Stations))|>
-     knitr:: kable()
+    ) |>
+  group_by(Borough, Neighborhood) |>
+  summarize(Stations_Used = n()) |>
+  left_join(stations_available,
+            by = c("Borough" = "borough",
+                   "Neighborhood" = "uhf34_neighborhood")) 
+station_usage |>
+  arrange(Borough, desc(Stations_Used)) |>
+  knitr::kable()
+
 ```
 
-Bronx only has a single station used, 
+There is consistency among stations available and used, with a mean of `r mean(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2) ` (range: `r min(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2)`, `r max(station_usage$Stations_Used/station_usage$Stations_Available * 100)`)
+
+* **Bronx has only a single station**, which makes sense given [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/) that describes Citibike expansion into the Bronx just after the time we're observing here (late 2019). While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas. So we'll see if this seems to be indicated when we incorporate SDI below. 
+* Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
+
+
+
+
 
 This graph shows that most start and end rides occurred in Manhattan in September 2019. 
 
