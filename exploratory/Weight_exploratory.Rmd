@@ -8,6 +8,14 @@ output:
     code_folding: hide
 css: styles.css
 ---
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+
+------------------------------------------------------------------------
+
 
 
 ```{r setup, include=FALSE}
