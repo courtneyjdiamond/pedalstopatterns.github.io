@@ -59,8 +59,24 @@ scale_fill_discrete = scale_fill_viridis_d
 citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
 ```
 
-```{r, eval = FALSE}
+```{r}
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
+```
+
+Here is a table of the number of stations per neighborhood.
+
+```{r table of stations per neighborhoods}
+station = citibike_zip_neighborhoods %>%
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood) %>%
+  distinct(Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+           Station_Name = coalesce(end_station_name, start_station_name))
+
+  station %>%
+  group_by(Neighborhood) %>%
+  summarize(Number_of_Stations = n())|>
+  arrange(desc(Number_of_Stations))|>
+     knitr:: kable()
 ```
 
 Here is a table of the number of rides per start neighborhood.
@@ -78,7 +94,6 @@ Here is a table of the number of rides per end neighborhood.
 
 ```{r table of end neighborhoods, eval= FALSE}
 citibike_zip_neighborhoods |>
- filter(! is.na(end_uhf34_neighborhood)) |>
 group_by(end_uhf34_neighborhood) |>
   summarize(Number_Rides = n()) |>
   rename("End_Neighborhood" = end_uhf34_neighborhood) |>
@@ -98,9 +113,80 @@ popular_stations <- citibike_zip_neighborhoods %>%
 # Plot the most popular landmark stations
 ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
   geom_bar(stat = "identity") +
-  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Landmark Stations") +
+  labs(x = "Start Station", y = "Number of Rides", title = "Top 10 Most Popular Start Stations") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+Here is a graph of the most popular end stations
+
+```{r, eval = FALSE}
+# Count the number of rides for each start station
+popular_stations <- citibike_zip_neighborhoods %>%
+  group_by(end_station_name) %>%
+  summarise(n_rides = n()) %>%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = "identity") +
+  labs(x = "End Station", y = "Number of Rides", title = "Top 10 Most Popular End Stations") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Here is a graph of the number of rides per neighborhood per month
+
+```{r neighborhood_month, eval = FALSE}
+citibike_zip_neighborhoods |>
+  select(start_time, start_uhf34_neighborhood) |>
+  mutate(month = as.factor(month(start_time))) |>
+  group_by(start_uhf34_neighborhood, month) |>
+  summarize(n_rides = n()) |>
+  ggplot(aes(x = month, y = n_rides, color = start_uhf34_neighborhood, group = start_uhf34_neighborhood)) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Month", y = "Number of Rides")
+```
+
+
+## <span style='color: blue;'>User Demographics</span> 
+
+Here is a graph of user type distribution: Subsribers take more rides!
+
+```{r, eval = FALSE}
+# Count the number of rides for each user type
+citibike_zip_neighborhoods %>%
+  group_by(user_type) %>%
+  summarise(n_rides = n()) |>
+ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
+```
+
+Here is a graph of number of rides per gender: Males take the most rides!
+
+```{r, eval = FALSE}
+
+citibike_zip_neighborhoods %>%
+  group_by(gender) %>%
+  summarise(n_rides = n()) |>ggplot(aes(x = gender, y = n_rides, fill = gender)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "red", "Unknown" = "yellow")) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
+```
+
+This graph shows the distribution of ages: 30 year olds and 50 year olds use citibike the most!
+
+```{r, eval = FALSE}
+ggplot(citibike_zip_neighborhoods, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Age", y = "Number of Rides", title = "Age Distribution")
+```
+
 
 [Citibike](exploratory/Citibike_exploratory.html)
 

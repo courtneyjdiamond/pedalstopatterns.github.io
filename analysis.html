@@ -405,6 +405,116 @@ charts and graphs.</p>
 <p> </p>
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+<p>Here is a table of the number of stations per neighborhood.</p>
+<pre class="r"><code>station = citibike_zip_neighborhoods %&gt;%
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %&gt;%
+  select(end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood) %&gt;%
+  distinct(Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+           Station_Name = coalesce(end_station_name, start_station_name))
+
+  station %&gt;%
+  group_by(Neighborhood) %&gt;%
+  summarize(Number_of_Stations = n())|&gt;
+  arrange(desc(Number_of_Stations))|&gt;
+     knitr:: kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Neighborhood</th>
+<th align="right">Number_of_Stations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chelsea Village</td>
+<td align="right">215</td>
+</tr>
+<tr class="even">
+<td align="left">Downtown Heights Slope</td>
+<td align="right">200</td>
+</tr>
+<tr class="odd">
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="right">190</td>
+</tr>
+<tr class="even">
+<td align="left">Upper East Side Gramercy</td>
+<td align="right">160</td>
+</tr>
+<tr class="odd">
+<td align="left">Long Island City Astoria</td>
+<td align="right">151</td>
+</tr>
+<tr class="even">
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">148</td>
+</tr>
+<tr class="odd">
+<td align="left">Greenpoint</td>
+<td align="right">136</td>
+</tr>
+<tr class="even">
+<td align="left">Upper West Side</td>
+<td align="right">123</td>
+</tr>
+<tr class="odd">
+<td align="left">East Harlem</td>
+<td align="right">117</td>
+</tr>
+<tr class="even">
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">110</td>
+</tr>
+<tr class="odd">
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">107</td>
+</tr>
+<tr class="even">
+<td align="left">East New York</td>
+<td align="right">92</td>
+</tr>
+<tr class="odd">
+<td align="left">East Flatbush Flatbush</td>
+<td align="right">67</td>
+</tr>
+<tr class="even">
+<td align="left">Kingsbridge Riverdale</td>
+<td align="right">66</td>
+</tr>
+<tr class="odd">
+<td align="left">Washington Heights Inwood</td>
+<td align="right">54</td>
+</tr>
+<tr class="even">
+<td align="left">West Queens</td>
+<td align="right">54</td>
+</tr>
+<tr class="odd">
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">46</td>
+</tr>
+<tr class="even">
+<td align="left">Bensonhurst Bay Ridge</td>
+<td align="right">39</td>
+</tr>
+<tr class="odd">
+<td align="left">Coney Island Sheepshead Bay</td>
+<td align="right">38</td>
+</tr>
+<tr class="even">
+<td align="left">Sunset Park</td>
+<td align="right">36</td>
+</tr>
+<tr class="odd">
+<td align="left">Southwest Queens</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">Canarsie Flatlands</td>
+<td align="right">4</td>
+</tr>
+</tbody>
+</table>
 <p>Here is a table of the number of rides per start neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
 group_by(start_uhf34_neighborhood) |&gt;
@@ -414,7 +524,6 @@ group_by(start_uhf34_neighborhood) |&gt;
   knitr:: kable()</code></pre>
 <p>Here is a table of the number of rides per end neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
- filter(! is.na(end_uhf34_neighborhood)) |&gt;
 group_by(end_uhf34_neighborhood) |&gt;
   summarize(Number_Rides = n()) |&gt;
   rename(&quot;End_Neighborhood&quot; = end_uhf34_neighborhood) |&gt;
@@ -430,8 +539,60 @@ popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
 # Plot the most popular landmark stations
 ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rides)) +
   geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Start Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular Landmark Stations&quot;) +
+  labs(x = &quot;Start Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular Start Stations&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p>Here is a graph of the most popular end stations</p>
+<pre class="r"><code># Count the number of rides for each start station
+popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
+  group_by(end_station_name) %&gt;%
+  summarise(n_rides = n()) %&gt;%
+  top_n(10, wt = n_rides)  # Select the top 10 most popular stations
+
+# Plot the most popular landmark stations
+ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(x = &quot;End Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular End Stations&quot;) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p>Here is a graph of the number of rides per neighborhood per month</p>
+<pre class="r"><code>citibike_zip_neighborhoods |&gt;
+  select(start_time, start_uhf34_neighborhood) |&gt;
+  mutate(month = as.factor(month(start_time))) |&gt;
+  group_by(start_uhf34_neighborhood, month) |&gt;
+  summarize(n_rides = n()) |&gt;
+  ggplot(aes(x = month, y = n_rides, color = start_uhf34_neighborhood, group = start_uhf34_neighborhood)) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = &quot;Month&quot;, y = &quot;Number of Rides&quot;)</code></pre>
+</div>
+<div id="user-demographics" class="section level2">
+<h2><span style="color: blue;">User Demographics</span></h2>
+<p>Here is a graph of user type distribution: Subsribers take more
+rides!</p>
+<pre class="r"><code># Count the number of rides for each user type
+citibike_zip_neighborhoods %&gt;%
+  group_by(user_type) %&gt;%
+  summarise(n_rides = n()) |&gt;
+ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = &quot;User Type&quot;, y = &quot;Number of Rides&quot;, title = &quot;User Type Distribution&quot;)</code></pre>
+<p>Here is a graph of number of rides per gender: Males take the most
+rides!</p>
+<pre class="r"><code>citibike_zip_neighborhoods %&gt;%
+  group_by(gender) %&gt;%
+  summarise(n_rides = n()) |&gt;ggplot(aes(x = gender, y = n_rides, fill = gender)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_fill_manual(values = c(&quot;Male&quot; = &quot;blue&quot;, &quot;Female&quot; = &quot;red&quot;, &quot;Unknown&quot; = &quot;yellow&quot;)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = &quot;Gender&quot;, y = &quot;Number of Rides&quot;, title = &quot;Gender Distribution&quot;)</code></pre>
+<p>This graph shows the distribution of ages: 30 year olds and 50 year
+olds use citibike the most!</p>
+<pre class="r"><code>ggplot(citibike_zip_neighborhoods, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = &quot;skyblue&quot;, color = &quot;black&quot;, alpha = 0.7) +
+   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;)</code></pre>
 <p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
 <div id="exploring-subsets" class="section level2">
