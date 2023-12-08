@@ -507,8 +507,32 @@ changes to your ideas.</p>
 </div>
 <div id="additional-analysis" class="section level2">
 <h2><span style="color: blue;">Additional Analysis</span></h2>
-<p>Additional analysis: If you undertake formal statistical analyses,
-describe these in detail</p>
+<p>To build upon our exploratory analyses above we decided to pursue GLM
+with two sets of outcome in mind. The first was utilization of Citibike
+in a geographic area, based on health factors in the form of Air
+quality, SDI, and overweight percentages. This utilized a linear model
+that at first took these three predictors separately into consideration.
+We then created an interaction model that included each of the three
+individual predictors, but added all possible two-way interactions, and
+a three-way interaction as we hypothesized that the health,
+environmental influences, and utilization of biking as a mode of
+transportation and leisure were related.</p>
+<ul>
+<li>We found that the models had significant Beta statistics, but
+overall had very variable RMSE values in our cross-validation analyses.
+We also found the R2 to be low for both.</li>
+</ul>
+<p><img src="modeling/compare_rides_models.png" /></p>
+<p>We then sought to see if conversely health metrics may be able to be
+predicted by the other metrics, and Citibike utilization. We created
+three linear models to predict for Air Quality, SDI, and percentage
+overweight each, using the other factors and number of rides as the
+predictors.</p>
+<ul>
+<li>We found that the models had less variability in RMSE, and higher R2
+values, in particular for percentage overweight.</li>
+</ul>
+<p><img src="modeling/compare_healthoutcomes.png" /></p>
 <p> </p>
 <hr />
 </div>
