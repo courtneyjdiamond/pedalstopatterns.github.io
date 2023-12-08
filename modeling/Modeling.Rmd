@@ -15,17 +15,106 @@ library(mgcv)
 library(modelr)
 library(purrr)
 library(here)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE
+)
+```
+
+# Modeling Health Outcomes
+
+
+Before diving into understanding how [health metrics play into Citibike usage](Modeling.html),
+we wanted to explore interactions among the health metrics themselves. 
+
+* Note: Details on the datasources and how they were impored and cleaned can be found at [Data Sources](data_sources.html). Here, we'll just read in CSV's generated from those tidied dataframes! 
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(mgcv)
+library(modelr)
+library(purrr)
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
 ```
 
 
-#Regression Models for Statistical Analyses 
+# Load Health Data 
+
+
+```{r}
+data = read_csv('../citibike_clean/sdi_overweight.csv') |>
+  select(uhf34, uhf34_neighborhood, percent_overweight, sdi_score)
+
+aq_df = read_csv("../citibike_clean/air_quality_clean.csv") |>
+  rename(uhf34 = geo_join_id,
+         neighborhood = geo_place_name)
+  #select(-measure, -geo_type_name, -time_period, 
+   #      -start_date, -message, -year) ```
+```
+
+## Combine Health Data
+```{r combine}
+data = data |>
+  left_join(y = aq_df,
+            by = join_by(uhf34)) |>
+  rename(pm25 = data_value)
+
+head(data) |>
+  knitr::kable()
+```
+
+## Group by uhf34
+```{r}
+data = data |> group_by(uhf34, uhf34_neighborhood) |>
+  summarize(sdi = mean(sdi_score),
+            overweight = mean(percent_overweight),
+            pm25 = mean(pm25)) |>
+  filter(!is.na(uhf34))
+
+head(data) |> 
+  knitr::kable()
+```
+
+
+```{r scatter}
+scatter_plot = data |>
+  ggplot(aes(x = sdi, y = overweight)) + geom_point()
+
+
+```
+
+
+## Build Health model 
+```{r}
+fit = lm(overweight ~ sdi, data = data)
+
+fit |> 
+  broom::tidy() |> 
+  select(term, estimate, p.value) |>
+  knitr::kable(digits = 3)
+
+scatter_plot + geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue")
+
+```
+
+This means that for every one-unit increase in sdi, overweight is estimated to increase by 0.194 units, assuming all other factors remain constant. They are positively correlated, but not very strongly. 
+
+
+# Regression Models for Statistical Analyses 
 
 For regression analysis, the merged data set was created by reading in Air Quality, Social Disparity Index, overweight percentages and merged with our Citibike dataset for 2019. To convert zip code data to neighborhoods we utilized ufh34/42 coding. 
 
 This finalized dataset was imported in as `citibike.df`.
 
 ```{r load data}
-citibike.df = read_csv(here("./citibike/citibike_clean.csv"))
+citibike.df = read_csv("../citibike_clean/citibike_clean.csv")
 
 ```
 
