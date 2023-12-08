@@ -152,7 +152,6 @@ end_station = citibike_df |>
 stations = rbind(start_station, end_station) |>
   unique() 
   
-write_csv(stations, "./citibike_clean/stations.csv")
 
 ```
 
@@ -632,3 +631,33 @@ write_csv(citibike_df, file = './citibike_clean/citibike_clean.csv')
 ```
 
 The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`.
+
+
+# Stations Analysis 
+For some extra analysis work, we want to understand the full avaialbility of stations, not just the ones used in September, So we also have to join zipcode and UHF34 neighborhood to our full station data.
+```{r station_uhf}
+stations = stations |>
+  left_join(latlong_zip, 
+            by = c("latitude" ,"longitude")) |>
+  rename("zipcode" = "postcode") |>
+  mutate(zipcode = case_when(station_name == "Broadway & W 32 St" ~ 10001,
+                             station_name == "Cooper Square & Astor Pl" ~ 10003,
+                             station_name == "William St & Pine St" ~ 10005,
+                             station_name %in% c("Broadway & W 36 St",
+                                                 "Broadway & W 37 St",
+                                                 "Broadway & W 38 St",
+                                                 "Broadway & W 41 St") ~ 10018,
+                             station_name == "W 52 St & 6 Ave" ~ 100019,
+                             station_name %in% c("Broadway & W 41 St",
+                                                 "W 43 St & 6 Ave") ~ 10036,
+                             station_name == "South St & Gouverneur Ln" ~ 10043,
+                             station_name == "E 47 St & 1 Ave" ~ 10075,
+                             station_name == "Roebling St & N 4 St" ~ 11211,
+                             TRUE ~ zipcode)) |>
+  left_join(y = (joined_uhf_34_42 |> select(zip, uhf34, uhf34_neighborhood, borough)),
+            by = join_by("zipcode" == "zip")) 
+
+write_csv(stations, "./citibike_clean/stations.csv")
+
+```
+

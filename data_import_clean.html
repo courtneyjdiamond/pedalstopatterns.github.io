@@ -844,9 +844,7 @@ end_station = citibike_df |&gt;
 
 
 stations = rbind(start_station, end_station) |&gt;
-  unique() 
-  
-write_csv(stations, &quot;./citibike_clean/stations.csv&quot;)</code></pre>
+  unique() </code></pre>
 <pre class="r"><code>citibike_df |&gt;
   group_by(month) |&gt;
   summarize(n_rides = n()) |&gt;
@@ -2594,6 +2592,35 @@ end_uhf34_neighborhood, start_sdi_score, start_percent_overweight,
 start_aq, end_sdi_score, end_percent_overweight, end_aq, end_borough,
 start_borough.</p>
 </div>
+</div>
+<div id="stations-analysis" class="section level1">
+<h1>Stations Analysis</h1>
+<p>For some extra analysis work, we want to understand the full
+avaialbility of stations, not just the ones used in September, So we
+also have to join zipcode and UHF34 neighborhood to our full station
+data.</p>
+<pre class="r"><code>stations = stations |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;latitude&quot; ,&quot;longitude&quot;)) |&gt;
+  rename(&quot;zipcode&quot; = &quot;postcode&quot;) |&gt;
+  mutate(zipcode = case_when(station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
+                             station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
+                             station_name == &quot;William St &amp; Pine St&quot; ~ 10005,
+                             station_name %in% c(&quot;Broadway &amp; W 36 St&quot;,
+                                                 &quot;Broadway &amp; W 37 St&quot;,
+                                                 &quot;Broadway &amp; W 38 St&quot;,
+                                                 &quot;Broadway &amp; W 41 St&quot;) ~ 10018,
+                             station_name == &quot;W 52 St &amp; 6 Ave&quot; ~ 100019,
+                             station_name %in% c(&quot;Broadway &amp; W 41 St&quot;,
+                                                 &quot;W 43 St &amp; 6 Ave&quot;) ~ 10036,
+                             station_name == &quot;South St &amp; Gouverneur Ln&quot; ~ 10043,
+                             station_name == &quot;E 47 St &amp; 1 Ave&quot; ~ 10075,
+                             station_name == &quot;Roebling St &amp; N 4 St&quot; ~ 11211,
+                             TRUE ~ zipcode)) |&gt;
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf34, uhf34_neighborhood, borough)),
+            by = join_by(&quot;zipcode&quot; == &quot;zip&quot;)) 
+
+write_csv(stations, &quot;./citibike_clean/stations.csv&quot;)</code></pre>
 </div>
 
 
