@@ -1,0 +1,2566 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Sources and Overview</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
+</li>
+<li>
+  <a href="analysis.html">Analysis</a>
+</li>
+<li>
+  <a href="project_report.html">Project Report</a>
+</li>
+<li>
+  <a href="about_us.html">About Us</a>
+</li>
+<li>
+  <a href="mailto:&lt;jl5934@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/courtneyjdiamond/p8105_final_project">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://citibikenyc.com/">
+    <span class="fa fa-solid fa-bicycle"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><span style="color: blue;">Data Sources and
+Overview</span></h1>
+
+</div>
+
+
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+<p> </p>
+<hr />
+<div id="data-sources" class="section level2">
+<h2><span style="color: blue;">Data Sources</span></h2>
+<p><a
+href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
+Data</strong></a>: These datasets contain monthly logs of trip,
+including ride ID, the user’s status (subscriber or casual user), trip
+start/end longitude/latitude coordinates, and the trip start/stop times
+and duration.</p>
+<p><a
+href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"><strong>Social
+Deprivation Index</strong></a>: The social deprivation index (SDI) is an
+effort to generate a scoring system of socioeconomic factors using US
+census data from the American Community Survey. The final SDI is a
+composite measure of percent living in poverty, percent with less than
+12 years of education, percent single-parent households, the percentage
+living in rented housing units, the percentage living in the overcrowded
+housing unit, percent of households without a car, and percentage
+nonemployed adults under 65 years of age. For more details please see
+the webpage link.</p>
+<p><a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&amp;subtopic_id=113"><strong>Overweight
+Data</strong></a>: This dataset contains publicly available data from
+NYC regarding the percent of people who are overweight per area.</p>
+<p><a
+href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
+Quality Index Data</strong></a>: These data originated from NYC Open
+Data, contributed by the Department of Hygiene and Mental Health and
+include air quality indexes measured across boroughs in NYC.</p>
+<hr />
+</div>
+<div id="invididual-dataset-imports-and-cleaning"
+class="section level2">
+<h2><span style="color: blue;">Invididual Dataset Imports and
+Cleaning</span></h2>
+</div>
+<div id="citibike" class="section level2">
+<h2>Citibike</h2>
+<p>The citibike data was a collection of csv files that we downloaded
+and merged. We were specifically interested in 2019 as this was when SDI
+scores were available. We downloaded the data files from December 2018
+through January 2020.</p>
+<p>A look at the raw data:</p>
+<pre class="r"><code>citibike = 
+  tibble(
+    files = list.files(&quot;./citibike_alt/&quot;),
+    path = str_c(&quot;./citibike_alt/&quot;, files)
+  ) |&gt;
+  mutate(data = map(path, ~read_csv(.x, col_types = cols(
+    &#39;end station id&#39; = col_double(),
+    &#39;start station id&#39; = col_double()
+  )))) |&gt;
+  unnest(cols = c(data))
+
+citibike |&gt;
+  head() |&gt;
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="13%" />
+<col width="3%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="4%" />
+<col width="8%" />
+<col width="6%" />
+<col width="6%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">files</th>
+<th align="left">path</th>
+<th align="right">tripduration</th>
+<th align="left">starttime</th>
+<th align="left">stoptime</th>
+<th align="right">start station id</th>
+<th align="left">start station name</th>
+<th align="right">start station latitude</th>
+<th align="right">start station longitude</th>
+<th align="right">end station id</th>
+<th align="left">end station name</th>
+<th align="right">end station latitude</th>
+<th align="right">end station longitude</th>
+<th align="right">bikeid</th>
+<th align="left">usertype</th>
+<th align="right">birth year</th>
+<th align="right">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">897</td>
+<td align="left">2019-07-01 00:00:00</td>
+<td align="left">2019-07-01 00:14:58</td>
+<td align="right">493</td>
+<td align="left">W 45 St &amp; 6 Ave</td>
+<td align="right">40.75680</td>
+<td align="right">-73.98291</td>
+<td align="right">454</td>
+<td align="left">E 51 St &amp; 1 Ave</td>
+<td align="right">40.75456</td>
+<td align="right">-73.96593</td>
+<td align="right">18340</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">267</td>
+<td align="left">2019-07-01 00:00:05</td>
+<td align="left">2019-07-01 00:04:32</td>
+<td align="right">3143</td>
+<td align="left">5 Ave &amp; E 78 St</td>
+<td align="right">40.77632</td>
+<td align="right">-73.96427</td>
+<td align="right">3226</td>
+<td align="left">W 82 St &amp; Central Park West</td>
+<td align="right">40.78275</td>
+<td align="right">-73.97137</td>
+<td align="right">21458</td>
+<td align="left">Customer</td>
+<td align="right">1996</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">2201</td>
+<td align="left">2019-07-01 00:00:05</td>
+<td align="left">2019-07-01 00:36:46</td>
+<td align="right">317</td>
+<td align="left">E 6 St &amp; Avenue B</td>
+<td align="right">40.72454</td>
+<td align="right">-73.98185</td>
+<td align="right">3469</td>
+<td align="left">India St &amp; West St</td>
+<td align="right">40.73181</td>
+<td align="right">-73.95995</td>
+<td align="right">39874</td>
+<td align="left">Subscriber</td>
+<td align="right">1986</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">1660</td>
+<td align="left">2019-07-01 00:00:08</td>
+<td align="left">2019-07-01 00:27:48</td>
+<td align="right">249</td>
+<td align="left">Harrison St &amp; Hudson St</td>
+<td align="right">40.71871</td>
+<td align="right">-74.00900</td>
+<td align="right">369</td>
+<td align="left">Washington Pl &amp; 6 Ave</td>
+<td align="right">40.73224</td>
+<td align="right">-74.00026</td>
+<td align="right">38865</td>
+<td align="left">Subscriber</td>
+<td align="right">1988</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">109</td>
+<td align="left">2019-07-01 00:00:12</td>
+<td align="left">2019-07-01 00:02:01</td>
+<td align="right">3552</td>
+<td align="left">W 113 St &amp; Broadway</td>
+<td align="right">40.80597</td>
+<td align="right">-73.96493</td>
+<td align="right">3538</td>
+<td align="left">W 110 St &amp; Amsterdam Ave</td>
+<td align="right">40.80269</td>
+<td align="right">-73.96295</td>
+<td align="right">30256</td>
+<td align="left">Subscriber</td>
+<td align="right">1997</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">201907-citibike-tripdata.csv</td>
+<td align="left">./citibike_alt/201907-citibike-tripdata.csv</td>
+<td align="right">106</td>
+<td align="left">2019-07-01 00:00:12</td>
+<td align="left">2019-07-01 00:01:59</td>
+<td align="right">3593</td>
+<td align="left">31 St &amp; Broadway</td>
+<td align="right">40.76158</td>
+<td align="right">-73.92592</td>
+<td align="right">3592</td>
+<td align="left">Crescent St &amp; Broadway</td>
+<td align="right">40.76336</td>
+<td align="right">-73.92865</td>
+<td align="right">16875</td>
+<td align="left">Subscriber</td>
+<td align="right">1988</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>The cleaning of the citibike data included the following steps:</p>
+<ul>
+<li>Recoding gender from numeric to text</li>
+<li>Filtering trip duration to more than 5 minutes but less than 1 day
+in order to capture true trips taken</li>
+<li>Including trips that started in 2018 but ended in 2019 and trips
+that started in 2019 but ended in 2020, so as to include all trips taken
+in 2019</li>
+<li>Creating an age at time of trip variable from birth year</li>
+<li>Creating a trip duration in minutes (as opposed to seconds)
+variable</li>
+<li>Renaming variables</li>
+</ul>
+<p>Note: throughout the code chunks we have removed large dataframes to
+save memory.</p>
+<p>A look at the tidied dataframe:</p>
+<pre class="r"><code>citibike_df &lt;- citibike |&gt;
+  janitor::clean_names() |&gt;
+  select(-files, -path) |&gt;
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|&gt;
+  mutate(gender = recode(gender,
+                         &quot;0&quot; = &quot;Unknown&quot;,
+                         &quot;1&quot; = &quot;Male&quot;,
+                         &quot;2&quot; = &quot;Female&quot;),
+        trip_duration_min = trip_duration_sec / 60,
+        age = 2019 - birth_year
+        ) |&gt;
+  filter(
+    trip_duration_sec &gt;= 300,
+    trip_duration_sec &lt;= 86400,
+    as.Date(stop_time) &gt;= as.Date(&quot;2019-01-01&quot;),
+    as.Date(start_time) &lt;= as.Date(&quot;2019-12-31&quot;)
+  )  |&gt;
+  select(trip_duration_sec, trip_duration_min, everything()) 
+
+remove(citibike)
+
+head(citibike_df) |&gt;
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="5%" />
+<col width="8%" />
+<col width="7%" />
+<col width="8%" />
+<col width="5%" />
+<col width="11%" />
+<col width="7%" />
+<col width="7%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+<col width="1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">trip_duration_sec</th>
+<th align="right">trip_duration_min</th>
+<th align="left">start_time</th>
+<th align="left">stop_time</th>
+<th align="right">start_station_id</th>
+<th align="left">start_station_name</th>
+<th align="right">start_station_latitude</th>
+<th align="right">start_station_longitude</th>
+<th align="right">end_station_id</th>
+<th align="left">end_station_name</th>
+<th align="right">end_station_latitude</th>
+<th align="right">end_station_longitude</th>
+<th align="right">bikeid</th>
+<th align="left">user_type</th>
+<th align="right">birth_year</th>
+<th align="left">gender</th>
+<th align="right">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">897</td>
+<td align="right">14.950000</td>
+<td align="left">2019-07-01 00:00:00</td>
+<td align="left">2019-07-01 00:14:58</td>
+<td align="right">493</td>
+<td align="left">W 45 St &amp; 6 Ave</td>
+<td align="right">40.75680</td>
+<td align="right">-73.98291</td>
+<td align="right">454</td>
+<td align="left">E 51 St &amp; 1 Ave</td>
+<td align="right">40.75456</td>
+<td align="right">-73.96593</td>
+<td align="right">18340</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="left">Male</td>
+<td align="right">53</td>
+</tr>
+<tr class="even">
+<td align="right">2201</td>
+<td align="right">36.683333</td>
+<td align="left">2019-07-01 00:00:05</td>
+<td align="left">2019-07-01 00:36:46</td>
+<td align="right">317</td>
+<td align="left">E 6 St &amp; Avenue B</td>
+<td align="right">40.72454</td>
+<td align="right">-73.98185</td>
+<td align="right">3469</td>
+<td align="left">India St &amp; West St</td>
+<td align="right">40.73181</td>
+<td align="right">-73.95995</td>
+<td align="right">39874</td>
+<td align="left">Subscriber</td>
+<td align="right">1986</td>
+<td align="left">Male</td>
+<td align="right">33</td>
+</tr>
+<tr class="odd">
+<td align="right">1660</td>
+<td align="right">27.666667</td>
+<td align="left">2019-07-01 00:00:08</td>
+<td align="left">2019-07-01 00:27:48</td>
+<td align="right">249</td>
+<td align="left">Harrison St &amp; Hudson St</td>
+<td align="right">40.71871</td>
+<td align="right">-74.00900</td>
+<td align="right">369</td>
+<td align="left">Washington Pl &amp; 6 Ave</td>
+<td align="right">40.73224</td>
+<td align="right">-74.00026</td>
+<td align="right">38865</td>
+<td align="left">Subscriber</td>
+<td align="right">1988</td>
+<td align="left">Male</td>
+<td align="right">31</td>
+</tr>
+<tr class="even">
+<td align="right">550</td>
+<td align="right">9.166667</td>
+<td align="left">2019-07-01 00:00:14</td>
+<td align="left">2019-07-01 00:09:25</td>
+<td align="right">3507</td>
+<td align="left">Park Ave &amp; E 124 St</td>
+<td align="right">40.80456</td>
+<td align="right">-73.93969</td>
+<td align="right">3553</td>
+<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
+<td align="right">40.80169</td>
+<td align="right">-73.95714</td>
+<td align="right">34139</td>
+<td align="left">Subscriber</td>
+<td align="right">1992</td>
+<td align="left">Male</td>
+<td align="right">27</td>
+</tr>
+<tr class="odd">
+<td align="right">338</td>
+<td align="right">5.633333</td>
+<td align="left">2019-07-01 00:00:18</td>
+<td align="left">2019-07-01 00:05:56</td>
+<td align="right">478</td>
+<td align="left">11 Ave &amp; W 41 St</td>
+<td align="right">40.76030</td>
+<td align="right">-73.99884</td>
+<td align="right">388</td>
+<td align="left">W 26 St &amp; 10 Ave</td>
+<td align="right">40.74972</td>
+<td align="right">-74.00295</td>
+<td align="right">39703</td>
+<td align="left">Subscriber</td>
+<td align="right">1995</td>
+<td align="left">Male</td>
+<td align="right">24</td>
+</tr>
+<tr class="even">
+<td align="right">469</td>
+<td align="right">7.816667</td>
+<td align="left">2019-07-01 00:00:25</td>
+<td align="left">2019-07-01 00:08:14</td>
+<td align="right">514</td>
+<td align="left">12 Ave &amp; W 40 St</td>
+<td align="right">40.76087</td>
+<td align="right">-74.00278</td>
+<td align="right">458</td>
+<td align="left">11 Ave &amp; W 27 St</td>
+<td align="right">40.75140</td>
+<td align="right">-74.00523</td>
+<td align="right">28266</td>
+<td align="left">Subscriber</td>
+<td align="right">1989</td>
+<td align="left">Male</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<p>The citibike dataframe includes 1834241 trips and 17 variables. The
+variables in the dataframe are trip_duration_sec, trip_duration_min,
+start_time, stop_time, start_station_id, start_station_name,
+start_station_latitude, start_station_longitude, end_station_id,
+end_station_name, end_station_latitude, end_station_longitude, bikeid,
+user_type, birth_year, gender, age.</p>
+</div>
+<div id="social-deprivation-index" class="section level2">
+<h2>Social Deprivation Index</h2>
+<p>The SDI dataset was a csv. We renamed the zipcode variable to be more
+intuitive. As we were only interested in the entirety of the SDI score,
+we filtered the data to include zip code and sdi_score only.</p>
+<ul>
+<li>Note: the higher the SDI score, the higher the social deprivation in
+that area.</li>
+</ul>
+<p>A look at the tidied dataframe:</p>
+<pre class="r"><code>SDI_df &lt;- read_csv(&quot;./data/SDI_data/rgcsdi-2015-2019-zcta.csv&quot;) |&gt;
+  janitor::clean_names() |&gt;
+  select(zcta5_fips, sdi_score)|&gt;
+  rename(zip=zcta5_fips)
+
+head(SDI_df) |&gt;
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">zip</th>
+<th align="right">sdi_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">01001</td>
+<td align="right">36</td>
+</tr>
+<tr class="even">
+<td align="left">01002</td>
+<td align="right">72</td>
+</tr>
+<tr class="odd">
+<td align="left">01003</td>
+<td align="right">76</td>
+</tr>
+<tr class="even">
+<td align="left">01005</td>
+<td align="right">14</td>
+</tr>
+<tr class="odd">
+<td align="left">01007</td>
+<td align="right">14</td>
+</tr>
+<tr class="even">
+<td align="left">01008</td>
+<td align="right">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="overweight-data" class="section level2">
+<h2>Overweight data</h2>
+<p>The overweight data was downloaded as csv files for “Overweight and
+Obese Adults.” We were specifically interested in 2019 as this was when
+SDI scores were available.</p>
+<p>The cleaning of the overweight data included the following steps:</p>
+<ul>
+<li>Converting percent to a numeric variable</li>
+<li>Separating out the high and low confidence intervals of percent</li>
+<li>Renaming time to year</li>
+<li>Filtering data to 2019</li>
+</ul>
+<p>A look at the tidied dataframe:</p>
+<pre class="r"><code>overweight_df =
+  read_csv(&#39;./data/SDI_data/nyc_overweight_or_obesity_adults.csv&#39;) |&gt;
+  janitor::clean_names() |&gt;
+  mutate(number = gsub(&quot;\\*&quot;, &quot;&quot;, number)) |&gt;
+  mutate(number = gsub(&quot;,&quot;, &quot;&quot;, number)) |&gt;
+  mutate(number = as.numeric(number)) |&gt;
+  mutate(
+    percent_low = as.numeric(gsub(&quot;^.*\\(\\s*&quot;, &quot;&quot;, gsub(&quot;\\s*,.*$&quot;, &quot;&quot;, percent))),
+    percent_high = as.numeric(gsub(&quot;^.*\\,\\s*&quot;, &quot;&quot;, gsub(&quot;\\)$&quot;, &quot;&quot;, percent))),
+percent = as.numeric(ifelse(grepl(&quot;\\*&quot;, percent),
+                                gsub(&quot;\\*.*$&quot;, &quot;&quot;, percent),
+                                gsub(&quot;\\s*\\(.*&quot;, &quot;&quot;, percent)))) |&gt;
+  rename(year = time) |&gt;
+  filter (year == 2019)
+
+head(overweight_df) |&gt;
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="9%" />
+<col width="7%" />
+<col width="9%" />
+<col width="27%" />
+<col width="7%" />
+<col width="8%" />
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">geo_type</th>
+<th align="right">geo_id</th>
+<th align="right">geo_rank</th>
+<th align="left">geography</th>
+<th align="right">number</th>
+<th align="right">percent</th>
+<th align="right">percent_low</th>
+<th align="right">percent_high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">101</td>
+<td align="right">3</td>
+<td align="left">Kingsbridge - Riverdale</td>
+<td align="right">37000</td>
+<td align="right">52.4</td>
+<td align="right">40.8</td>
+<td align="right">63.8</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">102</td>
+<td align="right">3</td>
+<td align="left">Northeast Bronx</td>
+<td align="right">103000</td>
+<td align="right">69.6</td>
+<td align="right">59.7</td>
+<td align="right">78.0</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">103</td>
+<td align="right">3</td>
+<td align="left">Fordham - Bronx Pk</td>
+<td align="right">122000</td>
+<td align="right">71.1</td>
+<td align="right">61.1</td>
+<td align="right">79.3</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">104</td>
+<td align="right">3</td>
+<td align="left">Pelham - Throgs Neck</td>
+<td align="right">152000</td>
+<td align="right">66.4</td>
+<td align="right">58.7</td>
+<td align="right">73.4</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">201</td>
+<td align="right">3</td>
+<td align="left">Greenpoint</td>
+<td align="right">40000</td>
+<td align="right">41.8</td>
+<td align="right">31.0</td>
+<td align="right">53.6</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="left">UHF34</td>
+<td align="right">202</td>
+<td align="right">3</td>
+<td align="left">Downtown - Heights - Slope</td>
+<td align="right">86000</td>
+<td align="right">50.8</td>
+<td align="right">41.8</td>
+<td align="right">59.7</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#write_csv(overweight_df, &quot;data/SDI_data/overweight_data_clean.csv&quot;)</code></pre>
+</div>
+<div id="air-quality" class="section level2">
+<h2>Air Quality</h2>
+<p>The air quality data was a downloaded from csv files.</p>
+<p>The cleaning of the air quality index data included the following
+steps:</p>
+<ul>
+<li>Extracting year from the date variable</li>
+<li>Filtering data to 2019</li>
+<li>Filtering to geolocation type UHF34, as this is consistent with our
+other datasets (more on this below!)</li>
+<li>Filtering to annual values, as this dataset also has seasonal
+values</li>
+<li>Filtering to Fine Particles (PM 2.5) (the original dataset also had
+Nitrogen dioxide (NO2) and Ozone (O3), but for the purpose of only a
+single value for AQ, we keep PM 2.5 as the most relevant</li>
+</ul>
+<p>A look at the tidied dataset:</p>
+<pre class="r"><code>air_quality_df = read_csv(&quot;./data/air_quality/Air_Quality_20231126.csv&quot;) |&gt;
+  janitor::clean_names() |&gt;
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |&gt;
+  filter(year == &quot;2019&quot;)
+
+#Filter to only annual averages of fine particles (PM 2.5) mean measurement, mcg/m3
+air_quality_df =   
+  air_quality_df |&gt;
+  filter(geo_type_name == &quot;UHF34&quot;) |&gt;
+  filter(time_period == &quot;Annual Average 2019&quot;) |&gt;
+  filter(name == &quot;Fine particles (PM 2.5)&quot;)
+
+head(air_quality_df) |&gt;
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="5%" />
+<col width="7%" />
+<col width="13%" />
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+<col width="6%" />
+<col width="16%" />
+<col width="11%" />
+<col width="6%" />
+<col width="6%" />
+<col width="4%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">unique_id</th>
+<th align="right">indicator_id</th>
+<th align="left">name</th>
+<th align="left">measure</th>
+<th align="left">measure_info</th>
+<th align="left">geo_type_name</th>
+<th align="right">geo_join_id</th>
+<th align="left">geo_place_name</th>
+<th align="left">time_period</th>
+<th align="left">start_date</th>
+<th align="right">data_value</th>
+<th align="left">message</th>
+<th align="right">year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">649819</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">207</td>
+<td align="left">East Flatbush - Flatbush</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">6.31</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">649858</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">407</td>
+<td align="left">Southwest Queens</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">6.19</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="odd">
+<td align="right">649789</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">101</td>
+<td align="left">Kingsbridge - Riverdale</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">6.71</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">649795</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">103</td>
+<td align="left">Fordham - Bronx Pk</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">6.70</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="odd">
+<td align="right">649882</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">501502</td>
+<td align="left">Northern SI</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">6.05</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="right">649876</td>
+<td align="right">365</td>
+<td align="left">Fine particles (PM 2.5)</td>
+<td align="left">Mean</td>
+<td align="left">mcg/m3</td>
+<td align="left">UHF34</td>
+<td align="right">309310</td>
+<td align="left">Union Square-Lower Manhattan</td>
+<td align="left">Annual Average 2019</td>
+<td align="left">2019-01-01</td>
+<td align="right">8.67</td>
+<td align="left">NA</td>
+<td align="right">2019</td>
+</tr>
+</tbody>
+</table>
+<p>The air quality dataframe now includes 34 rows and 13 variables. The
+variables in the dataframe are unique_id, indicator_id, name, measure,
+measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
+start_date, data_value, message, year.</p>
+<hr />
+</div>
+<div id="nyc-neighborhood-data-merging" class="section level2">
+<h2><span style="color: blue;">NYC Neighborhood Data Merging</span></h2>
+<p>To combine datasets, they all need to have the same geographic
+identifier. We decided to use United Hospital (UHF) 34 codes which
+consists of 34 adjoining zip codes with similar characteristics compiled
+by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the
+least number of neighborhoods and is therefore more manageable (contains
+the largest area per neighborhood).</p>
+<ul>
+<li>For more information about the background behind UHF codes, please
+see <a
+href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><strong>here</strong></a>.</li>
+</ul>
+<p>We did the following:</p>
+<ol style="list-style-type: decimal">
+<li><strong>UHF42 to Zipcode</strong> First we converted United Hospital
+(UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42
+codes. We found a table that mapped UHF 42 codes to zip codes from a NYC
+gov <a
+href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
+Below we import this table and tidied it into a dataframe</li>
+</ol>
+<pre class="r"><code>uhf_zip = 
+  pdf_text(&quot;./data/geocoding/zipcodetable.pdf&quot;) |&gt; 
+  extract(1)
+
+uhf_zip_df =
+  uhf_zip |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_zip, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  filter(!row_number() %in% c(1, 2, 51)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 10, 22, 33, 44)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;)) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  separate(data, into = c(&quot;uhf&quot;, &quot;rest&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  separate(col = &quot;rest&quot;, into = c(&quot;neighborhood&quot;, &quot;zip&quot;), sep = &quot;(?=\\s\\d)&quot;, extra = &quot;merge&quot;) |&gt; 
+  separate(col = &quot;zip&quot;, into = c(&quot;zip1&quot;, &quot;zip2&quot;, &quot;zip3&quot;, &quot;zip4&quot;, &quot;zip5&quot;, &quot;zip6&quot;, &quot;zip7&quot;, &quot;zip8&quot;, &quot;zip9&quot;), sep = &quot;,&quot;) |&gt; 
+  mutate(across(everything(), ~ str_trim(.x))) |&gt; 
+  mutate(across(c(&quot;zip1&quot;:&quot;zip9&quot;), ~ as.numeric(.x))) |&gt; 
+  mutate(uhf = as.numeric(uhf)) |&gt; 
+  pivot_longer(c(zip1:zip9), names_to = &quot;zip_name&quot;, values_to = &quot;zip&quot;) |&gt; 
+  filter(!is.na(zip)) |&gt; 
+  select(!zip_name)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>UHF34 to UHF42</strong> We imported and cleaned a dataframe
+that converted UHF 34 to UHF 42 via neighborhood name</li>
+</ol>
+<pre class="r"><code>uhf_34 = 
+  pdf_text(&quot;./data/geocoding/uhf34.pdf&quot;)
+
+uhf_34_df =
+  uhf_34 |&gt; 
+  str_split(&quot;\n&quot;) |&gt;
+  tibble() |&gt; 
+  rename(&quot;data&quot; = &quot;str_split(uhf_34, \&quot;\\n\&quot;)&quot;) |&gt; 
+  unnest(&quot;data&quot;) |&gt; 
+  filter(data != &quot;&quot;) |&gt; 
+  mutate(data = str_squish(data)) |&gt; 
+  filter(!row_number() %in% c(1, 2, 7, 14, 18, 21, 24, 27, 28, 31, 32, 34, 35, 39, 40, 42, 43, 44, 45, 47, 48, 52, 53, 57, 61:75)) |&gt; 
+  mutate(data = str_replace(data, &quot;Kingsbridge - Riverdale&quot;, &quot;101 Kingsbridge - Riverdale&quot;)) |&gt; 
+  mutate(data = str_replace(data, &quot;Northeast Bronx&quot;, &quot;102 Northeast Bronx&quot;)) |&gt; 
+  filter(!row_number() %in% c(1,2)) |&gt; 
+  mutate(data = str_remove_all(data, &quot;-&quot;),
+         data = str_squish(data), 
+         data = str_trim(data)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+$&quot;)) |&gt;
+  mutate(data = str_remove(data, &quot;(\\d)+\\s$&quot;)) |&gt;
+  separate(data, into = c(&quot;uhf34&quot;, &quot;neighborhood&quot;), sep = &quot;(?&lt;=\\d\\s)&quot;) |&gt; 
+  mutate(uhf34 = as.numeric(str_trim(uhf34)),
+         neighborhood = str_trim(neighborhood)) |&gt; 
+  mutate(uhf2 = uhf34) |&gt; 
+  separate_wider_position(uhf2, widths = c(&quot;1_uhf&quot; = 3, &quot;2_uhf&quot; = 3, &quot;3_uhf&quot; = 3), too_few = &quot;align_start&quot;) |&gt; 
+  pivot_longer(c(&quot;1_uhf&quot;:&quot;3_uhf&quot;), names_to = &quot;uhf_name&quot;, values_to = &quot;uhf42&quot;) |&gt; 
+  select(!uhf_name) |&gt; 
+  mutate(uhf34 = as.numeric(uhf34),
+         uhf42 = as.numeric(uhf42))</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li><strong>UHF34, UHF42, Zip</strong> We combined UHF 42 and UHF 34
+dataframes and zipcode to create a neighborhood crosswalk.</li>
+</ol>
+<pre class="r"><code>joined_uhf_34_42 = 
+  uhf_zip_df |&gt; 
+  left_join(y = uhf_34_df, by = join_by(&quot;uhf&quot; == &quot;uhf42&quot;)) |&gt; 
+  rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
+         &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
+         &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
+<hr />
+</div>
+<div id="bring-neighborhood-to-health-datasets" class="section level2">
+<h2><span style="color: blue;">Bring Neighborhood to Health
+Datasets</span></h2>
+<p>Now that we have a crosswalk among all location identifiers (UHF34,
+UHF42, and zipcode) used in our datasets, we’ll make sure they all have
+UHF34 so they can be merged together later.</p>
+</div>
+<div id="join-sdi-data-to-uhfzipneighborhood-data"
+class="section level2">
+<h2>Join SDI data to UHF/Zip/Neighborhood data</h2>
+<pre class="r"><code>joined_SDI_zip_neighborhood = 
+  SDI_df |&gt; 
+  filter(zip %in% pull(joined_uhf_34_42, zip)) |&gt; 
+  mutate(zip = as.numeric(zip)) |&gt; 
+  left_join(y = joined_uhf_34_42, by = &quot;zip&quot;)</code></pre>
+</div>
+<div id="join-overweight-data-to-uhfzipneighborhood-data"
+class="section level2">
+<h2>Join Overweight data to UHF/Zip/Neighborhood data</h2>
+<pre class="r"><code>joined_overweight_zip_neighborhood = 
+  overweight_df |&gt; 
+  left_join(y = joined_uhf_34_42, by = join_by(&quot;geo_id&quot; == &quot;uhf34&quot;)) |&gt;
+  rename(percent_overweight = percent)</code></pre>
+</div>
+<div id="join-air-quality-data-to-uhfzipneighborhood-data"
+class="section level2">
+<h2>Join Air Quality data to UHF/Zip/Neighborhood data</h2>
+<pre class="r"><code>#Align UHF neighborhood names
+air_quality_df = 
+  left_join(air_quality_df, uhf_34_df, by = c(&quot;geo_join_id&quot; = &quot;uhf34&quot;))
+
+air_quality_df =
+  air_quality_df |&gt;
+select(data_value, neighborhood ) |&gt;
+ distinct()</code></pre>
+<hr />
+</div>
+<div id="bring-neighborhood-to-citibike-dataset" class="section level2">
+<h2><span style="color: blue;">Bring Neighborhood to Citibike
+Dataset</span></h2>
+<p>The Citibike data is coded by latitude/longitude To enable merging of
+Citibike data with the health datasets, we need to transform coordinates
+to zipcode, that can later be easily converted to UHF34 identifiers.</p>
+<ul>
+<li><p>To get zipcodes for each latitude/longitude pair in the Citibike
+data, we used the <a
+href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>
+packager. The full code with details of how that was created <a
+href="data/geocoding/latlong_to_zip.html">can be found here</a>. Here,
+we import the latitude/longitude to zipcode crosswalk that we
+generated.</p>
+<ul>
+<li>Note: Every Citibike entry has a start_latitude/longitude, and
+end_latitude/longitude. Each row will accordingly have a start_zipcode
+and end_zipcode.</li>
+</ul></li>
+</ul>
+</div>
+<div id="merge-citibike-with-zipcode" class="section level2">
+<h2>Merge Citibike with Zipcode</h2>
+<pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)
+
+citibike_zip =
+  citibike_df |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
+  left_join(latlong_zip, 
+            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
+                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
+  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) 
+
+remove(citibike_df)</code></pre>
+<p>There are 81354 entries missing either the start or end zipcode.</p>
+<div id="missing-zipcodes" class="section level3">
+<h3><em>Missing Zipcodes</em></h3>
+<p>A look at the start coordinates with missing zipcodes below:</p>
+<pre class="r"><code>citibike_zip |&gt;
+  filter(is.na(start_zipcode)) |&gt;
+  group_by(start_station_name, start_station_latitude, start_station_longitude) |&gt;
+  summarize(n = n()) |&gt; 
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="32%" />
+<col width="29%" />
+<col width="31%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">start_station_name</th>
+<th align="right">start_station_latitude</th>
+<th align="right">start_station_longitude</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Broadway &amp; W 36 St</td>
+<td align="right">40.75098</td>
+<td align="right">-73.98765</td>
+<td align="right">2750</td>
+</tr>
+<tr class="even">
+<td align="left">Broadway &amp; W 37 St</td>
+<td align="right">40.75173</td>
+<td align="right">-73.98754</td>
+<td align="right">3301</td>
+</tr>
+<tr class="odd">
+<td align="left">Broadway &amp; W 38 St</td>
+<td align="right">40.75300</td>
+<td align="right">-73.98722</td>
+<td align="right">4325</td>
+</tr>
+<tr class="even">
+<td align="left">Broadway &amp; W 41 St</td>
+<td align="right">40.75514</td>
+<td align="right">-73.98658</td>
+<td align="right">7415</td>
+</tr>
+<tr class="odd">
+<td align="left">Cooper Square &amp; Astor Pl</td>
+<td align="right">40.72951</td>
+<td align="right">-73.99075</td>
+<td align="right">6576</td>
+</tr>
+<tr class="even">
+<td align="left">E 47 St &amp; 1 Ave</td>
+<td align="right">40.75207</td>
+<td align="right">-73.96784</td>
+<td align="right">2152</td>
+</tr>
+<tr class="odd">
+<td align="left">Roebling St &amp; N 4 St</td>
+<td align="right">40.71469</td>
+<td align="right">-73.95739</td>
+<td align="right">1649</td>
+</tr>
+<tr class="even">
+<td align="left">South St &amp; Gouverneur Ln</td>
+<td align="right">40.70355</td>
+<td align="right">-74.00670</td>
+<td align="right">5416</td>
+</tr>
+<tr class="odd">
+<td align="left">W 52 St &amp; 6 Ave</td>
+<td align="right">40.76133</td>
+<td align="right">-73.97982</td>
+<td align="right">5238</td>
+</tr>
+<tr class="even">
+<td align="left">William St &amp; Pine St</td>
+<td align="right">40.70718</td>
+<td align="right">-74.00887</td>
+<td align="right">2260</td>
+</tr>
+</tbody>
+</table>
+<p>A look at the end coordinates with missing zipcodes below:</p>
+<pre class="r"><code>citibike_zip |&gt;
+  filter(is.na(end_zipcode)) |&gt;
+  group_by(end_station_name, end_station_latitude, end_station_longitude) |&gt;
+  summarize(n = n()) |&gt;
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="34%" />
+<col width="28%" />
+<col width="30%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">end_station_name</th>
+<th align="right">end_station_latitude</th>
+<th align="right">end_station_longitude</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Broadway &amp; W 32 St</td>
+<td align="right">40.74855</td>
+<td align="right">-73.98808</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Broadway &amp; W 36 St</td>
+<td align="right">40.75098</td>
+<td align="right">-73.98765</td>
+<td align="right">2667</td>
+</tr>
+<tr class="odd">
+<td align="left">Broadway &amp; W 37 St</td>
+<td align="right">40.75173</td>
+<td align="right">-73.98754</td>
+<td align="right">3249</td>
+</tr>
+<tr class="even">
+<td align="left">Broadway &amp; W 38 St</td>
+<td align="right">40.75300</td>
+<td align="right">-73.98722</td>
+<td align="right">4251</td>
+</tr>
+<tr class="odd">
+<td align="left">Broadway &amp; W 41 St</td>
+<td align="right">40.75514</td>
+<td align="right">-73.98658</td>
+<td align="right">7796</td>
+</tr>
+<tr class="even">
+<td align="left">Cooper Square &amp; Astor Pl</td>
+<td align="right">40.72951</td>
+<td align="right">-73.99075</td>
+<td align="right">6209</td>
+</tr>
+<tr class="odd">
+<td align="left">E 47 St &amp; 1 Ave</td>
+<td align="right">40.75207</td>
+<td align="right">-73.96784</td>
+<td align="right">2141</td>
+</tr>
+<tr class="even">
+<td align="left">Roebling St &amp; N 4 St</td>
+<td align="right">40.71469</td>
+<td align="right">-73.95739</td>
+<td align="right">1651</td>
+</tr>
+<tr class="odd">
+<td align="left">South St &amp; Gouverneur Ln</td>
+<td align="right">40.70355</td>
+<td align="right">-74.00670</td>
+<td align="right">5318</td>
+</tr>
+<tr class="even">
+<td align="left">W 52 St &amp; 6 Ave</td>
+<td align="right">40.76133</td>
+<td align="right">-73.97982</td>
+<td align="right">6237</td>
+</tr>
+<tr class="odd">
+<td align="left">William St &amp; Pine St</td>
+<td align="right">40.70718</td>
+<td align="right">-74.00887</td>
+<td align="right">2371</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="manual-zipcode-completion" class="section level3">
+<h3><em>Manual Zipcode Completion</em></h3>
+<p>For the above missing zipcodes, we manually looked up based on
+latitude, longitude, and station_name what the correct zipcode is. Upon
+manually exploration, these looked like some data quality issues with
+the coordinates, but based on the staton name we were able to identify
+the correct zipcode. We stored this work in a csv on our g<a
+href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">ithub
+here</a>. The code below implements filling in those missing zipcode
+values.</p>
+<pre class="r"><code>citibike_zip = citibike_zip |&gt;
+  mutate(start_zipcode = case_when(start_station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
+                               start_station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
+                               start_station_name == &quot;William St &amp; Pine St&quot; ~ 10005,
+                               start_station_name %in% c(&quot;Broadway &amp; W 36 St&quot;,&quot;Broadway &amp; W 37 St&quot;,&quot;Broadway &amp; W 38 St&quot;,&quot;Broadway &amp; W 41 St&quot;) ~ 10018,
+                               start_station_name == &quot;W 52 St &amp; 6 Ave&quot; ~ 100019,
+                               start_station_name %in% c(&quot;Broadway &amp; W 41 St&quot;,&quot;W 43 St &amp; 6 Ave&quot;) ~ 10036,
+                               start_station_name == &quot;South St &amp; Gouverneur Ln&quot; ~ 10043,
+                               start_station_name == &quot;E 47 St &amp; 1 Ave&quot; ~ 10075,
+                               start_station_name == &quot;Roebling St &amp; N 4 St&quot; ~ 11211,
+                               TRUE ~ start_zipcode)) |&gt;
+  mutate(end_zipcode = case_when(end_station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
+                               end_station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
+                               end_station_name == &quot;William St &amp; Pine St&quot; ~ 10005,
+                               end_station_name %in% c(&quot;Broadway &amp; W 36 St&quot;,&quot;Broadway &amp; W 37 St&quot;,&quot;Broadway &amp; W 38 St&quot;,&quot;Broadway &amp; W 41 St&quot;) ~ 10018,
+                               end_station_name == &quot;W 52 St &amp; 6 Ave&quot; ~ 100019,
+                               end_station_name %in% c(&quot;Broadway &amp; W 41 St&quot;,&quot;W 43 St &amp; 6 Ave&quot;) ~ 10036,
+                               end_station_name == &quot;South St &amp; Gouverneur Ln&quot; ~ 10043,
+                               end_station_name == &quot;E 47 St &amp; 1 Ave&quot; ~ 10075,
+                               end_station_name == &quot;Roebling St &amp; N 4 St&quot; ~ 11211,
+                               TRUE ~ end_zipcode))</code></pre>
+</div>
+</div>
+<div id="merge-citibike-with-uhf34-neighborhood" class="section level2">
+<h2>Merge Citibike with UHF34 Neighborhood</h2>
+<p>Now that we have the zipcode for Citibike data, we can use the
+zipcode and UHF34 crosswalk generated above to get neighborhood onto
+Citibike data.</p>
+<pre class="r"><code>citibike_zip_neighborhoods =
+  citibike_zip |&gt;
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;start_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;start_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;) |&gt; 
+  left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
+            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt; 
+  rename(&quot;end_uhf34_neighborhood&quot; = &quot;uhf34_neighborhood&quot;,
+         &quot;end_uhf42_neighborhood&quot; = &quot;uhf42_neighborhood&quot;)
+
+remove(citibike_zip)
+
+head(citibike_zip_neighborhoods) |&gt; 
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="4%" />
+<col width="3%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="3%" />
+<col width="7%" />
+<col width="4%" />
+<col width="4%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="0%" />
+<col width="3%" />
+<col width="2%" />
+<col width="6%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">trip_duration_sec</th>
+<th align="right">trip_duration_min</th>
+<th align="left">start_time</th>
+<th align="left">stop_time</th>
+<th align="right">start_station_id</th>
+<th align="left">start_station_name</th>
+<th align="right">start_station_latitude</th>
+<th align="right">start_station_longitude</th>
+<th align="right">end_station_id</th>
+<th align="left">end_station_name</th>
+<th align="right">end_station_latitude</th>
+<th align="right">end_station_longitude</th>
+<th align="right">bikeid</th>
+<th align="left">user_type</th>
+<th align="right">birth_year</th>
+<th align="left">gender</th>
+<th align="right">age</th>
+<th align="right">start_zipcode</th>
+<th align="right">end_zipcode</th>
+<th align="left">start_uhf42_neighborhood</th>
+<th align="left">start_uhf34_neighborhood</th>
+<th align="left">end_uhf42_neighborhood</th>
+<th align="left">end_uhf34_neighborhood</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">897</td>
+<td align="right">14.950000</td>
+<td align="left">2019-07-01 00:00:00</td>
+<td align="left">2019-07-01 00:14:58</td>
+<td align="right">493</td>
+<td align="left">W 45 St &amp; 6 Ave</td>
+<td align="right">40.75680</td>
+<td align="right">-73.98291</td>
+<td align="right">454</td>
+<td align="left">E 51 St &amp; 1 Ave</td>
+<td align="right">40.75456</td>
+<td align="right">-73.96593</td>
+<td align="right">18340</td>
+<td align="left">Subscriber</td>
+<td align="right">1966</td>
+<td align="left">Male</td>
+<td align="right">53</td>
+<td align="right">10036</td>
+<td align="right">10022</td>
+<td align="left">Chelsea Clinton</td>
+<td align="left">Chelsea Village</td>
+<td align="left">Gramercy Park Murray Hill</td>
+<td align="left">Upper East Side Gramercy</td>
+</tr>
+<tr class="even">
+<td align="right">2201</td>
+<td align="right">36.683333</td>
+<td align="left">2019-07-01 00:00:05</td>
+<td align="left">2019-07-01 00:36:46</td>
+<td align="right">317</td>
+<td align="left">E 6 St &amp; Avenue B</td>
+<td align="right">40.72454</td>
+<td align="right">-73.98185</td>
+<td align="right">3469</td>
+<td align="left">India St &amp; West St</td>
+<td align="right">40.73181</td>
+<td align="right">-73.95995</td>
+<td align="right">39874</td>
+<td align="left">Subscriber</td>
+<td align="right">1986</td>
+<td align="left">Male</td>
+<td align="right">33</td>
+<td align="right">10009</td>
+<td align="right">11222</td>
+<td align="left">Union Square Lower East Side</td>
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="left">Greenpoint</td>
+<td align="left">Greenpoint</td>
+</tr>
+<tr class="odd">
+<td align="right">1660</td>
+<td align="right">27.666667</td>
+<td align="left">2019-07-01 00:00:08</td>
+<td align="left">2019-07-01 00:27:48</td>
+<td align="right">249</td>
+<td align="left">Harrison St &amp; Hudson St</td>
+<td align="right">40.71871</td>
+<td align="right">-74.00900</td>
+<td align="right">369</td>
+<td align="left">Washington Pl &amp; 6 Ave</td>
+<td align="right">40.73224</td>
+<td align="right">-74.00026</td>
+<td align="right">38865</td>
+<td align="left">Subscriber</td>
+<td align="right">1988</td>
+<td align="left">Male</td>
+<td align="right">31</td>
+<td align="right">10013</td>
+<td align="right">10011</td>
+<td align="left">Greenwich Village SoHo</td>
+<td align="left">Chelsea Village</td>
+<td align="left">Chelsea Clinton</td>
+<td align="left">Chelsea Village</td>
+</tr>
+<tr class="even">
+<td align="right">550</td>
+<td align="right">9.166667</td>
+<td align="left">2019-07-01 00:00:14</td>
+<td align="left">2019-07-01 00:09:25</td>
+<td align="right">3507</td>
+<td align="left">Park Ave &amp; E 124 St</td>
+<td align="right">40.80456</td>
+<td align="right">-73.93969</td>
+<td align="right">3553</td>
+<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
+<td align="right">40.80169</td>
+<td align="right">-73.95714</td>
+<td align="right">34139</td>
+<td align="left">Subscriber</td>
+<td align="right">1992</td>
+<td align="left">Male</td>
+<td align="right">27</td>
+<td align="right">10035</td>
+<td align="right">10026</td>
+<td align="left">East Harlem</td>
+<td align="left">East Harlem</td>
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="left">Central Harlem Morningside Heights</td>
+</tr>
+<tr class="odd">
+<td align="right">338</td>
+<td align="right">5.633333</td>
+<td align="left">2019-07-01 00:00:18</td>
+<td align="left">2019-07-01 00:05:56</td>
+<td align="right">478</td>
+<td align="left">11 Ave &amp; W 41 St</td>
+<td align="right">40.76030</td>
+<td align="right">-73.99884</td>
+<td align="right">388</td>
+<td align="left">W 26 St &amp; 10 Ave</td>
+<td align="right">40.74972</td>
+<td align="right">-74.00295</td>
+<td align="right">39703</td>
+<td align="left">Subscriber</td>
+<td align="right">1995</td>
+<td align="left">Male</td>
+<td align="right">24</td>
+<td align="right">10018</td>
+<td align="right">10001</td>
+<td align="left">Chelsea Clinton</td>
+<td align="left">Chelsea Village</td>
+<td align="left">Chelsea Clinton</td>
+<td align="left">Chelsea Village</td>
+</tr>
+<tr class="even">
+<td align="right">469</td>
+<td align="right">7.816667</td>
+<td align="left">2019-07-01 00:00:25</td>
+<td align="left">2019-07-01 00:08:14</td>
+<td align="right">514</td>
+<td align="left">12 Ave &amp; W 40 St</td>
+<td align="right">40.76087</td>
+<td align="right">-74.00278</td>
+<td align="right">458</td>
+<td align="left">11 Ave &amp; W 27 St</td>
+<td align="right">40.75140</td>
+<td align="right">-74.00523</td>
+<td align="right">28266</td>
+<td align="left">Subscriber</td>
+<td align="right">1989</td>
+<td align="left">Male</td>
+<td align="right">30</td>
+<td align="right">10199</td>
+<td align="right">10001</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Chelsea Clinton</td>
+<td align="left">Chelsea Village</td>
+</tr>
+</tbody>
+</table>
+<div id="missing-uhf34" class="section level3">
+<h3><em>Missing UHF34</em></h3>
+<p>There were some citibike zipcodes with missing UHF34, which we
+explore below:</p>
+<pre class="r"><code>missing_startuhf = citibike_zip_neighborhoods |&gt;
+  filter(is.na(start_uhf34_neighborhood)) |&gt;
+  group_by(start_zipcode) |&gt;
+  summarize(n = n()) |&gt;
+  rename(zipcode = start_zipcode)
+  
+missing_enduhf = citibike_zip_neighborhoods |&gt;
+  filter(is.na(end_uhf34_neighborhood)) |&gt;
+  group_by(end_zipcode) |&gt;
+  summarize(n = n()) |&gt;
+  rename(zipcode = end_zipcode)
+
+#write_csv(rbind(missing_startuhf, missing_enduhf) ,&#39;../data/geocoding/missing_uhf34.csv&#39;)
+
+citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
+  filter(!is.na(end_uhf34_neighborhood) &amp; !is.na(start_uhf34_neighborhood))</code></pre>
+<p>There are 227180 entries whose start zipcode do not have an
+associated uhf34, and 228910 entries whose end zipcode do not have an
+associated uhf34. Manual validation showed these zipcodes are business
+zipcodes, where a zipcode refers to a small domain of a business. While
+these could be pinpointed roughly to a UHF34 neighborhood manually, it
+is cleaner to simply omit them, as we still retain a substantial dataset
+size. The resulting dataset has 1424096 entries.</p>
+<hr />
+</div>
+</div>
+<div id="final-dataset-merge-citibike-sdi-overweight-and-aqt"
+class="section level2">
+<h2><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
+Overweight, and AQt</span></h2>
+<p>Next we needed to create one large dataframe that merged the citibike
+data with and each health dataset by UHF 34 neighborhood.</p>
+</div>
+<div id="merge-sdi-and-overweight-data" class="section level2">
+<h2>Merge SDI and Overweight data</h2>
+<p>SDI and overweight are joined together first by UHF42.</p>
+<ul>
+<li>Note: There are rows in the overweight data without zipcode that
+refer instead to borough and city-wide overweight percentages. These are
+excluded from joining on SDI/citibike data, which function by zipcode
+that is more granular than borough. These are what is excluded by
+filtering out null values.</li>
+</ul>
+<pre class="r"><code>sdi_overweight = 
+  merge(joined_overweight_zip_neighborhood, joined_SDI_zip_neighborhood,
+                   by.x = c(&quot;zip&quot;, &quot;uhf42&quot;, &quot;uhf42_neighborhood&quot;),
+                   by.y = c(&quot;zip&quot;, &quot;uhf42&quot;, &quot;uhf42_neighborhood&quot;),
+                   all.x = TRUE)  |&gt;
+  select(&quot;zip&quot;,&quot;uhf34&quot;,&quot;uhf34_neighborhood.x&quot;,&quot;uhf42&quot;,&quot;uhf42_neighborhood&quot;,
+         &quot;sdi_score&quot;,&quot;percent_overweight&quot;) |&gt;
+  rename(uhf34_neighborhood = uhf34_neighborhood.x) |&gt;
+  filter(!is.na(zip)) 
+
+remove(joined_overweight_zip_neighborhood)
+remove(joined_SDI_zip_neighborhood)
+remove(SDI_df)
+remove(overweight_df)</code></pre>
+</div>
+<div id="merge-sdi-and-overweight-data-onto-citibike"
+class="section level2">
+<h2>Merge SDI and Overweight data onto citibike</h2>
+<pre class="r"><code>citibike_df =
+  citibike_zip_neighborhoods |&gt;
+  left_join(y = sdi_overweight,
+            by = join_by(&quot;start_zipcode&quot; == &quot;zip&quot;)) |&gt;
+  rename(&quot;start_sdi_score&quot; = &quot;sdi_score&quot;,
+         &quot;start_percent_overweight&quot; = &quot;percent_overweight&quot;) 
+
+remove(citibike_zip_neighborhoods)
+
+citibike_df = citibike_df |&gt;
+  left_join(y = sdi_overweight,
+            by = join_by(&quot;end_zipcode&quot; == &quot;zip&quot;)) |&gt;
+  rename(&quot;end_sdi_score&quot; = &quot;sdi_score&quot;,
+         &quot;end_percent_overweight&quot; = &quot;percent_overweight&quot;) </code></pre>
+</div>
+<div id="merge-aq-data-onto-citibike" class="section level2">
+<h2>Merge AQ data onto citibike</h2>
+<pre class="r"><code>#Join to final dataframe
+citibike_df =
+  citibike_df |&gt;
+  left_join(y = air_quality_df,
+            by = join_by(&quot;start_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;
+  rename(&quot;start_aq&quot; = &quot;data_value&quot;)
+
+citibike_df = citibike_df |&gt;
+  left_join(y = air_quality_df,
+            by = join_by(&quot;end_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;
+  rename(&quot;end_aq&quot; = &quot;data_value&quot;)</code></pre>
+</div>
+<div id="final-tidy-of-citibike-data" class="section level2">
+<h2>Final Tidy of Citibike Data</h2>
+<p>A view at the final dataset, as well as overall summary of variables
+included and their missingness:</p>
+<pre class="r"><code>citibike_df = citibike_df |&gt;
+  select(bikeid, user_type, gender, age,
+         start_time, stop_time, 
+         start_station_latitude, start_station_longitude, 
+         end_station_latitude, end_station_latitude,
+         start_station_id, start_station_name,
+         start_zipcode, start_uhf34_neighborhood,
+         end_station_id, end_station_name,
+         end_zipcode, end_uhf34_neighborhood,
+         start_sdi_score, start_percent_overweight, start_aq,
+         end_sdi_score, end_percent_overweight, end_aq)
+
+head(citibike_df) |&gt;
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="1%" />
+<col width="2%" />
+<col width="1%" />
+<col width="0%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="5%" />
+<col width="3%" />
+<col width="7%" />
+<col width="3%" />
+<col width="8%" />
+<col width="2%" />
+<col width="8%" />
+<col width="3%" />
+<col width="6%" />
+<col width="2%" />
+<col width="3%" />
+<col width="5%" />
+<col width="1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">bikeid</th>
+<th align="left">user_type</th>
+<th align="left">gender</th>
+<th align="right">age</th>
+<th align="left">start_time</th>
+<th align="left">stop_time</th>
+<th align="right">start_station_latitude</th>
+<th align="right">start_station_longitude</th>
+<th align="right">end_station_latitude</th>
+<th align="right">start_station_id</th>
+<th align="left">start_station_name</th>
+<th align="right">start_zipcode</th>
+<th align="left">start_uhf34_neighborhood</th>
+<th align="right">end_station_id</th>
+<th align="left">end_station_name</th>
+<th align="right">end_zipcode</th>
+<th align="left">end_uhf34_neighborhood</th>
+<th align="right">start_sdi_score</th>
+<th align="right">start_percent_overweight</th>
+<th align="right">start_aq</th>
+<th align="right">end_sdi_score</th>
+<th align="right">end_percent_overweight</th>
+<th align="right">end_aq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">18340</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">53</td>
+<td align="left">2019-07-01 00:00:00</td>
+<td align="left">2019-07-01 00:14:58</td>
+<td align="right">40.75680</td>
+<td align="right">-73.98291</td>
+<td align="right">40.75456</td>
+<td align="right">493</td>
+<td align="left">W 45 St &amp; 6 Ave</td>
+<td align="right">10036</td>
+<td align="left">Chelsea Village</td>
+<td align="right">454</td>
+<td align="left">E 51 St &amp; 1 Ave</td>
+<td align="right">10022</td>
+<td align="left">Upper East Side Gramercy</td>
+<td align="right">69</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">26</td>
+<td align="right">36.5</td>
+<td align="right">8.98</td>
+</tr>
+<tr class="even">
+<td align="right">39874</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">33</td>
+<td align="left">2019-07-01 00:00:05</td>
+<td align="left">2019-07-01 00:36:46</td>
+<td align="right">40.72454</td>
+<td align="right">-73.98185</td>
+<td align="right">40.73181</td>
+<td align="right">317</td>
+<td align="left">E 6 St &amp; Avenue B</td>
+<td align="right">10009</td>
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="right">3469</td>
+<td align="left">India St &amp; West St</td>
+<td align="right">11222</td>
+<td align="left">Greenpoint</td>
+<td align="right">88</td>
+<td align="right">40.5</td>
+<td align="right">8.67</td>
+<td align="right">61</td>
+<td align="right">41.8</td>
+<td align="right">8.56</td>
+</tr>
+<tr class="odd">
+<td align="right">38865</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">31</td>
+<td align="left">2019-07-01 00:00:08</td>
+<td align="left">2019-07-01 00:27:48</td>
+<td align="right">40.71871</td>
+<td align="right">-74.00900</td>
+<td align="right">40.73224</td>
+<td align="right">249</td>
+<td align="left">Harrison St &amp; Hudson St</td>
+<td align="right">10013</td>
+<td align="left">Chelsea Village</td>
+<td align="right">369</td>
+<td align="left">Washington Pl &amp; 6 Ave</td>
+<td align="right">10011</td>
+<td align="left">Chelsea Village</td>
+<td align="right">69</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">51</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+</tr>
+<tr class="even">
+<td align="right">34139</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">27</td>
+<td align="left">2019-07-01 00:00:14</td>
+<td align="left">2019-07-01 00:09:25</td>
+<td align="right">40.80456</td>
+<td align="right">-73.93969</td>
+<td align="right">40.80169</td>
+<td align="right">3507</td>
+<td align="left">Park Ave &amp; E 124 St</td>
+<td align="right">10035</td>
+<td align="left">East Harlem</td>
+<td align="right">3553</td>
+<td align="left">Frederick Douglass Blvd &amp; W 112 St</td>
+<td align="right">10026</td>
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">100</td>
+<td align="right">70.1</td>
+<td align="right">7.11</td>
+<td align="right">95</td>
+<td align="right">68.7</td>
+<td align="right">7.00</td>
+</tr>
+<tr class="odd">
+<td align="right">39703</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">24</td>
+<td align="left">2019-07-01 00:00:18</td>
+<td align="left">2019-07-01 00:05:56</td>
+<td align="right">40.76030</td>
+<td align="right">-73.99884</td>
+<td align="right">40.74972</td>
+<td align="right">478</td>
+<td align="left">11 Ave &amp; W 41 St</td>
+<td align="right">10018</td>
+<td align="left">Chelsea Village</td>
+<td align="right">388</td>
+<td align="left">W 26 St &amp; 10 Ave</td>
+<td align="right">10001</td>
+<td align="left">Chelsea Village</td>
+<td align="right">65</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">70</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+</tr>
+<tr class="even">
+<td align="right">26757</td>
+<td align="left">Subscriber</td>
+<td align="left">Male</td>
+<td align="right">54</td>
+<td align="left">2019-07-01 00:00:26</td>
+<td align="left">2019-07-01 00:09:49</td>
+<td align="right">40.74178</td>
+<td align="right">-74.00150</td>
+<td align="right">40.74692</td>
+<td align="right">116</td>
+<td align="left">W 17 St &amp; 8 Ave</td>
+<td align="right">10011</td>
+<td align="left">Chelsea Village</td>
+<td align="right">462</td>
+<td align="left">W 22 St &amp; 10 Ave</td>
+<td align="right">10011</td>
+<td align="left">Chelsea Village</td>
+<td align="right">51</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+<td align="right">51</td>
+<td align="right">38.1</td>
+<td align="right">10.02</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>skimr::skim(citibike_df)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">citibike_df</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">1424096</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">23</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">6</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">15</td>
+</tr>
+<tr class="even">
+<td align="left">POSIXct</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="30%" />
+<col width="12%" />
+<col width="16%" />
+<col width="4%" />
+<col width="4%" />
+<col width="7%" />
+<col width="10%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">user_type</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">gender</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">start_station_name</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">45</td>
+<td align="right">0</td>
+<td align="right">716</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">start_uhf34_neighborhood</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">34</td>
+<td align="right">0</td>
+<td align="right">22</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">end_station_name</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">45</td>
+<td align="right">0</td>
+<td align="right">719</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">end_uhf34_neighborhood</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">34</td>
+<td align="right">0</td>
+<td align="right">22</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="21%" />
+<col width="8%" />
+<col width="11%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">bikeid</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">29831.33</td>
+<td align="right">7688.88</td>
+<td align="right">14529.00</td>
+<td align="right">25271.00</td>
+<td align="right">31075.00</td>
+<td align="right">35386.00</td>
+<td align="right">40002.00</td>
+<td align="left">▅▂▅▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">age</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">38.19</td>
+<td align="right">12.05</td>
+<td align="right">16.00</td>
+<td align="right">29.00</td>
+<td align="right">35.00</td>
+<td align="right">49.00</td>
+<td align="right">134.00</td>
+<td align="left">▇▅▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">start_station_latitude</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">40.74</td>
+<td align="right">0.03</td>
+<td align="right">40.66</td>
+<td align="right">40.72</td>
+<td align="right">40.74</td>
+<td align="right">40.76</td>
+<td align="right">40.87</td>
+<td align="left">▂▇▇▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">start_station_longitude</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-73.98</td>
+<td align="right">0.02</td>
+<td align="right">-74.03</td>
+<td align="right">-74.00</td>
+<td align="right">-73.99</td>
+<td align="right">-73.97</td>
+<td align="right">-73.88</td>
+<td align="left">▃▇▂▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">end_station_latitude</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">40.74</td>
+<td align="right">0.03</td>
+<td align="right">40.66</td>
+<td align="right">40.72</td>
+<td align="right">40.74</td>
+<td align="right">40.76</td>
+<td align="right">40.87</td>
+<td align="left">▂▇▇▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">start_station_id</td>
+<td align="right">42</td>
+<td align="right">1</td>
+<td align="right">1652.79</td>
+<td align="right">1486.59</td>
+<td align="right">72.00</td>
+<td align="right">379.00</td>
+<td align="right">504.00</td>
+<td align="right">3320.00</td>
+<td align="right">3798.00</td>
+<td align="left">▇▁▁▁▆</td>
+</tr>
+<tr class="odd">
+<td align="left">start_zipcode</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10258.49</td>
+<td align="right">475.48</td>
+<td align="right">10001.00</td>
+<td align="right">10010.00</td>
+<td align="right">10018.00</td>
+<td align="right">10037.00</td>
+<td align="right">11385.00</td>
+<td align="left">▇▁▁▁▂</td>
+</tr>
+<tr class="even">
+<td align="left">end_station_id</td>
+<td align="right">42</td>
+<td align="right">1</td>
+<td align="right">1640.10</td>
+<td align="right">1486.78</td>
+<td align="right">72.00</td>
+<td align="right">377.00</td>
+<td align="right">501.00</td>
+<td align="right">3321.00</td>
+<td align="right">3798.00</td>
+<td align="left">▇▁▁▁▆</td>
+</tr>
+<tr class="odd">
+<td align="left">end_zipcode</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10261.18</td>
+<td align="right">477.71</td>
+<td align="right">10001.00</td>
+<td align="right">10010.00</td>
+<td align="right">10018.00</td>
+<td align="right">10037.00</td>
+<td align="right">11385.00</td>
+<td align="left">▇▁▁▁▂</td>
+</tr>
+<tr class="even">
+<td align="left">start_sdi_score</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">65.33</td>
+<td align="right">21.61</td>
+<td align="right">26.00</td>
+<td align="right">49.00</td>
+<td align="right">64.00</td>
+<td align="right">88.00</td>
+<td align="right">100.00</td>
+<td align="left">▃▇▇▃▇</td>
+</tr>
+<tr class="odd">
+<td align="left">start_percent_overweight</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">44.04</td>
+<td align="right">9.82</td>
+<td align="right">36.50</td>
+<td align="right">38.10</td>
+<td align="right">40.50</td>
+<td align="right">43.40</td>
+<td align="right">71.20</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">start_aq</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8.71</td>
+<td align="right">1.11</td>
+<td align="right">6.04</td>
+<td align="right">7.44</td>
+<td align="right">8.67</td>
+<td align="right">10.02</td>
+<td align="right">10.02</td>
+<td align="left">▁▅▁▇▇</td>
+</tr>
+<tr class="odd">
+<td align="left">end_sdi_score</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">65.49</td>
+<td align="right">21.57</td>
+<td align="right">26.00</td>
+<td align="right">49.00</td>
+<td align="right">64.00</td>
+<td align="right">88.00</td>
+<td align="right">100.00</td>
+<td align="left">▃▇▇▃▇</td>
+</tr>
+<tr class="even">
+<td align="left">end_percent_overweight</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">44.04</td>
+<td align="right">9.81</td>
+<td align="right">36.50</td>
+<td align="right">38.10</td>
+<td align="right">40.50</td>
+<td align="right">43.40</td>
+<td align="right">71.20</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">end_aq</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8.72</td>
+<td align="right">1.11</td>
+<td align="right">6.04</td>
+<td align="right">7.50</td>
+<td align="right">8.67</td>
+<td align="right">10.02</td>
+<td align="right">10.02</td>
+<td align="left">▁▅▁▇▇</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: POSIXct</strong></p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="9%" />
+<col width="13%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="right">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">start_time</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2019-07-01 00:00:00</td>
+<td align="left">2019-07-31 23:59:57</td>
+<td align="left">2019-07-16 14:29:28</td>
+<td align="right">1423532</td>
+</tr>
+<tr class="even">
+<td align="left">stop_time</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2019-07-01 00:05:52</td>
+<td align="left">2019-08-01 18:30:37</td>
+<td align="left">2019-07-16 14:46:04</td>
+<td align="right">1423510</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write_csv(citibike_df, file = &#39;./data/citibike_clean.csv&#39;)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
