@@ -812,6 +812,12 @@ head(citibike_df) |&gt;
 </tr>
 </tbody>
 </table>
+<p>The citibike dataframe includes 16893163 trips and 18 variables. The
+variables in the dataframe are trip_duration_sec, trip_duration_min,
+start_time, stop_time, start_station_id, start_station_name,
+start_station_latitude, start_station_longitude, end_station_id,
+end_station_name, end_station_latitude, end_station_longitude, bikeid,
+user_type, birth_year, gender, month, age.</p>
 <p>Due to large sample size that limits technical processing
 feasibility, we decided to focus on only a month of Citibike data. To do
 so, we look at the distribution of number of rides by month.</p>
@@ -828,12 +834,7 @@ so, we look at the distribution of number of rides by month.</p>
 <p>Since September is the month of highest usage, we focus on
 September</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt; filter(month == 9)</code></pre>
-<p>The citibike dataframe includes 2069707 trips and 18 variables. The
-variables in the dataframe are trip_duration_sec, trip_duration_min,
-start_time, stop_time, start_station_id, start_station_name,
-start_station_latitude, start_station_longitude, end_station_id,
-end_station_name, end_station_latitude, end_station_longitude, bikeid,
-user_type, birth_year, gender, month, age.</p>
+<p>The September Citibike dataframe includes 2069707 trips.</p>
 </div>
 </div>
 <div id="social-deprivation-index" class="section level2">

@@ -121,6 +121,9 @@ head(citibike_df) |>
 
 ```
 
+
+The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
+
 Due to large sample size that limits technical processing feasibility, we decided to focus on only a month of Citibike data. To do so, we look at the distribution of number of rides by month. 
 
 ```{r citibike_plot}
@@ -139,8 +142,7 @@ Since September is the month of highest usage, we focus on September
 citibike_df = citibike_df |> filter(month == 9)
 ```
 
-
-The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
+The September Citibike dataframe includes `r nrow(citibike_df)` trips.
 
 
 ## Social Deprivation Index
