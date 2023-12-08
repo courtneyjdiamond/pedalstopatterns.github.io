@@ -329,7 +329,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
+  <a href="data_import_clean.html">Data Sources</a>
 </li>
 <li>
   <a href="analysis.html">Analysis</a>
@@ -403,7 +403,7 @@ charts and graphs.</p>
 <div id="geographic-utilization" class="section level2">
 <h2><span style="color: blue;">Geographic utilization</span></h2>
 <p> </p>
-<pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+<pre class="r"><code>citibike_df &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_zip_neighborhoods.csv&quot;)</code></pre>
 <p>Here is a table of the number of stations per neighborhood.</p>
 <pre class="r"><code>station = citibike_zip_neighborhoods %&gt;%
@@ -417,104 +417,6 @@ charts and graphs.</p>
   summarize(Number_of_Stations = n())|&gt;
   arrange(desc(Number_of_Stations))|&gt;
      knitr:: kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Neighborhood</th>
-<th align="right">Number_of_Stations</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Chelsea Village</td>
-<td align="right">215</td>
-</tr>
-<tr class="even">
-<td align="left">Downtown Heights Slope</td>
-<td align="right">200</td>
-</tr>
-<tr class="odd">
-<td align="left">Union Square, Lower Manhattan</td>
-<td align="right">190</td>
-</tr>
-<tr class="even">
-<td align="left">Upper East Side Gramercy</td>
-<td align="right">160</td>
-</tr>
-<tr class="odd">
-<td align="left">Long Island City Astoria</td>
-<td align="right">151</td>
-</tr>
-<tr class="even">
-<td align="left">Williamsburg Bushwick</td>
-<td align="right">148</td>
-</tr>
-<tr class="odd">
-<td align="left">Greenpoint</td>
-<td align="right">136</td>
-</tr>
-<tr class="even">
-<td align="left">Upper West Side</td>
-<td align="right">123</td>
-</tr>
-<tr class="odd">
-<td align="left">East Harlem</td>
-<td align="right">117</td>
-</tr>
-<tr class="even">
-<td align="left">Bedford Stuyvesant Crown Heights</td>
-<td align="right">110</td>
-</tr>
-<tr class="odd">
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">107</td>
-</tr>
-<tr class="even">
-<td align="left">East New York</td>
-<td align="right">92</td>
-</tr>
-<tr class="odd">
-<td align="left">East Flatbush Flatbush</td>
-<td align="right">67</td>
-</tr>
-<tr class="even">
-<td align="left">Kingsbridge Riverdale</td>
-<td align="right">66</td>
-</tr>
-<tr class="odd">
-<td align="left">Washington Heights Inwood</td>
-<td align="right">54</td>
-</tr>
-<tr class="even">
-<td align="left">West Queens</td>
-<td align="right">54</td>
-</tr>
-<tr class="odd">
-<td align="left">Ridgewood Forest Hills</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
-<td align="left">Bensonhurst Bay Ridge</td>
-<td align="right">39</td>
-</tr>
-<tr class="odd">
-<td align="left">Coney Island Sheepshead Bay</td>
-<td align="right">38</td>
-</tr>
-<tr class="even">
-<td align="left">Sunset Park</td>
-<td align="right">36</td>
-</tr>
-<tr class="odd">
-<td align="left">Southwest Queens</td>
-<td align="right">8</td>
-</tr>
-<tr class="even">
-<td align="left">Canarsie Flatlands</td>
-<td align="right">4</td>
-</tr>
-</tbody>
-</table>
 <p>Here is a table of the number of rides per start neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
 group_by(start_uhf34_neighborhood) |&gt;
@@ -595,8 +497,9 @@ olds use citibike the most!</p>
   labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;)</code></pre>
 <p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
-<div id="exploring-subsets" class="section level2">
-<h2>Exploring Subsets</h2>
+</div>
+<div id="exploring-subsets" class="section level1">
+<h1><span style="color: blue;">Exploring Subsets</span></h1>
 <p><a href="exploratory/AirQual_exploratory.html">Air Quality
 index</a></p>
 <p><a href="exploratory/SDI_Exploratory.html">Social deprivation
@@ -608,7 +511,9 @@ href="Dashboard_Shiny.html">dashboard</a> to visualize some of these
 exploratory analyses all together!</p>
 <p> </p>
 <hr />
-<p># <span style="color: blue;">Modeling Outcomes</span></p>
+</div>
+<div id="modelling" class="section level1">
+<h1><span style="color: blue;">Modelling</span></h1>
 <p>We sought to develop linear models that would characterize the number
 of rides per station as a surrogate for utilization of citibikes.
 Predictors included Air quality measures, social deprivation index, and
@@ -616,7 +521,6 @@ percentage of overweight individuals in a neighborhood.</p>
 <p>We then built on these models and looked at the outcomes of these
 metrics, based on the other metrics and citibike utilization.</p>
 <p><a href="modeling/Modeling.html">Models</a></p>
-</div>
 </div>
 
 
