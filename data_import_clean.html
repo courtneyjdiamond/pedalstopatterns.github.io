@@ -416,6 +416,7 @@ href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>A
 Quality Index Data</strong></a>: These data originated from NYC Open
 Data, contributed by the Department of Hygiene and Mental Health and
 include air quality indexes measured across boroughs in NYC.</p>
+<p> </p>
 <hr />
 </div>
 <div id="invididual-dataset-imports-and-cleaning"
@@ -833,6 +834,7 @@ so, we look at the distribution of number of rides by month.</p>
 September</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt; filter(month == 9)</code></pre>
 <p>The September Citibike dataframe includes 2069707 trips.</p>
+<p> </p>
 </div>
 </div>
 <div id="social-deprivation-index" class="section level3">
@@ -886,6 +888,7 @@ head(SDI_df) |&gt;
 </tr>
 </tbody>
 </table>
+<p> </p>
 </div>
 <div id="overweight-data" class="section level3">
 <h3>Overweight data</h3>
@@ -1012,6 +1015,7 @@ head(overweight_df) |&gt;
 </tbody>
 </table>
 <pre class="r"><code>#write_csv(overweight_df, &quot;data/SDI_data/overweight_data_clean.csv&quot;)</code></pre>
+<p> </p>
 </div>
 <div id="air-quality" class="section level3">
 <h3>Air Quality</h3>
@@ -1278,10 +1282,9 @@ Datasets</span></h2>
 <p>Now that we have a crosswalk among all location identifiers (UHF34,
 UHF42, and zipcode) used in our datasets, we’ll make sure they all have
 UHF34 so they can be merged together later.</p>
-</div>
 <div id="join-sdi-data-to-uhfzipneighborhood-data"
-class="section level2">
-<h2>Join SDI data to UHF/Zip/Neighborhood data</h2>
+class="section level3">
+<h3>Join SDI data to UHF/Zip/Neighborhood data</h3>
 <pre class="r"><code>joined_SDI_zip_neighborhood = 
   SDI_df |&gt; 
   filter(zip %in% pull(joined_uhf_34_42, zip)) |&gt; 
@@ -1289,16 +1292,16 @@ class="section level2">
   left_join(y = joined_uhf_34_42, by = &quot;zip&quot;)</code></pre>
 </div>
 <div id="join-overweight-data-to-uhfzipneighborhood-data"
-class="section level2">
-<h2>Join Overweight data to UHF/Zip/Neighborhood data</h2>
+class="section level3">
+<h3>Join Overweight data to UHF/Zip/Neighborhood data</h3>
 <pre class="r"><code>joined_overweight_zip_neighborhood = 
   overweight_df |&gt; 
   left_join(y = joined_uhf_34_42, by = join_by(&quot;geo_id&quot; == &quot;uhf34&quot;)) |&gt;
   rename(percent_overweight = percent)</code></pre>
 </div>
 <div id="join-air-quality-data-to-uhfzipneighborhood-data"
-class="section level2">
-<h2>Join Air Quality data to UHF/Zip/Neighborhood data</h2>
+class="section level3">
+<h3>Join Air Quality data to UHF/Zip/Neighborhood data</h3>
 <pre class="r"><code>#Align UHF neighborhood names
 air_quality_df = 
   left_join(air_quality_df, uhf_34_df, by = c(&quot;geo_join_id&quot; = &quot;uhf34&quot;))
@@ -1308,6 +1311,7 @@ air_quality_df =
 select(data_value, neighborhood ) |&gt;
  distinct()</code></pre>
 <hr />
+</div>
 </div>
 <div id="bring-neighborhood-to-citibike-dataset" class="section level2">
 <h2><span style="color: blue;">Bring Neighborhood to Citibike
@@ -1815,10 +1819,10 @@ size. The resulting dataset has 1628960 entries.</p>
 </div>
 </div>
 </div>
-<div id="final-dataset-merge-citibike-sdi-overweight-and-aqt"
+<div id="final-dataset-merge-citibike-sdi-overweight-and-aq"
 class="section level2">
 <h2><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
-Overweight, and AQt</span></h2>
+Overweight, and AQ</span></h2>
 <p>Next we needed to create one large dataframe that merged the citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level3">

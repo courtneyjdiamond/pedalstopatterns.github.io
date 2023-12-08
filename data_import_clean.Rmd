@@ -45,6 +45,8 @@ knitr::opts_chunk$set(message = FALSE,
 
 [**Air Quality Index Data**](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r): These data originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC.
 
+  &nbsp;
+  
   ***
   
 ## <span style='color: blue;'>Invididual Dataset Imports and Cleaning</span>
@@ -140,7 +142,8 @@ citibike_df = citibike_df |> filter(month == 9)
 
 The September Citibike dataframe includes `r nrow(citibike_df)` trips.
 
-
+  &nbsp;
+  
 ### Social Deprivation Index
 
 The SDI dataset was a csv. We renamed the zipcode variable to be more intuitive. As we were only interested in the entirety of the SDI score, we filtered the data to include zip code and sdi_score only. 
@@ -159,6 +162,8 @@ head(SDI_df) |>
   knitr::kable()
 ```
 
+  &nbsp;
+  
 ### Overweight data 
 
 The overweight data was downloaded as csv files for "Overweight and Obese Adults." We were specifically interested in 2019 as this was when SDI scores were available.
@@ -194,7 +199,8 @@ head(overweight_df) |>
 
 ```
 
-
+  &nbsp;
+  
 ### Air Quality
 
 The air quality data was a downloaded from csv files. 
@@ -327,7 +333,7 @@ joined_uhf_34_42 =
 
 Now that we have a crosswalk among all location identifiers (UHF34, UHF42, and zipcode) used in our datasets, we'll make sure they all have UHF34 so they can be merged together later. 
 
-## Join SDI data to UHF/Zip/Neighborhood data
+### Join SDI data to UHF/Zip/Neighborhood data
 ```{r SDI_zip}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
@@ -336,7 +342,7 @@ joined_SDI_zip_neighborhood =
   left_join(y = joined_uhf_34_42, by = "zip")
 ```
 
-## Join Overweight data to UHF/Zip/Neighborhood data
+### Join Overweight data to UHF/Zip/Neighborhood data
 ```{r overweight_zip}
 joined_overweight_zip_neighborhood = 
   overweight_df |> 
@@ -345,7 +351,7 @@ joined_overweight_zip_neighborhood =
 
 ```
 
-## Join Air Quality data to UHF/Zip/Neighborhood data
+### Join Air Quality data to UHF/Zip/Neighborhood data
 ```{r air_quality_uhf}
 #Align UHF neighborhood names
 air_quality_df = 
@@ -493,7 +499,7 @@ There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode d
 
   ***
   
-## <span style='color: blue;'>Final Dataset: Merge Citibike, SDI, Overweight, and AQt</span>
+## <span style='color: blue;'>Final Dataset: Merge Citibike, SDI, Overweight, and AQ</span>
 
 Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
