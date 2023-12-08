@@ -84,6 +84,7 @@ scatter_plot = data |>
 
 
 ## Build Health model 
+
 ```{r}
 fit = lm(overweight ~ sdi, data = data)
 
@@ -96,12 +97,12 @@ scatter_plot + geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "
 
 ```
 
-This means that for every one-unit increase in sdi, overweight is estimated to increase by 0.194 units, assuming all other factors remain constant. They are positively correlated, but not very strongly. 
+This means that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly. 
 
 
 # Regression Models for Statistical Analyses 
 
-For regression analysis, the merged data set was created by reading in Air Quality, Social Disparity Index, overweight percentages and merged with our Citibike dataset for 2019. To convert zip code data to neighborhoods we utilized ufh34/42 coding. 
+For regression analysis, the merged data set was created by reading in Air Quality, Social Disparity Index, overweight percentages and merged with our Citibike dataset for September 2019 (peak usage month). To convert zip code data to neighborhoods we utilized ufh34/42 coding. 
 
 This finalized dataset was imported in as `citibike.df`.
 
@@ -123,7 +124,7 @@ Our exploratory analyses noted some interesting trends in the Citibike data for 
 
 As such we elected to model potential interactions between the mean aggregate rides in geographic neighborhoods in NYC and Air Quality Index (AQI), SDI, and percentage overweight to see if they could predict citibike usage in a geographic area. 
 
-We first summarized the citibike ride data by start station to make a new variable, `n_rides`. We then also calculate mean values of each of the health metrics for the start station location (`mean_aq`, `mean_sdi`, and `mean_overweight`) and end station (`mean_end_aq`, `mean_end_sdi`, and `mean_end_overweight`). 
+We first summarized the citibike ride data by start station to make a new variable, `n_rides`. We then also calculate mean values of each of the health metrics for the start station location (`AQI`, `median_sdi`, and `overweight`). 
 
 ```{r location summaries, eval = TRUE}
 citibike_group_by_station <- citibike.df %>%
@@ -136,11 +137,11 @@ citibike_group_by_station <- citibike.df %>%
   )
 ```
 
-##Our first model:
+## Our first model:
 
 Outcome: Sum of rides per start station
 
-Predictors: Health metrics for the location the start station is located in: Mean_AQI, Mean_SDI, Mean_Overweight
+Predictors: Health metrics for the location the start station is located in: `AQI`, `Median_SDI`, `overweight`.
 
 ```{r first model}
 fit_model = lm(n_rides ~ AQI + median_sdi + overweight, data = citibike_group_by_station)
@@ -160,9 +161,9 @@ citibike_group_by_station %>%
 ```
 
 
-We can interpret the Beta statistics as:
+We can interpret the Beta coefficients as:
 
-* For every increase in AQI Fine Particles by 1, there is an increase of sum of rides by 9.87, with all other variables held constant. This is the only value that is significant with p<0.05.
+* For every increase in AQI (Fine Particles) by 1, there is an increase of sum of rides by 9.87, with all other variables held constant. This is the only value that is significant with p<0.05.
 
 * For every increase in median SDI score by one point, there is a decrease of sum of rides by 1.22, with all other variables held constant. 
 
@@ -175,7 +176,7 @@ performance::check_model(fit_model, check = c("linearity", "outliers", "qq", "no
 
 * We also plotted the performance of our model looking at linearity, influential observations, and normality of residuals. 
 
-##Our second model:
+## Our second model:
 
 Outcome: Number of rides per start station
 Predictors: 
@@ -204,7 +205,7 @@ citibike_group_by_station %>%
        y = "residual")
 ```
 
-We can interpret the Beta statistics as:
+We can interpret the Beta coefficients as:
 
 * For every increase in air quality (fine particles) by 1, there is a decrease of sum of rides by 1.05, with all other variables held constant. 
 
@@ -296,7 +297,7 @@ citibike_group_by_station %>%
        y = "residual")
 ```
 
-When interpreting the beta statistics for predicting percentage overweight:
+When interpreting the Beta coefficients for predicting percentage overweight:
 
 * For every increase in Air quality (fine particles) by one point, there is a decrease of percentage overweight by 24.87
 
@@ -321,7 +322,7 @@ citibike_group_by_station %>%
        y = "residual")
 ```
 
-When interpreting the beta statistics for predicting Air quality: (all were significant).
+When interpreting the Beta coefficients for predicting Air quality: (all were significant).
 
 * For every increase in percentage overweight by one point, there is a decrease of AQI by 24.87
 
