@@ -41,6 +41,7 @@ This page includes a few summary tables of the Citibike data, links to view deep
 library(tidyverse)
 library(viridis)
 library(plotly)
+library(patchwork)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -103,8 +104,13 @@ There is consistency among stations available and used, with a mean of `r mean(s
 -   **Bronx has only a single station**, which makes sense given [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/) that describes Citibike expansion into the Bronx just after the time we're observing here (late 2019). While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas. So we'll see if this seems to be indicated when we incorporate SDI below.
 -   Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
 
+<<<<<<< HEAD
 This graph shows that most start and end rides occurred in Manhattan in September 2019.
 
+=======
+
+**This graph shows that most start and end rides occurred in Manhattan in September 2019.**
+>>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
 ```{r graph of station stop/start per borough}
 
 # Assuming citibike_df is your dataframe
@@ -130,8 +136,7 @@ ggplot(combined_df, aes(x = reorder(borough, n_rides), y = n_rides, fill = borou
   theme(legend.position = "bottom") 
 ```
 
-Here are the 10 most popular starting and stopping stations in September 2019 - also in Manhattan.
-
+**Here are the 10 most popular starting and stopping stations in September 2019, all in Manhattan.**
 ```{r start stations}
 
 combined_df <- bind_rows(
@@ -159,15 +164,16 @@ ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides, fill = stati
 
 ```
 
-Add in plot for rides per day of the week here:
+**TO DO ridership by days of the week:**
+
+
 
 ## [User Demographics]{style="color: blue;"}
 
-Here is a graph of user type distribution: Subscribers take more rides!
+**Distribution of User Type Demographics:**
 
-```{r rider per subscriber}
-# Count the number of rides for each user type
-citibike_df %>%
+```{r}
+user_type = citibike_df %>%
   group_by(user_type) %>%
   summarise(n_rides = n()) |>
 ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
@@ -175,26 +181,16 @@ ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
   scale_y_continuous(labels = scales::comma_format()) +
   scale_fill_viridis(discrete = TRUE) +
   labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
-```
 
-Here is a graph of number of rides per gender: Males take the most rides!
-
-```{r rides per gender}
-
-citibike_df %>%
+gender = citibike_df %>%
   group_by(gender) %>%
   summarise(n_rides = n()) |>ggplot(aes(x = gender, y = n_rides, fill = gender)) +
   geom_bar(stat = "identity") +
-   scale_fill_viridis(discrete = TRUE) +
+  scale_fill_viridis(discrete = TRUE) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
-```
 
-This graph shows the distribution of ages: 30 year olds and 50 year olds use citibike the most!
-
-```{r age distribution}
-
-ggplot(citibike_df, aes(x = age, fill = "Count")) +
+age = ggplot(citibike_df, aes(x = age, fill = "Count")) +
   geom_histogram(binwidth = 5, alpha = 0.7, color = "black") +
   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
@@ -202,9 +198,20 @@ ggplot(citibike_df, aes(x = age, fill = "Count")) +
   scale_fill_viridis(discrete = TRUE) +
   theme_minimal() +
   guides(fill = FALSE)
+
+
+(user_type + gender) / age
 ```
 
+<<<<<<< HEAD
  
+=======
+Subscribers make up the large majority of rides.Males take the most rides! And 30 year olds and 50 year olds use citibike the most!
+
+ &nbsp;
+ 
+ ***
+>>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
 
 ------------------------------------------------------------------------
 
@@ -231,7 +238,11 @@ health_plot |>
 
 ```
 
+<<<<<<< HEAD
 ## Station Available and Usage
+=======
+## Station Availability and Usage 
+>>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
 
 **Does station usage and availability vary by SDI?**
 
