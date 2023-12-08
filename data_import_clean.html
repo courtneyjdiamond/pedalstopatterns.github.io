@@ -446,9 +446,10 @@ Data</strong></a>: This dataset contains publicly available data from
 NYC regarding the percent of people who are overweight per area.</p>
 <p><a
 href="https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r"><strong>Air
-Quality Index Data</strong></a>: These data originated from NYC Open
-Data, contributed by the Department of Hygiene and Mental Health and
-include air quality indexes measured across boroughs in NYC.</p>
+Quality Index Data</strong></a>: The air quality (AQ) data originated
+from NYC Open Data, contributed by the Department of Hygiene and Mental
+Health and include air quality indexes measured across boroughs in
+NYC.</p>
 <p> </p>
 <hr />
 </div>
@@ -458,7 +459,7 @@ class="section level2">
 Cleaning</span></h2>
 <div id="citibike" class="section level3">
 <h3>Citibike</h3>
-<p>The citibike data was a collection of csv files that we downloaded
+<p>The Citibike data was a collection of csv files that we downloaded
 and merged. We were specifically interested in 2019 as this was when SDI
 scores were available. We downloaded the data files from December 2018
 through January 2020.</p>
@@ -888,18 +889,19 @@ stations = rbind(start_station, end_station) |&gt;
 <p><img src="data_import_clean_files/figure-html/citibike_plot-1.png" width="90%" /></p>
 <div id="filter-to-september" class="section level4">
 <h4>Filter to September</h4>
-<p>Since September is the month of highest usage, we focus on
-September</p>
+<p>Since September is the month of highest usage, we focus on September
+2019.</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt; filter(month == 9)</code></pre>
-<p>The September Citibike dataframe includes 2069707 trips.</p>
+<p>The September 2019 Citibike dataframe includes 2069707 trips.</p>
 <p> </p>
 </div>
 </div>
 <div id="social-deprivation-index" class="section level3">
 <h3>Social Deprivation Index</h3>
-<p>The SDI dataset was a csv. We renamed the zipcode variable to be more
-intuitive. As we were only interested in the entirety of the SDI score,
-we filtered the data to include zip code and sdi_score only.</p>
+<p>The social deprivation index (SDI) dataset was a csv. We renamed the
+zipcode variable to be more intuitive. As we were only interested in the
+entirety of the SDI score, we filtered the data to include zip code and
+sdi_score only.</p>
 <ul>
 <li>Note: the higher the SDI score, the higher the social deprivation in
 that area.</li>
@@ -1077,7 +1079,7 @@ head(overweight_df) |&gt;
 </div>
 <div id="air-quality" class="section level3">
 <h3>Air Quality</h3>
-<p>The air quality data was a downloaded from csv files.</p>
+<p>The air quality (AQ) data was a downloaded from csv files.</p>
 <p>The cleaning of the air quality index data included the following
 steps:</p>
 <ul>
@@ -1235,8 +1237,8 @@ head(air_quality_df) |&gt;
 </tr>
 </tbody>
 </table>
-<p>The air quality dataframe now includes 34 rows and 13 variables. The
-variables in the dataframe are unique_id, indicator_id, name, measure,
+<p>The AQ dataframe now includes 34 rows and 13 variables. The variables
+in the dataframe are unique_id, indicator_id, name, measure,
 measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
 start_date, data_value, message, year.</p>
 <hr />
@@ -1247,9 +1249,9 @@ start_date, data_value, message, year.</p>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
-by NYC Gov. We used UHF 34 (instead of other UHF 42) as UHF 34 had the
-least number of neighborhoods and is therefore more manageable (contains
-the largest area per neighborhood).</p>
+by NYC Gov. We used UHF 34 (instead of other UHF codes, such as UHF 42)
+as UHF 34 had the least number of neighborhoods and is therefore more
+manageable (contains the largest area per neighborhood).</p>
 <ul>
 <li>For more information about the background behind UHF codes, please
 see <a
@@ -1257,10 +1259,9 @@ href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><s
 </ul>
 <p>We did the following:</p>
 <ol style="list-style-type: decimal">
-<li><strong>UHF42 to Zipcode</strong> First we converted United Hospital
-(UHF) 42 codes to zip codes, as the overweight dataframe included UHF 42
-codes. We found a table that mapped UHF 42 codes to zip codes from a NYC
-gov <a
+<li><strong>UHF 42 to Zipcode</strong> First we converted UHF 42 codes
+to zip codes, as the overweight dataframe included UHF 42 codes. We
+found a table that mapped UHF 42 codes to zip codes from a NYC gov <a
 href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
 Below we import this table and tidied it into a dataframe</li>
 </ol>
@@ -1290,8 +1291,8 @@ uhf_zip_df =
   filter(!is.na(zip)) |&gt; 
   select(!zip_name)</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li><strong>UHF34 to UHF42</strong> We imported and cleaned a dataframe
-that converted UHF 34 to UHF 42 via neighborhood name</li>
+<li><strong>UHF 34 to UHF 42</strong> We imported and cleaned a
+dataframe that converted UHF 34 to UHF 42 via neighborhood name.</li>
 </ol>
 <pre class="r"><code>uhf_34 = 
   pdf_text(&quot;./data/geocoding/uhf34.pdf&quot;)
@@ -1331,7 +1332,7 @@ uhf_34_df =
     TRUE ~ &quot;Unknown&quot;  # Handle any other values
   ))</code></pre>
 <ol start="3" style="list-style-type: decimal">
-<li><strong>UHF34, UHF42, Zip</strong> We combined UHF 42 and UHF 34
+<li><strong>UHF 34, UHF 42, Zip</strong> We combined UHF 42 and UHF 34
 dataframes and zipcode to create a neighborhood crosswalk.</li>
 </ol>
 <pre class="r"><code>joined_uhf_34_42 = 
@@ -1345,9 +1346,9 @@ dataframes and zipcode to create a neighborhood crosswalk.</li>
 <div id="bring-neighborhood-to-health-datasets" class="section level2">
 <h2><span style="color: blue;">Bring Neighborhood to Health
 Datasets</span></h2>
-<p>Now that we have a crosswalk among all location identifiers (UHF34,
-UHF42, and zipcode) used in our datasets, we’ll make sure they all have
-UHF34 so they can be merged together later.</p>
+<p>Now that we have a crosswalk among all location identifiers (UHF 34,
+UHF 42, and zipcode) used in our datasets, we’ll make sure they all have
+UHF 34 so they can be merged together later.</p>
 <div id="join-sdi-data-to-uhfzipneighborhood-data"
 class="section level3">
 <h3>Join SDI data to UHF/Zip/Neighborhood data</h3>
@@ -1384,7 +1385,8 @@ select(data_value, neighborhood ) |&gt;
 Dataset</span></h2>
 <p>The Citibike data is coded by latitude/longitude To enable merging of
 Citibike data with the health datasets, we need to transform coordinates
-to zipcode, that can later be easily converted to UHF34 identifiers.</p>
+to zipcode, that can later be easily converted to UHF 34
+identifiers.</p>
 <ul>
 <li><p>To get zipcodes for each latitude/longitude pair in the Citibike
 data, we used the <a
@@ -1620,10 +1622,11 @@ values.</p>
                                TRUE ~ end_zipcode))</code></pre>
 </div>
 </div>
-<div id="merge-citibike-with-uhf34-neighborhood" class="section level3">
-<h3>Merge Citibike with UHF34 Neighborhood</h3>
+<div id="merge-citibike-with-uhf-34-neighborhood"
+class="section level3">
+<h3>Merge Citibike with UHF 34 Neighborhood</h3>
 <p>Now that we have the zipcode for Citibike data, we can use the
-zipcode and UHF34 crosswalk generated above to get neighborhood onto
+zipcode and UHF 34 crosswalk generated above to get neighborhood onto
 Citibike data.</p>
 <pre class="r"><code>citibike_zip_neighborhoods =
   citibike_zip |&gt;
@@ -1856,7 +1859,7 @@ head(citibike_zip_neighborhoods) |&gt;
 </table>
 <div id="missing-uhf34" class="section level4">
 <h4><em>Missing UHF34</em></h4>
-<p>There were some citibike zipcodes with missing UHF34, which we
+<p>There were some citibike zipcodes with missing UHF 34, which we
 explore below:</p>
 <pre class="r"><code>missing_startuhf = citibike_zip_neighborhoods |&gt;
   filter(is.na(start_uhf34_neighborhood)) |&gt;
@@ -1875,10 +1878,10 @@ missing_enduhf = citibike_zip_neighborhoods |&gt;
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |&gt;
   filter(!is.na(end_uhf34_neighborhood) &amp; !is.na(start_uhf34_neighborhood))</code></pre>
 <p>There are 241988 entries whose start zipcode do not have an
-associated uhf34, and 244314 entries whose end zipcode do not have an
-associated uhf34. Manual validation showed these zipcodes are business
+associated UHF 34, and 244314 entries whose end zipcode do not have an
+associated UHF 34. Manual validation showed these zipcodes are business
 zipcodes, where a zipcode refers to a small domain of a business. While
-these could be pinpointed roughly to a UHF34 neighborhood manually, it
+these could be pinpointed roughly to a UHF 34 neighborhood manually, it
 is cleaner to simply omit them, as we still retain a substantial dataset
 size. The resulting dataset has 1628960 entries.</p>
 <hr />
@@ -1893,7 +1896,7 @@ Overweight, and AQ</span></h2>
 data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level3">
 <h3>Merge SDI and Overweight data</h3>
-<p>SDI and overweight are joined together first by UHF42.</p>
+<p>SDI and overweight are joined together first by UHF 42.</p>
 <ul>
 <li>Note: There are rows in the overweight data without zipcode that
 refer instead to borough and city-wide overweight percentages. These are
@@ -2645,10 +2648,16 @@ start_zipcode, start_uhf34_neighborhood, end_station_id,
 end_station_name, end_zipcode, end_uhf34_neighborhood, start_sdi_score,
 start_percent_overweight, start_aq, end_sdi_score,
 end_percent_overweight, end_aq, end_borough, start_borough.</p>
-<p>##¬¬ Stations Analysis For some extra analysis work, we want to
-understand the full availability of stations, not just the ones used in
-September, So we also have to join zipcode and UHF34 neighborhood to our
-full station data.</p>
+<p> </p>
+<hr />
+</div>
+</div>
+<div id="stations-analysis" class="section level2">
+<h2><span style="color: blue;">Stations Analysis</span></h2>
+<p>For some extra analysis work, we want to understand the full
+availability of stations, not just the ones used in September, So we
+also have to join zipcode and UHF 34 neighborhood to our full station
+data.</p>
 <pre class="r"><code>stations = stations |&gt;
   left_join(latlong_zip, 
             by = c(&quot;latitude&quot; ,&quot;longitude&quot;)) |&gt;
@@ -2671,7 +2680,6 @@ full station data.</p>
             by = join_by(&quot;zipcode&quot; == &quot;zip&quot;)) 
 
 write_csv(stations, &quot;./citibike_clean/stations.csv&quot;)</code></pre>
-</div>
 </div>
 
 
