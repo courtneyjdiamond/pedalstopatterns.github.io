@@ -59,7 +59,7 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ```{r}
-citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
+citibike_zip_neighborhoods <- read_csv("citibike/citibike_zip_neighborhood.csv")
 ```
 
 ```{r, eval = FALSE}
@@ -203,7 +203,7 @@ ggplot(citibike_zip_neighborhoods, aes(x = age)) +
 
 [Overweight Trends](exploratory/Weight_exploratory.html) 
 
-And we made an interactive [dashboard](Dashboard_Shiny.html) to visualize some of these exploratory analyses all together!
+And we made an interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
 
  &nbsp;
  

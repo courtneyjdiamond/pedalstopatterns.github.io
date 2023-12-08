@@ -403,7 +403,7 @@ charts and graphs.</p>
 <div id="geographic-utilization" class="section level2">
 <h2><span style="color: blue;">Geographic utilization</span></h2>
 <p> </p>
-<pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+<pre class="r"><code>citibike_zip_neighborhoods &lt;- read_csv(&quot;citibike/citibike_zip_neighborhood.csv&quot;)</code></pre>
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_zip_neighborhoods.csv&quot;)</code></pre>
 <p>Here is a table of the number of stations per neighborhood.</p>
 <pre class="r"><code>station = citibike_zip_neighborhoods %&gt;%
@@ -427,27 +427,27 @@ charts and graphs.</p>
 <tbody>
 <tr class="odd">
 <td align="left">Chelsea Village</td>
-<td align="right">215</td>
+<td align="right">216</td>
 </tr>
 <tr class="even">
 <td align="left">Downtown Heights Slope</td>
-<td align="right">200</td>
+<td align="right">201</td>
 </tr>
 <tr class="odd">
 <td align="left">Union Square, Lower Manhattan</td>
-<td align="right">190</td>
+<td align="right">193</td>
 </tr>
 <tr class="even">
 <td align="left">Upper East Side Gramercy</td>
-<td align="right">160</td>
+<td align="right">164</td>
 </tr>
 <tr class="odd">
-<td align="left">Long Island City Astoria</td>
-<td align="right">151</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">155</td>
 </tr>
 <tr class="even">
-<td align="left">Williamsburg Bushwick</td>
-<td align="right">148</td>
+<td align="left">Long Island City Astoria</td>
+<td align="right">151</td>
 </tr>
 <tr class="odd">
 <td align="left">Greenpoint</td>
@@ -459,7 +459,7 @@ charts and graphs.</p>
 </tr>
 <tr class="odd">
 <td align="left">East Harlem</td>
-<td align="right">117</td>
+<td align="right">118</td>
 </tr>
 <tr class="even">
 <td align="left">Bedford Stuyvesant Crown Heights</td>
@@ -470,16 +470,24 @@ charts and graphs.</p>
 <td align="right">107</td>
 </tr>
 <tr class="even">
-<td align="left">East New York</td>
-<td align="right">92</td>
+<td align="left">NA</td>
+<td align="right">98</td>
 </tr>
 <tr class="odd">
+<td align="left">East New York</td>
+<td align="right">94</td>
+</tr>
+<tr class="even">
 <td align="left">East Flatbush Flatbush</td>
 <td align="right">67</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Kingsbridge Riverdale</td>
 <td align="right">66</td>
+</tr>
+<tr class="even">
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">54</td>
 </tr>
 <tr class="odd">
 <td align="left">Washington Heights Inwood</td>
@@ -490,28 +498,32 @@ charts and graphs.</p>
 <td align="right">54</td>
 </tr>
 <tr class="odd">
-<td align="left">Ridgewood Forest Hills</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
 <td align="left">Bensonhurst Bay Ridge</td>
 <td align="right">39</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Coney Island Sheepshead Bay</td>
 <td align="right">38</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Sunset Park</td>
 <td align="right">36</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Southwest Queens</td>
 <td align="right">8</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Canarsie Flatlands</td>
 <td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Fordham Bronx Park</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">South Bronx</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -522,6 +534,116 @@ group_by(start_uhf34_neighborhood) |&gt;
   summarize(Number_Rides = n()) |&gt;
   arrange(desc(Number_Rides)) |&gt;
   knitr:: kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Start_Neighborhood</th>
+<th align="right">Number_Rides</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chelsea Village</td>
+<td align="right">4853936</td>
+</tr>
+<tr class="even">
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="right">3010469</td>
+</tr>
+<tr class="odd">
+<td align="left">Upper East Side Gramercy</td>
+<td align="right">2169920</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="right">1963674</td>
+</tr>
+<tr class="odd">
+<td align="left">Downtown Heights Slope</td>
+<td align="right">1137316</td>
+</tr>
+<tr class="even">
+<td align="left">Upper West Side</td>
+<td align="right">971910</td>
+</tr>
+<tr class="odd">
+<td align="left">Greenpoint</td>
+<td align="right">533972</td>
+</tr>
+<tr class="even">
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">480851</td>
+</tr>
+<tr class="odd">
+<td align="left">East Harlem</td>
+<td align="right">444949</td>
+</tr>
+<tr class="even">
+<td align="left">Long Island City Astoria</td>
+<td align="right">338498</td>
+</tr>
+<tr class="odd">
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">324676</td>
+</tr>
+<tr class="even">
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">289529</td>
+</tr>
+<tr class="odd">
+<td align="left">East New York</td>
+<td align="right">141496</td>
+</tr>
+<tr class="even">
+<td align="left">Kingsbridge Riverdale</td>
+<td align="right">86230</td>
+</tr>
+<tr class="odd">
+<td align="left">East Flatbush Flatbush</td>
+<td align="right">64009</td>
+</tr>
+<tr class="even">
+<td align="left">Washington Heights Inwood</td>
+<td align="right">25628</td>
+</tr>
+<tr class="odd">
+<td align="left">West Queens</td>
+<td align="right">22667</td>
+</tr>
+<tr class="even">
+<td align="left">Bensonhurst Bay Ridge</td>
+<td align="right">13626</td>
+</tr>
+<tr class="odd">
+<td align="left">Sunset Park</td>
+<td align="right">7784</td>
+</tr>
+<tr class="even">
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">7295</td>
+</tr>
+<tr class="odd">
+<td align="left">Coney Island Sheepshead Bay</td>
+<td align="right">4345</td>
+</tr>
+<tr class="even">
+<td align="left">Southwest Queens</td>
+<td align="right">149</td>
+</tr>
+<tr class="odd">
+<td align="left">Fordham Bronx Park</td>
+<td align="right">88</td>
+</tr>
+<tr class="even">
+<td align="left">Canarsie Flatlands</td>
+<td align="right">85</td>
+</tr>
+<tr class="odd">
+<td align="left">South Bronx</td>
+<td align="right">61</td>
+</tr>
+</tbody>
+</table>
 <p>Here is a table of the number of rides per end neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
 group_by(end_uhf34_neighborhood) |&gt;
@@ -529,6 +651,116 @@ group_by(end_uhf34_neighborhood) |&gt;
   rename(&quot;End_Neighborhood&quot; = end_uhf34_neighborhood) |&gt;
    arrange(desc(Number_Rides)) |&gt;
   knitr:: kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">End_Neighborhood</th>
+<th align="right">Number_Rides</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chelsea Village</td>
+<td align="right">4901931</td>
+</tr>
+<tr class="even">
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="right">3040860</td>
+</tr>
+<tr class="odd">
+<td align="left">Upper East Side Gramercy</td>
+<td align="right">2162039</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="right">1989338</td>
+</tr>
+<tr class="odd">
+<td align="left">Downtown Heights Slope</td>
+<td align="right">1135493</td>
+</tr>
+<tr class="even">
+<td align="left">Upper West Side</td>
+<td align="right">886864</td>
+</tr>
+<tr class="odd">
+<td align="left">Greenpoint</td>
+<td align="right">535752</td>
+</tr>
+<tr class="even">
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">471421</td>
+</tr>
+<tr class="odd">
+<td align="left">East Harlem</td>
+<td align="right">448557</td>
+</tr>
+<tr class="even">
+<td align="left">Long Island City Astoria</td>
+<td align="right">337048</td>
+</tr>
+<tr class="odd">
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">317222</td>
+</tr>
+<tr class="even">
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">290286</td>
+</tr>
+<tr class="odd">
+<td align="left">East New York</td>
+<td align="right">144367</td>
+</tr>
+<tr class="even">
+<td align="left">Kingsbridge Riverdale</td>
+<td align="right">87423</td>
+</tr>
+<tr class="odd">
+<td align="left">East Flatbush Flatbush</td>
+<td align="right">61622</td>
+</tr>
+<tr class="even">
+<td align="left">Washington Heights Inwood</td>
+<td align="right">25097</td>
+</tr>
+<tr class="odd">
+<td align="left">West Queens</td>
+<td align="right">23625</td>
+</tr>
+<tr class="even">
+<td align="left">Bensonhurst Bay Ridge</td>
+<td align="right">13258</td>
+</tr>
+<tr class="odd">
+<td align="left">Sunset Park</td>
+<td align="right">9114</td>
+</tr>
+<tr class="even">
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">7251</td>
+</tr>
+<tr class="odd">
+<td align="left">Coney Island Sheepshead Bay</td>
+<td align="right">4209</td>
+</tr>
+<tr class="even">
+<td align="left">Southwest Queens</td>
+<td align="right">146</td>
+</tr>
+<tr class="odd">
+<td align="left">Fordham Bronx Park</td>
+<td align="right">94</td>
+</tr>
+<tr class="even">
+<td align="left">Canarsie Flatlands</td>
+<td align="right">91</td>
+</tr>
+<tr class="odd">
+<td align="left">South Bronx</td>
+<td align="right">55</td>
+</tr>
+</tbody>
+</table>
 <p>Here are the most popular start stations.</p>
 <pre class="r"><code># Count the number of rides for each start station
 popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
@@ -541,6 +773,7 @@ ggplot(popular_stations, aes(x = reorder(start_station_name, n_rides), y = n_rid
   geom_bar(stat = &quot;identity&quot;) +
   labs(x = &quot;Start Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular Start Stations&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 <p>Here is a graph of the most popular end stations</p>
 <pre class="r"><code># Count the number of rides for each start station
 popular_stations &lt;- citibike_zip_neighborhoods %&gt;%
@@ -553,6 +786,7 @@ ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides
   geom_bar(stat = &quot;identity&quot;) +
   labs(x = &quot;End Station&quot;, y = &quot;Number of Rides&quot;, title = &quot;Top 10 Most Popular End Stations&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <p>Here is a graph of the number of rides per neighborhood per month</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
   select(start_time, start_uhf34_neighborhood) |&gt;
@@ -564,6 +798,7 @@ ggplot(popular_stations, aes(x = reorder(end_station_name, n_rides), y = n_rides
   geom_line() +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;Month&quot;, y = &quot;Number of Rides&quot;)</code></pre>
+<p><img src="analysis_files/figure-html/neighborhood_month-1.png" width="90%" /></p>
 </div>
 <div id="user-demographics" class="section level2">
 <h2><span style="color: blue;">User Demographics</span></h2>
@@ -577,6 +812,7 @@ ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
   geom_bar(stat = &quot;identity&quot;) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;User Type&quot;, y = &quot;Number of Rides&quot;, title = &quot;User Type Distribution&quot;)</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
 <p>Here is a graph of number of rides per gender: Males take the most
 rides!</p>
 <pre class="r"><code>citibike_zip_neighborhoods %&gt;%
@@ -586,6 +822,7 @@ rides!</p>
   scale_fill_manual(values = c(&quot;Male&quot; = &quot;blue&quot;, &quot;Female&quot; = &quot;red&quot;, &quot;Unknown&quot; = &quot;yellow&quot;)) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;Gender&quot;, y = &quot;Number of Rides&quot;, title = &quot;Gender Distribution&quot;)</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 <p>This graph shows the distribution of ages: 30 year olds and 50 year
 olds use citibike the most!</p>
 <pre class="r"><code>ggplot(citibike_zip_neighborhoods, aes(x = age)) +
@@ -593,10 +830,12 @@ olds use citibike the most!</p>
    scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;)</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
 <p><a href="exploratory/Citibike_exploratory.html">Citibike</a></p>
 </div>
-<div id="exploring-subsets" class="section level2">
-<h2>Exploring Subsets</h2>
+</div>
+<div id="exploring-subsets" class="section level1">
+<h1><span style="color: blue;">Exploring Subsets</span></h1>
 <p><a href="exploratory/AirQual_exploratory.html">Air Quality
 index</a></p>
 <p><a href="exploratory/SDI_Exploratory.html">Social deprivation
@@ -604,11 +843,13 @@ Index</a></p>
 <p><a href="exploratory/Weight_exploratory.html">Overweight
 Trends</a></p>
 <p>And we made an interactive <a
-href="Dashboard_Shiny.html">dashboard</a> to visualize some of these
-exploratory analyses all together!</p>
+href="https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/">dashboard</a>
+to visualize some of these exploratory analyses all together!</p>
 <p> </p>
 <hr />
-<p># <span style="color: blue;">Modeling Outcomes</span></p>
+</div>
+<div id="modelling" class="section level1">
+<h1><span style="color: blue;">Modelling</span></h1>
 <p>We sought to develop linear models that would characterize the number
 of rides per station as a surrogate for utilization of citibikes.
 Predictors included Air quality measures, social deprivation index, and
@@ -616,7 +857,6 @@ percentage of overweight individuals in a neighborhood.</p>
 <p>We then built on these models and looked at the outcomes of these
 metrics, based on the other metrics and citibike utilization.</p>
 <p><a href="modeling/Modeling.html">Models</a></p>
-</div>
 </div>
 
 
