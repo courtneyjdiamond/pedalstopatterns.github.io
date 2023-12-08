@@ -59,13 +59,13 @@ scale_fill_discrete = scale_fill_viridis_d
 citibike_zip_neighborhoods <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
 ```
 
-```{r, eval = FALSE}
+```{r}
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
 ```
 
 Here is a table of the number of stations per neighborhood.
 
-```{r table of stations per neighborhoods, eval = FALSE}
+```{r table of stations per neighborhoods}
 station = citibike_zip_neighborhoods %>%
   filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
   select(end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood) %>%
@@ -149,21 +149,44 @@ citibike_zip_neighborhoods |>
 ```
 
 
-```{r , eval = FALSE}
+## <span style='color: blue;'>User Demographics</span> 
 
-rides_by_month <- citibike_zip_neighborhoods %>%
-  mutate(month = format(start_time, "%Y-%m")) %>%
-  group_by(month) %>%
-  summarise(n_rides = n())
+Here is a graph of user type distribution: Subsribers take more rides!
 
-# Plot the number of rides by month
-ggplot(rides_by_month, aes(x = month, y = n_rides)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Month", y = "Number of Rides", title = "Number of Rides by Month") +
+```{r, eval = FALSE}
+# Count the number of rides for each user type
+citibike_zip_neighborhoods %>%
+  group_by(user_type) %>%
+  summarise(n_rides = n()) |>
+ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma_format()) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
 ```
+
+Here is a graph of number of rides per gender: Males take the most rides!
+
+```{r, eval = FALSE}
+
+citibike_zip_neighborhoods %>%
+  group_by(gender) %>%
+  summarise(n_rides = n()) |>ggplot(aes(x = gender, y = n_rides, fill = gender)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "red", "Unknown" = "yellow")) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
+```
+
+This graph shows the distribution of ages: 30 year olds and 50 year olds use citibike the most!
+
+```{r, eval = FALSE}
+ggplot(citibike_zip_neighborhoods, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(x = "Age", y = "Number of Rides", title = "Age Distribution")
+```
+
 
 [Citibike](exploratory/Citibike_exploratory.html)
 
