@@ -595,7 +595,7 @@ skimr::skim(citibike_df)
 ```
 
 ```{r}
-write_csv(citibike_df, file = './data/citibike_clean.csv')
+write_csv(citibike_df, file = './citibike_clean/citibike_clean.csv')
 ```
 
 The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`.
