@@ -1262,7 +1262,7 @@ href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><s
 <li><strong>UHF 42 to Zipcode</strong> First we converted UHF 42 codes
 to zip codes, as the overweight dataframe included UHF 42 codes. We
 found a table that mapped UHF 42 codes to zip codes from a NYC gov <a
-href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf%60"><strong>pdf</strong></a>.
+href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf"><strong>pdf</strong></a>.
 Below we import this table and tidied it into a dataframe</li>
 </ol>
 <pre class="r"><code>uhf_zip = 
@@ -1292,7 +1292,9 @@ uhf_zip_df =
   select(!zip_name)</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>UHF 34 to UHF 42</strong> We imported and cleaned a
-dataframe that converted UHF 34 to UHF 42 via neighborhood name.</li>
+dataframe that converted UHF 34 to UHF 42 via neighborhood name. The
+UHF34 source data were found <a
+href="https://www.nyc.gov/assets/doh/downloads/pdf/tracking/uhf34.pdf"><strong>here</strong></a>.</li>
 </ol>
 <pre class="r"><code>uhf_34 = 
   pdf_text(&quot;./data/geocoding/uhf34.pdf&quot;)

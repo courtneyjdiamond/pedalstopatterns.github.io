@@ -279,7 +279,7 @@ To combine datasets, they all need to have the same geographic identifier. We de
 
 We did the following:
 
-1. **UHF 42 to Zipcode** First we converted UHF 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf`). Below we import this table and tidied it into a dataframe
+1. **UHF 42 to Zipcode** First we converted UHF 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf). Below we import this table and tidied it into a dataframe
 
 
 ```{r uhf_zip}
@@ -311,7 +311,7 @@ uhf_zip_df =
 ```
 
 
-2. **UHF 34 to UHF 42**  We imported and cleaned a dataframe that converted UHF 34 to UHF 42 via neighborhood name.
+2. **UHF 34 to UHF 42**  We imported and cleaned a dataframe that converted UHF 34 to UHF 42 via neighborhood name. The UHF34 source data were found [**here**](https://www.nyc.gov/assets/doh/downloads/pdf/tracking/uhf34.pdf). 
 
 ```{r uhf}
 uhf_34 = 
