@@ -47,7 +47,6 @@ knitr::opts_chunk$set(message = FALSE,
 
 # Load Health Data 
 
-
 ```{r}
 data = read_csv('../citibike_clean/sdi_overweight.csv') |>
   select(uhf34, uhf34_neighborhood, percent_overweight, sdi_score)
@@ -127,7 +126,7 @@ Our exploratory analyses noted some interesting trends in the Citibike data for 
 
 * For SDI scores, there was some variability in ranges based on grouping by zip code, uhf34 or uhf43 neighborhood classifications. However, across them all there were large ranges in scores from 10-100.
 
-* Percentage of neighorhood residents who were overweight varied broadly from the low 30%, with the lowest being Upper East Side-Gramercy, and up to nearly 80% in Rockaways. 
+* Percentage of neighborhood residents who were overweight varied broadly from the low 30%, with the lowest being Upper East Side-Gramercy, and up to nearly 80% in Rockaways. 
 
 As such we elected to model potential interactions between the mean aggregate rides in geographic neighborhoods in NYC and Air Quality Index (AQI), SDI, and percentage overweight to see if they could predict citibike usage in a geographic area. 
 
@@ -137,23 +136,21 @@ We first summarized the citibike ride data by start station to make a new variab
 citibike_group_by_station <- citibike.df %>%
   group_by(start_station_name) %>%
   summarize(n_rides = n(), 
-            mean_aq = mean(start_aq),
-            mean_sdi = mean(start_sdi_score), 
-            mean_overweight = mean(start_percent_overweight), 
-            mean_end_aq = mean(end_aq),
-            mean_end_sdi = mean(end_sdi_score),
-            mean_end_overweight = mean(end_percent_overweight),
+            AQI = median(start_aq),
+            median_sdi = median(start_sdi_score), 
+            overweight = mean(start_percent_overweight), 
             mean_age = mean(age)
   )
 ```
 
 ##Our first model:
 
-Outcome: Mean number of rides per start station
+Outcome: Sum of rides per start station
+
 Predictors: Health metrics for the location the start station is located in: Mean_AQI, Mean_SDI, Mean_Overweight
 
 ```{r first model}
-fit_model = lm(n_rides ~ mean_aq + mean_sdi + mean_overweight, data = citibike_group_by_station)
+fit_model = lm(n_rides ~ AQI + median_sdi + overweight, data = citibike_group_by_station)
 
 fit_model %>%
   broom::tidy() %>%
@@ -172,11 +169,11 @@ citibike_group_by_station %>%
 
 We can interpret the Beta statistics as:
 
-* For every increase in mean air quality by 1 point, there is an increase of mean rides by 5.25, with all other variables held constant. 
+* For every increase in AQI Fine Particles by 1, there is an increase of sum of rides by 9.87, with all other variables held constant. This is the only value that is significant with p<0.05.
 
-* For every increase in SDI score by one point, there is a decrease of mean rides by 2.58, with all other variables held constant. 
+* For every increase in median SDI score by one point, there is a decrease of sum of rides by 1.22, with all other variables held constant. 
 
-* For every increase in percentage of residents that are overweight by 1%, there is a decrease of mean rides by 3.55, with all other variables held constant. 
+* For every increase in percentage of residents that are overweight by 1%, there is a decrease of mean rides by 1.47, with all other variables held constant. 
 
 
 ```{r, eval = TRUE}
@@ -187,18 +184,18 @@ performance::check_model(fit_model, check = c("linearity", "outliers", "qq", "no
 
 ##Our second model:
 
-Outcome: Mean number of rides per start station
+Outcome: Number of rides per start station
 Predictors: 
-* Health metrics for the location the start station is located in: Mean_AQI, Mean_SDI, Mean_Overweight
+* Health metrics for the location the start station is located in: `AQI`, `Median_SDI`, `Overweight`.
 
 * Interactions including:
 
-  * Two way interactions: Mean_AQI * Mean_SDI, Mean_AQI * Mean_Overweight, Mean_SDI * Mean_Overweight
+  * Two way interactions: AQI * Median_SDI, AQI * Overweight, Median_SDI * Overweight
   
-  * Three way interaction: Mean_AQI * Mean_SDI * Mean_Overweight
+  * Three way interaction: AQI * Median_SDI * Overweight
 
 ```{r second model, eval = TRUE}
-fit_model_interactions = lm(n_rides ~ mean_aq + mean_sdi + mean_overweight + mean_aq*mean_sdi + mean_aq*mean_overweight + mean_aq*mean_sdi*mean_overweight, data = citibike_group_by_station)
+fit_model_interactions = lm(n_rides ~ AQI + median_sdi + overweight + AQI*median_sdi + AQI*overweight + AQI*median_sdi*overweight, data = citibike_group_by_station)
 
 fit_model_interactions %>%
   broom::tidy() %>%
@@ -216,13 +213,13 @@ citibike_group_by_station %>%
 
 We can interpret the Beta statistics as:
 
-* For every increase in mean air quality by 1 point, there is a decrease of mean rides by 2.31, with all other variables held constant. 
+* For every increase in air quality (fine particles) by 1, there is a decrease of sum of rides by 1.05, with all other variables held constant. 
 
-* For every increase in SDI score by one point, there is a decrease of mean rides by 4.61, with all other variables held constant. 
+* For every increase in median SDI score by one point, there is a decrease of sum of rides by 3.45, with all other variables held constant. 
 
-* For every increase in precentage of residents that are overweight by 1%, there is a decrease of mean rides by 2.36, with all other variables held constant. 
+* For every increase in percentage of residents that are overweight by 1%, there is a decrease of sum of rides by 1.43, with all other variables held constant. 
 
-* However, with interaction terms, we can see ______
+* However, with interaction terms, this does vary slightly.
 
 
 ```{r, eval = TRUE}
@@ -235,7 +232,7 @@ performance::check_model(fit_model_interactions, check = c("linearity", "outlier
 First we built a cross-validation by 100 splits (where there are no missing values). We will utilize this to evaluate the models by calculating their RMSE.
 
 ```{r CV, eval = TRUE}
-cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_aq), ] %>%
+cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$AQI), ] %>%
   crossv_mc(100) 
 
 #cv_df =  crossv_mc(citibike_group_by_station, 100) 
@@ -243,8 +240,8 @@ cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_
 cv_df = 
   cv_df |> 
   mutate(
-    fit_model  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight, data = df)), 
-    fit_model_interactions  = map(train, \(df) lm(n_rides ~ mean_aq + mean_sdi + mean_overweight + mean_aq*mean_sdi + mean_aq*mean_overweight + mean_aq*mean_sdi*mean_overweight, data = df))) |>  
+    fit_model  = map(train, \(df) lm(n_rides ~ AQI + median_sdi + overweight, data = df)), 
+    fit_model_interactions  = map(train, \(df) lm(n_rides ~ AQI + median_sdi + overweight + AQI*median_sdi + AQI*overweight + AQI*median_sdi*overweight, data = df))) |>  
   mutate(
     rmse_model = map2_dbl(fit_model, test, \(mod, df) rmse(model = mod, data = df)),
     rmse_model_interactions = map2_dbl(fit_model_interactions, test, \(mod, df) rmse(model = mod, data = df)))
@@ -272,9 +269,9 @@ cv_df |>
 performance::compare_performance(fit_model, fit_model_interactions)
 ```
 
-* Our model without interaction terms had an R2 of 0.238
+* Our model without interaction terms had an R2 of 0.360.
 
-* Our model with interaction terms had an R2 of 0.340
+* Our model with interaction terms had an R2 of 0.442, suggesting that there are interactions amongst these health metrics that when taken into consideration improve the predictive ability of our model for sum of rides per station.
 
 
 ## Reverse regression models:
@@ -282,7 +279,7 @@ performance::compare_performance(fit_model, fit_model_interactions)
 Next we sought to see if there were any reverse predictive relationships. Such that with a combination of mean number of rides and the other health metrics, we could predict the outcome of mean AQI, SDI, or percentage overweight for a location. 
 
 ```{r predict overweight}
-fit_overweight = lm(mean_overweight ~ mean_aq + mean_sdi + n_rides, data = citibike_group_by_station)
+fit_overweight = lm(overweight ~ AQI + median_sdi + n_rides, data = citibike_group_by_station)
 
 fit_overweight %>%
   broom::tidy() %>%
@@ -300,14 +297,14 @@ citibike_group_by_station %>%
 
 When interpreting the beta statistics for predicting percentage overweight:
 
-* For every increase in Air quality by one point, there is a decrease of mean percentage overweight by 29.59
+* For every increase in Air quality (fine particles) by one point, there is a decrease of percentage overweight by 24.87
 
-* For every increase in SDI by one point, there is an increase in mean percentage overweight by 18.18
+* For every increase in median SDI by one point, there is an increase in percentage overweight by 16.43
 
-* For every increase in mean number of rides by one, there is a decrease in mean percentage overweight by 3.55
+* For every increase in sum of number of rides by one, there is a decrease in percentage overweight by 1.47, although this value was not significant. 
 
 ```{r predict AQI}
-fit_AQI = lm(mean_aq ~ mean_overweight + mean_sdi + n_rides, data = citibike_group_by_station)
+fit_AQI = lm(AQI ~ overweight + median_sdi + n_rides, data = citibike_group_by_station)
 
 fit_AQI %>%
   broom::tidy() %>%
@@ -323,17 +320,17 @@ citibike_group_by_station %>%
        y = "residual")
 ```
 
-When interpreting the beta statistics for predicting Air quality:
+When interpreting the beta statistics for predicting Air quality: (all were significant).
 
-* For every increase in mean overweight by one point, there is a decrease of mean  AQI by 29.59
+* For every increase in percentage overweight by one point, there is a decrease of AQI by 24.87
 
-* For every increase in SDI by one point, there is an increase in mean AQI by 4.35
+* For every increase in median SDI by one point, there is an increase in AQI by 3.15
 
-* For every increase in mean number of rides by one, there is a increase in mean AQI by 5.26
+* For every increase in sum of number of rides by one, there is a increase in AQI by 9.87
 
 
 ```{r predict SDI}
-fit_sdi = lm(mean_sdi ~ mean_aq + mean_overweight + n_rides, data = citibike_group_by_station)
+fit_sdi = lm(median_sdi ~ AQI + overweight + n_rides, data = citibike_group_by_station)
 
 fit_sdi %>%
   broom::tidy() %>%
@@ -351,15 +348,15 @@ citibike_group_by_station %>%
 
 When interpreting the beta statistics for predicting SDI score:
 
-* For every increase in mean AQI by one point, there is a increase of mean SDI by 4.36
+* For every increase in AQI by one point, there is a increase of median SDI by 3.15
 
-* For every increase in mean overweight by one point, there is an increase in mean SDI by 18,18
+* For every increase in percentage overweight by one point, there is an increase in median SDI by 16.43
 
-* For every increase in mean number of rides by one, there is a decrease in mean SDI by 2.58
+* For every increase in sum of number of rides by one, there is a decrease in median SDI by 1.22, but this value was not significant (p<0.05)
 
 
 ```{r}
-cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_aq), ] %>%
+cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$AQI), ] %>%
   crossv_mc(100) 
 
 #cv_df =  crossv_mc(citibike_group_by_station, 100) 
@@ -367,9 +364,9 @@ cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$mean_
 cv_df = 
   cv_df |> 
   mutate(
-    fit_overweight  = map(train, \(df) lm(mean_overweight ~ mean_aq + mean_sdi + n_rides, data = df)), 
-    fit_sdi  = map(train, \(df) lm(mean_sdi ~ mean_aq + mean_overweight + n_rides, data = df)), 
-    fit_AQI  = map(train, \(df) lm(mean_aq ~ mean_overweight + mean_sdi + n_rides, data = df))) |>  
+    fit_overweight  = map(train, \(df) lm(overweight ~ AQI + median_sdi + n_rides, data = df)), 
+    fit_sdi  = map(train, \(df) lm(median_sdi ~ AQI + overweight + n_rides, data = df)), 
+    fit_AQI  = map(train, \(df) lm(AQI ~ overweight + median_sdi + n_rides, data = df))) |>  
   mutate(
     rmse_overweight = map2_dbl(fit_overweight, test, \(mod, df) rmse(model = mod, data = df)),
     rmse_sdi = map2_dbl(fit_sdi, test, \(mod, df) rmse(model = mod, data = df)),
@@ -389,10 +386,10 @@ cv_df |>
        y = "Frequency")
 ```
 
-* Here we can see that there is a much large spread compared to our RMSE density plots when predicting for mean number of rides. However, the least spread of RMSE values are for AQI, and largest are for SDI as outcomes.
+* Here we can see that there is a much large spread compared to our RMSE density plots when predicting for mean number of rides. However, the least spread of RMSE values are for AQI, and largest are for median SDI as outcomes.
 
 ```{r}
 performance::compare_performance(fit_overweight, fit_sdi, fit_AQI)
 ```
 
-* We can see that the model with the highest R2 was when the outcome was overweight values. 
+* We can see that the model with the highest R2 was when the outcome was overweight values, with R2 = 0.757, with AQI next and SDI the lowest. 
