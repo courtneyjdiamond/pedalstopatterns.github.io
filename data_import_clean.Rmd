@@ -49,7 +49,7 @@ knitr::opts_chunk$set(message = FALSE,
   
 ## <span style='color: blue;'>Invididual Dataset Imports and Cleaning</span>
 
-## Citibike
+### Citibike
 
 The citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available. We downloaded the data files from December 2018 through January 2020.
 
@@ -71,10 +71,6 @@ citibike |>
   head() |>
   knitr::kable()
 ```
-
-
-Viewing rides overtime:
-
 
 
 The cleaning of the citibike data included the following steps:
@@ -136,7 +132,7 @@ citibike_df |>
   geom_line() 
 ```
 
-### Filter to September
+#### Filter to September
 Since September is the month of highest usage, we focus on September
 ```{r filter_month}
 citibike_df = citibike_df |> filter(month == 9)
@@ -145,7 +141,7 @@ citibike_df = citibike_df |> filter(month == 9)
 The September Citibike dataframe includes `r nrow(citibike_df)` trips.
 
 
-## Social Deprivation Index
+### Social Deprivation Index
 
 The SDI dataset was a csv. We renamed the zipcode variable to be more intuitive. As we were only interested in the entirety of the SDI score, we filtered the data to include zip code and sdi_score only. 
 
@@ -163,7 +159,7 @@ head(SDI_df) |>
   knitr::kable()
 ```
 
-## Overweight data 
+### Overweight data 
 
 The overweight data was downloaded as csv files for "Overweight and Obese Adults." We were specifically interested in 2019 as this was when SDI scores were available.
 
@@ -199,7 +195,7 @@ head(overweight_df) |>
 ```
 
 
-## Air Quality
+### Air Quality
 
 The air quality data was a downloaded from csv files. 
 
@@ -371,7 +367,7 @@ The Citibike data is coded by latitude/longitude To enable merging of Citibike d
 
   * Note: Every Citibike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
   
-## Merge Citibike with Zipcode
+### Merge Citibike with Zipcode
 
 ```{r citibike_zip}
 latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
@@ -394,7 +390,7 @@ remove(citibike_df)
 There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
 
 
-### *Missing Zipcodes*
+#### *Missing Zipcodes*
 
 A look at the start coordinates with missing zipcodes below: 
 
@@ -418,7 +414,7 @@ citibike_zip |>
 ```
 
 
-### *Manual Zipcode Completion*
+#### *Manual Zipcode Completion*
 For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a csv on our g[ithub here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
 
 
@@ -447,7 +443,7 @@ citibike_zip = citibike_zip |>
 
 ```
 
-##  Merge Citibike with UHF34 Neighborhood
+###  Merge Citibike with UHF34 Neighborhood
 Now that we have the zipcode for Citibike data, we can use the zipcode and UHF34 crosswalk generated above to get neighborhood onto Citibike data. 
 
 ```{r citibike_neighborhoods}
@@ -468,7 +464,7 @@ head(citibike_zip_neighborhoods) |>
   knitr::kable()
 ```
 
-### *Missing UHF34*
+#### *Missing UHF34*
 
 There were some citibike zipcodes with missing UHF34, which we explore below: 
 
@@ -501,7 +497,7 @@ There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode d
 
 Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
-## Merge SDI and Overweight data 
+### Merge SDI and Overweight data 
 SDI and overweight are joined together first by UHF42. 
 
 * Note: There are rows in the overweight data without zipcode that refer instead to borough and city-wide overweight percentages. These are excluded from joining on SDI/citibike data, which function by zipcode that is more granular than borough. These are what is excluded by filtering out null values. 
@@ -523,7 +519,7 @@ remove(SDI_df)
 remove(overweight_df)
 ```
 
-## Merge SDI and Overweight data onto citibike
+### Merge SDI and Overweight data onto citibike
 ```{r SDI_Overweight_join}
 citibike_df =
   citibike_zip_neighborhoods |>
@@ -541,7 +537,7 @@ citibike_df = citibike_df |>
          "end_percent_overweight" = "percent_overweight") 
 ```
 
-## Merge AQ data onto citibike
+### Merge AQ data onto citibike
 
 ```{r AQ_join} 
 #Join to final dataframe
@@ -558,7 +554,7 @@ citibike_df = citibike_df |>
 
 ```
 
-## Final Tidy of Citibike Data 
+### Final Tidy of Citibike Data 
 
 A view at the final dataset, as well as overall summary of variables included and their missingness:
 
@@ -584,3 +580,5 @@ skimr::skim(citibike_df)
 ```{r}
 write_csv(citibike_df, file = './data/citibike_clean.csv')
 ```
+
+The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`. 

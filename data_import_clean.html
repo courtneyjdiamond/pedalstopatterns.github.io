@@ -422,9 +422,8 @@ include air quality indexes measured across boroughs in NYC.</p>
 class="section level2">
 <h2><span style="color: blue;">Invididual Dataset Imports and
 Cleaning</span></h2>
-</div>
-<div id="citibike" class="section level2">
-<h2>Citibike</h2>
+<div id="citibike" class="section level3">
+<h3>Citibike</h3>
 <p>The citibike data was a collection of csv files that we downloaded
 and merged. We were specifically interested in 2019 as this was when SDI
 scores were available. We downloaded the data files from December 2018
@@ -602,7 +601,6 @@ citibike |&gt;
 </tr>
 </tbody>
 </table>
-<p>Viewing rides overtime:</p>
 <p>The cleaning of the citibike data included the following steps:</p>
 <ul>
 <li>Recoding gender from numeric to text</li>
@@ -829,16 +827,16 @@ so, we look at the distribution of number of rides by month.</p>
   geom_point() +
   geom_line() </code></pre>
 <p><img src="data_import_clean_files/figure-html/citibike_plot-1.png" width="90%" /></p>
-<div id="filter-to-september" class="section level3">
-<h3>Filter to September</h3>
+<div id="filter-to-september" class="section level4">
+<h4>Filter to September</h4>
 <p>Since September is the month of highest usage, we focus on
 September</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt; filter(month == 9)</code></pre>
 <p>The September Citibike dataframe includes 2069707 trips.</p>
 </div>
 </div>
-<div id="social-deprivation-index" class="section level2">
-<h2>Social Deprivation Index</h2>
+<div id="social-deprivation-index" class="section level3">
+<h3>Social Deprivation Index</h3>
 <p>The SDI dataset was a csv. We renamed the zipcode variable to be more
 intuitive. As we were only interested in the entirety of the SDI score,
 we filtered the data to include zip code and sdi_score only.</p>
@@ -889,8 +887,8 @@ head(SDI_df) |&gt;
 </tbody>
 </table>
 </div>
-<div id="overweight-data" class="section level2">
-<h2>Overweight data</h2>
+<div id="overweight-data" class="section level3">
+<h3>Overweight data</h3>
 <p>The overweight data was downloaded as csv files for “Overweight and
 Obese Adults.” We were specifically interested in 2019 as this was when
 SDI scores were available.</p>
@@ -1015,8 +1013,8 @@ head(overweight_df) |&gt;
 </table>
 <pre class="r"><code>#write_csv(overweight_df, &quot;data/SDI_data/overweight_data_clean.csv&quot;)</code></pre>
 </div>
-<div id="air-quality" class="section level2">
-<h2>Air Quality</h2>
+<div id="air-quality" class="section level3">
+<h3>Air Quality</h3>
 <p>The air quality data was a downloaded from csv files.</p>
 <p>The cleaning of the air quality index data included the following
 steps:</p>
@@ -1181,6 +1179,7 @@ measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
 start_date, data_value, message, year.</p>
 <hr />
 </div>
+</div>
 <div id="nyc-neighborhood-data-merging" class="section level2">
 <h2><span style="color: blue;">NYC Neighborhood Data Merging</span></h2>
 <p>To combine datasets, they all need to have the same geographic
@@ -1330,9 +1329,8 @@ end_latitude/longitude. Each row will accordingly have a start_zipcode
 and end_zipcode.</li>
 </ul></li>
 </ul>
-</div>
-<div id="merge-citibike-with-zipcode" class="section level2">
-<h2>Merge Citibike with Zipcode</h2>
+<div id="merge-citibike-with-zipcode" class="section level3">
+<h3>Merge Citibike with Zipcode</h3>
 <pre class="r"><code>latlong_zip = read_csv(&#39;./data/geocoding/citibike_latlong_zip.csv&#39;)
 
 citibike_zip =
@@ -1348,8 +1346,8 @@ citibike_zip =
 
 remove(citibike_df)</code></pre>
 <p>There are 83953 entries missing either the start or end zipcode.</p>
-<div id="missing-zipcodes" class="section level3">
-<h3><em>Missing Zipcodes</em></h3>
+<div id="missing-zipcodes" class="section level4">
+<h4><em>Missing Zipcodes</em></h4>
 <p>A look at the start coordinates with missing zipcodes below:</p>
 <pre class="r"><code>citibike_zip |&gt;
   filter(is.na(start_zipcode)) |&gt;
@@ -1519,8 +1517,8 @@ remove(citibike_df)</code></pre>
 </tbody>
 </table>
 </div>
-<div id="manual-zipcode-completion" class="section level3">
-<h3><em>Manual Zipcode Completion</em></h3>
+<div id="manual-zipcode-completion" class="section level4">
+<h4><em>Manual Zipcode Completion</em></h4>
 <p>For the above missing zipcodes, we manually looked up based on
 latitude, longitude, and station_name what the correct zipcode is. Upon
 manually exploration, these looked like some data quality issues with
@@ -1552,8 +1550,8 @@ values.</p>
                                TRUE ~ end_zipcode))</code></pre>
 </div>
 </div>
-<div id="merge-citibike-with-uhf34-neighborhood" class="section level2">
-<h2>Merge Citibike with UHF34 Neighborhood</h2>
+<div id="merge-citibike-with-uhf34-neighborhood" class="section level3">
+<h3>Merge Citibike with UHF34 Neighborhood</h3>
 <p>Now that we have the zipcode for Citibike data, we can use the
 zipcode and UHF34 crosswalk generated above to get neighborhood onto
 Citibike data.</p>
@@ -1786,8 +1784,8 @@ head(citibike_zip_neighborhoods) |&gt;
 </tr>
 </tbody>
 </table>
-<div id="missing-uhf34" class="section level3">
-<h3><em>Missing UHF34</em></h3>
+<div id="missing-uhf34" class="section level4">
+<h4><em>Missing UHF34</em></h4>
 <p>There were some citibike zipcodes with missing UHF34, which we
 explore below:</p>
 <pre class="r"><code>missing_startuhf = citibike_zip_neighborhoods |&gt;
@@ -1816,15 +1814,15 @@ size. The resulting dataset has 1628960 entries.</p>
 <hr />
 </div>
 </div>
+</div>
 <div id="final-dataset-merge-citibike-sdi-overweight-and-aqt"
 class="section level2">
 <h2><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
 Overweight, and AQt</span></h2>
 <p>Next we needed to create one large dataframe that merged the citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
-</div>
-<div id="merge-sdi-and-overweight-data" class="section level2">
-<h2>Merge SDI and Overweight data</h2>
+<div id="merge-sdi-and-overweight-data" class="section level3">
+<h3>Merge SDI and Overweight data</h3>
 <p>SDI and overweight are joined together first by UHF42.</p>
 <ul>
 <li>Note: There are rows in the overweight data without zipcode that
@@ -1849,8 +1847,8 @@ remove(SDI_df)
 remove(overweight_df)</code></pre>
 </div>
 <div id="merge-sdi-and-overweight-data-onto-citibike"
-class="section level2">
-<h2>Merge SDI and Overweight data onto citibike</h2>
+class="section level3">
+<h3>Merge SDI and Overweight data onto citibike</h3>
 <pre class="r"><code>citibike_df =
   citibike_zip_neighborhoods |&gt;
   left_join(y = sdi_overweight,
@@ -1866,8 +1864,8 @@ citibike_df = citibike_df |&gt;
   rename(&quot;end_sdi_score&quot; = &quot;sdi_score&quot;,
          &quot;end_percent_overweight&quot; = &quot;percent_overweight&quot;) </code></pre>
 </div>
-<div id="merge-aq-data-onto-citibike" class="section level2">
-<h2>Merge AQ data onto citibike</h2>
+<div id="merge-aq-data-onto-citibike" class="section level3">
+<h3>Merge AQ data onto citibike</h3>
 <pre class="r"><code>#Join to final dataframe
 citibike_df =
   citibike_df |&gt;
@@ -1880,8 +1878,8 @@ citibike_df = citibike_df |&gt;
             by = join_by(&quot;end_uhf34_neighborhood&quot; == &quot;neighborhood&quot;)) |&gt;
   rename(&quot;end_aq&quot; = &quot;data_value&quot;)</code></pre>
 </div>
-<div id="final-tidy-of-citibike-data" class="section level2">
-<h2>Final Tidy of Citibike Data</h2>
+<div id="final-tidy-of-citibike-data" class="section level3">
+<h3>Final Tidy of Citibike Data</h3>
 <p>A view at the final dataset, as well as overall summary of variables
 included and their missingness:</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt;
@@ -2509,6 +2507,14 @@ head(citibike_df) |&gt;
 </tbody>
 </table>
 <pre class="r"><code>write_csv(citibike_df, file = &#39;./data/citibike_clean.csv&#39;)</code></pre>
+<p>The tidied citibike dataframe includes 1628960 trips and 23 variables
+named bikeid, user_type, gender, age, start_time, stop_time,
+start_station_latitude, start_station_longitude, end_station_latitude,
+start_station_id, start_station_name, start_zipcode,
+start_uhf34_neighborhood, end_station_id, end_station_name, end_zipcode,
+end_uhf34_neighborhood, start_sdi_score, start_percent_overweight,
+start_aq, end_sdi_score, end_percent_overweight, end_aq.</p>
+</div>
 </div>
 
 
