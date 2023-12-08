@@ -13,7 +13,7 @@
 
 <title>About Us</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -324,11 +324,44 @@ div.tocify {
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Data Sources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_import_clean.html">Data Sources</a>
+    </li>
+    <li>
+      <a href="data/geocoding/latlong_to_zip.html">Coordinates to Zipcodes</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="analysis.html">Analysis</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analysis.html">Overall Analaysis</a>
+    </li>
+    <li>
+      <a href="exploratory/AirQual_exploratory.html">Air Quality</a>
+    </li>
+    <li>
+      <a href="exploratory/SDI_Exploratory.html">Social Deprivation Index</a>
+    </li>
+    <li>
+      <a href="exploratory/Weight_exploratory.html">Overweight</a>
+    </li>
+    <li>
+      <a href="modeling/Modeling.html">Modeling</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="project_report.html">Project Report</a>
