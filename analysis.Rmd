@@ -27,15 +27,14 @@ To explore New Yorkers' use of the Citibike program, we examined data on rides, 
 
 This page includes a few summary tables of the Citibike data, links to view deeper explorations of the air quality index, social deprivation index, and weight data, and links to our model page with full model charts and graphs.
 
- 
+
+------------------------------------------------------------------------
 
 # [Citibike Exploration]{style="color: blue;"}
 
- 
 
 ## [Geographic utilization]{style="color: blue;"}
 
- 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -69,7 +68,7 @@ citibike_df = read_csv("./citibike_clean/citibike_clean.csv")
 stations_df = read_csv("./citibike_clean/stations.csv")
 ```
 
- 
+
 
 **This table shows the number of stations per neighborhood available and used in September.**
 
@@ -104,13 +103,11 @@ There is consistency among stations available and used, with a mean of `r mean(s
 -   **Bronx has only a single station**, which makes sense given [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/) that describes Citibike expansion into the Bronx just after the time we're observing here (late 2019). While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas. So we'll see if this seems to be indicated when we incorporate SDI below.
 -   Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
 
-<<<<<<< HEAD
 This graph shows that most start and end rides occurred in Manhattan in September 2019.
 
-=======
 
 **This graph shows that most start and end rides occurred in Manhattan in September 2019.**
->>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
+
 ```{r graph of station stop/start per borough}
 
 # Assuming citibike_df is your dataframe
@@ -203,15 +200,12 @@ age = ggplot(citibike_df, aes(x = age, fill = "Count")) +
 (user_type + gender) / age
 ```
 
-<<<<<<< HEAD
- 
-=======
+
 Subscribers make up the large majority of rides.Males take the most rides! And 30 year olds and 50 year olds use citibike the most!
 
  &nbsp;
  
  ***
->>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
 
 ------------------------------------------------------------------------
 
@@ -238,11 +232,9 @@ health_plot |>
 
 ```
 
-<<<<<<< HEAD
-## Station Available and Usage
-=======
+
 ## Station Availability and Usage 
->>>>>>> 46c57f6c3d5ab72d3c37122052d31f04ca9ed970
+
 
 **Does station usage and availability vary by SDI?**
 
@@ -394,11 +386,11 @@ rides_SDI_overweight |>
 
 Unlike SDI, there doesn't seem to be a dip in ridership for the low range of overweight percentage. Here, there is a more consistent decrease in ridership as overweight percentage increases.
 
- 
-
 ------------------------------------------------------------------------
 
 # [Exploring Subsets ]{style="color: blue;"}
+
+The below pages take a look at some of the basic characteristics of the individual health datasets.
 
 [Air Quality index](exploratory/AirQual_exploratory.html)
 
@@ -406,7 +398,6 @@ Unlike SDI, there doesn't seem to be a dip in ridership for the low range of ove
 
 [Overweight Trends](exploratory/Weight_exploratory.html)
 
- 
 
 ------------------------------------------------------------------------
 
