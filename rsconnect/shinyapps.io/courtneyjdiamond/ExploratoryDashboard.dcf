@@ -5,7 +5,7 @@ account: courtneyjdiamond
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10748020
-bundleId: 8022841
+bundleId: 8026645
 url: https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/
 version: 1
 asMultiple: FALSE

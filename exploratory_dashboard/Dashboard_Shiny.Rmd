@@ -1,8 +1,8 @@
 ---
-title: Exploring Weather, Air Quality, and Social Deprivation Index Datasets
+title: Visualizing AQI, SDI, and Overweight Data by Citibike Station
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
     source_code: embed
 runtime: shiny
@@ -16,93 +16,254 @@ library(plotly)
 library(here)
 library(shiny)
 library(shinyjs)
+
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(ggridges)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ```{r datasets, include = FALSE}
-AQI.df <- read_csv(here("data/air_quality/air_zip_uhf.csv"))
-SDI.df <- read_csv(here("data/SDI_data/SD_Zip_ufh.csv"))
-```
+# setwd("./exploratory_dashboard")
 
+citibike_df = read_csv("data/citibike_clean.csv")
+stations_df = read_csv("data/stations.csv")
+
+```
 
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-```{r AQI inputs}
-name_particle_vec = AQI.df %>% pull(name) %>% unique()
+This is a test header.
+
+
+```{r inputs, echo = FALSE}
+
+borough = citibike_df |> 
+  pull(start_borough) |> 
+  unique()
+
 
 selectInput(
-  inputId = "particle_choice",
-  label = h3("Select Particle"),
-  choices = name_particle_vec,
-  selected = "Fine particles (PM 2.5)"
+  inputId = "borough_choice",
+  label = h3("Select a Borough"),
+  choices = borough,
+  selected = "Manhattan"
 )
 
-neighborhood_vec = AQI.df %>% pull(geo_place_name) %>% unique()
+hr()
+
+extra_variable = c("AQI", "SDI", "Percent Overweight")
 
 radioButtons(
-  inputId = "Neighborhood_choice",
-  label = h3("Select a neighborhood"),
-  choices = neighborhood_vec,
-  selected = "Washington Heights"
+  inputId = "health_var",
+  label = h3("Select a Health Metric"),
+  choices = extra_variable,
+  selected = "AQI"
 )
 
 ```
 
-```{r SDI inputs}
-uhf34_neighborhood_vec = SDI.df %>% pull(uhf34_neighborhood) %>% unique()
 
-selectInput(
-  inputId = "neighborhood_choice",
-  label = h3("Select Neighborhood"),
-  choices = uhf34_neighborhood_vec,
-  selected = "Washington Heights"
-)
-```
-
-
-Column {data-width=650}
+Row {data-height = 350}
 -----------------------------------------------------------------------
 
-### Chart A
+### Health Metrics by Citibike Station Location
 
-```{r}
-renderText({
-  input[["borough_choice"]]
-  })
+```{r, echo = FALSE}
 
-
-# renderPlotly({
-#   AQI.df %>%
-#   filter(
-#     name == input$particle_choice,
-#     geo_place_name == input$Neighborhood_choice,
-#   ) %>%
-#   plot_ly(x = ~time_period, y = ~data_value, type = "bar", mode = "markers", color = ~geo_place_name)
-# })
-
-
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Chart B
-
-```{r}
-renderText({ "hi"
-})
-```
-
-x = reorder(geo_place_name, -data_value), y = data_value)
-
-### Chart C
-
-```{r}
 renderPlotly({
-  SDI.df %>%
-  filter(
-    uhf34_neighborhood == input$neighborhood_choice,
-  ) %>%
-  plot_ly(x = ~uhf34_neighborhood, y = ~sdi_score, type = "bar", mode = "markers")
+
+borough_here = input$borough_choice
+
+if (input$health_var == "AQI") {
+  
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(text_label = str_c("Station: ", start_station_name, "\nAQI: ", start_aq, "\nPercent Overweight: ", start_percent_overweight, "\nSDI: ", start_sdi_score)) |> 
+  plot_ly(x = ~start_station_longitude, y = ~start_station_latitude, type = "scatter", mode = "markers", color = ~start_aq, text = ~text_label, alpha = 0.5)
+  
+}
+
+
+else if (input$health_var == "Percent Overweight") {
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(text_label = str_c("Station: ", start_station_name, "\nAQI: ", start_aq, "\nPercent Overweight: ", start_percent_overweight, "\nSDI: ", start_sdi_score)) |> 
+  plot_ly(x = ~start_station_longitude, y = ~start_station_latitude, type = "scatter", mode = "markers", color = ~start_percent_overweight, text = ~text_label, alpha = 0.5)
+}
+
+else if (input$health_var == "SDI") {
+  
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(text_label = str_c("Station: ", start_station_name, "\nAQI: ", start_aq, "\nPercent Overweight: ", start_percent_overweight, "\nSDI: ", start_sdi_score)) |> 
+  plot_ly(x = ~start_station_longitude, y = ~start_station_latitude, type = "scatter", mode = "markers", color = ~start_sdi_score, text = ~text_label, alpha = 0.5)
+  
+}
+  
+})
+
+```
+
+
+### Sankey chart of most frequent rides taken from station to station
+
+```{r, echo = FALSE}
+
+fig <- plot_ly(
+    type = "sankey",
+    orientation = "h",
+
+    node = list(
+      label = c("A1", "A2", "B1", "B2", "C1", "C2"),
+      color = c("blue", "blue", "blue", "blue", "blue", "blue"),
+      pad = 15,
+      thickness = 20,
+      line = list(
+        color = "black",
+        width = 0.5
+      )
+    ),
+
+    link = list(
+      source = c(0,1,0,2,3,3),
+      target = c(2,3,3,4,4,5),
+      value =  c(8,4,2,8,4,2)
+    )
+  )
+fig <- fig %>% layout(
+    title = "Basic Sankey Diagram",
+    font = list(
+      size = 10
+    )
+)
+
+```
+
+
+
+Row {.tabset .tabset-fade} 
+-----------------------------------------------------------------------
+
+### Rides originating, by Citibike station
+```{r, echo = FALSE}
+
+renderPlotly({
+
+borough_here = input$borough_choice
+
+if (input$health_var == "AQI") {
+  
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  add_count(start_station_name, name = "station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
+  mutate(station_count = as.numeric(station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+  
+}
+
+
+else if (input$health_var == "Percent Overweight"){
+  
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  add_count(start_station_name, name = "station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
+  mutate(station_count = as.numeric(station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+  
+}
+
+else if (input$health_var == "SDI") {
+  
+  citibike_df |>
+  filter(start_borough == borough_here) |> 
+  add_count(start_station_name, name = "station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
+  mutate(station_count = as.numeric(station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+
+}
+
 })
 ```
+
+### Rides terminating, by Citibike station
+
+```{r, echo = FALSE}
+renderPlotly({
+
+borough_here = input$borough_choice
+
+if (input$health_var == "AQI") {
+  
+  citibike_df |>
+  filter(end_borough == borough_here) |> 
+  add_count(end_station_name, name = "station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
+  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  
+}
+
+
+else if (input$health_var == "Percent Overweight"){
+  
+  citibike_df |>
+  filter(end_borough == borough_here) |> 
+  add_count(end_station_name, name = "station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
+  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  
+}
+
+else if (input$health_var == "SDI") {
+  
+  citibike_df |>
+  filter(end_borough == borough_here) |> 
+  add_count(end_station_name, name = "station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
+  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  
+}
+
+})
+```
+
+
+
