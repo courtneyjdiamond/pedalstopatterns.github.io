@@ -233,6 +233,7 @@ health_plot |>
 
 ```
 
+## Station Available and Usage 
 
 **Does station usage and availability vary by SDI?**
 
@@ -264,6 +265,116 @@ stations_SDI |>
 ```
 
 There doesn't seem to be too much discernible pattern. The highest number of available stations, though, does appear in the lower SDI neighborhoods. As expected following our analysis above that usage and availability only vary for a few neighborhoods, it's not surprising that there's not much discernible difference here either! 
+
+**Does station usage and availability vary by Overweight percentage?**
+
+```{r overweight_stations}
+stations_overweight = citibike_df |>
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough, 
+         start_percent_overweight, end_percent_overweight) |>
+  mutate(
+    Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    Station_Name = coalesce(end_station_name, start_station_name),
+    Borough = coalesce(end_borough, start_borough),
+    Overweight_pct = coalesce(start_percent_overweight, end_percent_overweight)
+    ) |>
+  group_by(Borough, Neighborhood) |>
+  summarize(Overweight_pct = mean(Overweight_pct),
+            Stations_Used = n_distinct(Station_Name)) |>
+  left_join(stations_available,
+            by = c("Borough" = "borough",
+                   "Neighborhood" = "uhf34_neighborhood")) |>
+  pivot_longer(c(Stations_Used, Stations_Available),names_to = "status", 
+               values_to = "count")
+
+stations_overweight |>
+  ggplot(aes(x = Overweight_pct, y = count, color = status)) + geom_point() +
+  facet_grid(~status)
+
+```
+
+For overweight percentage, there seems to be a downward trend in stations both available and used as overweight percent increases. While we can't make any causative assumptions here, it's interesting to note that the correlation is roughly the same in **available** and **used** stations - that is, individuals will use whatever stations are available, so perhaps the introduction of more stations could be beneficial to population health. 
+
+## Ridership
+
+Let's look at the same analyses as above, but now looking at number of rides, not just available stations.
+
+**Does September ridership vary by SDI?**
+
+```{r sdi_rides}
+rides_SDI = citibike_df |>
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough, start_sdi_score, end_sdi_score) |>
+  mutate(
+    Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    Station_Name = coalesce(end_station_name, start_station_name),
+    Borough = coalesce(end_borough, start_borough),
+    SDI = coalesce(start_sdi_score, end_sdi_score)
+    ) |>
+  group_by(Borough, Neighborhood) |>
+  summarize(SDI = mean(SDI),
+            rides = n()) 
+
+rides_SDI |>
+  ggplot(aes(x = SDI, y = rides)) + geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+There seems to be a clear downward trend in ridership as SDI increases. However, our sample size is limited here to only 20. If we look by zipcode, we have a bit more sample,  53 distinct zipcodes.
+
+**Does September ridership vary by SDI, at the zipcode level?**
+
+```{r sdi_rides_zipcode}
+rides_SDI = citibike_df |>
+  select(start_zipcode, end_zipcode, 
+         start_sdi_score, end_sdi_score) |>
+  mutate(
+    Zipcode = coalesce(start_zipcode, end_zipcode),
+    SDI = coalesce(start_sdi_score, end_sdi_score)
+    ) |>
+  group_by(Zipcode) |>
+  summarize(SDI = mean(SDI),
+            rides = n()) 
+
+rides_SDI |>
+  ggplot(aes(x = SDI, y = rides)) + geom_point() + 
+  geom_smooth(se = FALSE) 
+```
+
+Both of these visualizations showa clear downward trend in ridership as SDI increases, but they also show low ridership at the lowest end of SDI. Perhaps this speaks to alternative modes of transportation that people take at both ends of the SDI spectrum.
+
+**Does September ridership vary by overweight percentage?**
+
+We'll look at variation in ridership by percentage overweight, and keep in mind variation in SDI as well. 
+
+```{r overweight_rides_zipcode}
+rides_SDI_overweight = citibike_df |>
+  select(start_zipcode, end_zipcode, 
+         start_sdi_score, end_sdi_score,
+         start_percent_overweight, end_percent_overweight) |>
+  mutate(
+    Zipcode = coalesce(start_zipcode, end_zipcode),
+    SDI = coalesce(start_sdi_score, end_sdi_score),
+    Overweight_percent = coalesce(start_percent_overweight, end_percent_overweight)
+    ) |>
+  group_by(Zipcode) |>
+  summarize(SDI = mean(SDI),
+            Overweight_percent = mean(Overweight_percent),
+            rides = n()) 
+
+
+rides_SDI_overweight |>
+  ggplot(aes(x = Overweight_percent, y = rides)) + 
+  geom_point(aes(size = SDI), alpha = .75) + 
+  geom_smooth(se = FALSE) 
+```
+
+Unlike SDI, there doesn't seem to be a dip in ridership for the low range of overweight percentage. Here, there is a more consistent decrease in ridership as overweight percentage increases. 
 
  &nbsp;
  
