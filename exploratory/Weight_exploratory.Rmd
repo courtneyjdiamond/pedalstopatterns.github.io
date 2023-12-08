@@ -1,5 +1,5 @@
 ---
-title: "Weight dataset exploratoration"
+title: "Weight Dataset Exploration"
 output: 
   html_document:
     toc: true
@@ -9,40 +9,75 @@ output:
 css: styles.css
 ---
 
-## Weight exploratory analysis
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
 library(tidyverse)
 library(ggplot2)
-library(here)
+library(leaflet)
+
 ```
 
-```{r}
-overweight <- read_csv(here("data/SDI_data/overweight_data_clean.csv"))
-joined_uhf_34_42 <- read_csv(here("data/geocoding/joined_uhf_34_42.csv"))
+## Load Data
+
+```{r load_data}
+data = read_csv('../citibike_clean/citibike_clean.csv')
+
+overweight_data = data |>
+  select(start_station_latitude,
+         start_station_longitude,
+         start_uhf34_neighborhood,
+         start_zipcode,
+         end_station_latitude,
+         end_station_longitude,
+         end_uhf34_neighborhood,
+         start_borough, end_borough,
+         end_zipcode,
+         start_percent_overweight, 
+         end_percent_overweight) |>
+  mutate(neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+         lat = coalesce(end_station_latitude, start_station_latitude),
+         long = coalesce(end_station_longitude, start_station_longitude),
+         borough = coalesce(start_borough, end_borough),
+         zipcode = coalesce(start_zipcode, end_zipcode),
+         overweight = coalesce(start_percent_overweight, end_percent_overweight)) |>
+  unique()
+
+
+head(overweight_data) |>
+  knitr::kable()
 ```
 
-Add zip codes to weight data. 
 
-```{r}
-joined_uhf_34_42 =
-joined_uhf_34_42 |>
-  select(zip, uhf34)
+## Summary Statistics
 
-weight_zipcodes =
-  left_join(overweight, y = (joined_uhf_34_42),
-            by = join_by("geo_id" == "uhf34")) 
+```{r stats}
+overweight_data |>  
+  summarize(
+    mean = mean(overweight, na.rm = TRUE),
+    min = min(overweight, na.rm = TRUE),
+    max = max(overweight, na.rm = TRUE),
+    median = median(overweight, na.rm = TRUE),
+    std = sd(overweight, na.rm = TRUE)
+  ) |>
+  knitr::kable()
 
-weight_zipcodes =
-  weight_zipcodes |>
-  filter(!duplicated(geography))
+
 ```
 
-Percent by area name
-```{r}
+
+## Percent by Zipcode
+```{r zip}
 percent_obese =
-weight_zipcodes |>
-ggplot(aes(x = reorder(geography, -percent), y = percent,)) +
+overweight_data |>
+ggplot(aes(x = reorder(zipcode, -overweight), y = overweight,)) +
   geom_point() +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
@@ -53,25 +88,54 @@ print(percent_obese)
 
 ```
 
-Percent by zipcode
-```{r}
-
-percent_obese_zip =
-weight_zipcodes |>
-  filter(zip != "NA") |>
-ggplot(aes(x = reorder(zip, -percent), y = percent,)) +
+## Percent by UHF34 Neighborhood
+```{r uhf}
+percent_obese =
+overweight_data |>
+  group_by(neighborhood) |>
+  summarize(overweight = mean(overweight)) |>
+ggplot(aes(x = reorder(neighborhood, -overweight), y = overweight,)) +
   geom_point() +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  labs(title = "Percent of adults classified as overweight or obese, by zipcode", x = "Location", y = "Percent")  
+  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
 
-print(percent_obese_zip)
+print(percent_obese)
 
 
 ```
 
 
 
+
+
+```{r}
+# Create a leaflet map
+
+# Select the necessary columns
+map_data <- overweight_data %>%
+  select(lat, long, overweight)
+
+map <- leaflet(data = map_data) %>%
+  addTiles()  # Add map tiles (you can use different tile providers)
+
+# Add color-coded circles based on overweight percentage
+map <- map %>%
+  addCircleMarkers(
+    radius = 5,  # Adjust the circle size as needed
+    fillColor = ~colorFactor("Blues", map_data$overweight)(overweight),
+    color = "black",
+    fillOpacity = 0.7,
+    popup = ~paste("Overweight Percentage:", overweight, "%"),
+    label = ~paste("Overweight Percentage:", overweight, "%")
+  )
+
+
+
+# Display the map
+map
+
+```
 
 
 
