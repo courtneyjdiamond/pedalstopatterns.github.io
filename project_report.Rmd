@@ -32,14 +32,15 @@ css: styles.css
 
 ## <span style='color: blue;'>Motivation</span>
 
-Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, a critical question emerges: Does every NYer enjoy equitable access to these bikes and the health advantages they confer?
+Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, a critical question emerges: How do NYers in different neighborhoods use citibike, and how do environmental, health, and socioeconomic variables impact rides?
 
-As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a collective curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of CitiBike use:
+As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of CitiBike use:
 
-  * Geographical Utilization: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
-  * User Demographics: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
-  * Neighborhood Disparities: We aim to investigate if there is an uneven distribution of CitiBikes across neighborhoods, particularly focusing on areas characterized by higher levels of social deprivation. Addressing this aspect is important in understanding the accessibility and inclusiveness of the CitiBike system.
-  * Health Implications: Beyond transportation, we aim to explore whether disproportionate access to CitiBikes might contribute to health disparities among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
+   * <u>Geographical Utilization</u>: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
+   
+  * <u>User Demographics</u>: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
+  
+  * <u>Health Implications</u>: Beyond transportation statistics, we aim to explore whether CitiBike use is related to health disparities and socioeconomic variables among NYers. This involves exploring associations between CitiBike availability, social deprivation indices, air quality, and being overweight.
 
 Overall, we aim to understand how CitiBike intersects with public health and urban life in NYC.
 
@@ -48,7 +49,7 @@ Overall, we aim to understand how CitiBike intersects with public health and urb
 ***
 ## <span style='color: blue;'>Related Work</span>
 
-After spending time on the airbnb data sources in class, we were particularly interested in exploring an NYC related source of data. As we are public health students and our group also includes healthcare professionals our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
+After spending time on the airbnb data sources in class, we were particularly interested in exploring an NYC dataset. As we are public health students and our group also includes healthcare professionals our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
 
   &nbsp;
 
@@ -56,9 +57,9 @@ After spending time on the airbnb data sources in class, we were particularly in
 
 ## <span style='color: blue;'>Initial Questions</span>
 
-Initially, our focus revolved around the customer usability of Citibike, with a specific emphasis on time-related factors. We posed questions aimed at understanding user utilization patterns, specifically the ratio of recurrent subscribers to one-time customers and examining trends that might suggest tourist usage, especially around holidays. Additionally, we sought to understand the temporal variations in this ratio, both throughout the day and across different seasons. We inquired about potential discrepancies in ride duration between subscribers and one-time customers and how these durations might fluctuate based on the time of day, season, and varying weather conditions. 
+Initially, our view of this project was very grandiose. We wanted to explore all Citibike usage patterns throughout 2019. We specifically chose 2019 as we wanted to use the social deprivation index score which was most recently available for 2019. However, we quickly realized that examining data from all of 2019 was too much data (around 1 million rides) and consistently led to problems knitting. Instead we decided to limit our data to one month, September, which had the largest number of rides. The trade off was that we were unable to examine seasonal trends and ridership. We were particularly interested in rides and times that suggested tourist usage, especially around holidays, but this area of exploration was discarded.
 
-While we still wanted to explore Citibike usage, throughout the evolution of our project, we decided to shift more towards neighborhood specific usage. This fit better with our desire to explore health and equity and introduced a more nuanced layer to our data exploration. 
+Instead, we focused on questions related to ridership and usage - who uses Citibike and where in NYC do they use it. Throughout the evolution of our project, we also decided to emphasize the exploration of health, environment, and socioeconomic variables, which introduced a more nuanced layer to our data exploration. 
 
 ***
 
