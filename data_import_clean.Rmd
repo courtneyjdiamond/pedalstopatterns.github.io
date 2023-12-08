@@ -634,7 +634,7 @@ The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(c
 
 
 # Stations Analysis 
-For some extra analysis work, we want to understand the full avaialbility of stations, not just the ones used in September, So we also have to join zipcode and UHF34 neighborhood to our full station data.
+For some extra analysis work, we want to understand the full availability of stations, not just the ones used in September, So we also have to join zipcode and UHF34 neighborhood to our full station data.
 ```{r station_uhf}
 stations = stations |>
   left_join(latlong_zip, 
