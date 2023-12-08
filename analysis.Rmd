@@ -355,17 +355,6 @@ There seems to be a clear downward trend in ridership as median SDI increases. H
  &nbsp;
 
 ```{r sdi_rides_zipcode}
-
-citibike_df %>%
-  group_by(start_uhf34_neighborhood) %>%
-  summarise(
-    median_SDI = median(start_sdi_score, na.rm = TRUE),
-    median_SDI = median(start_sdi_score, na.rm = TRUE),
-    max_SDI = max(start_sdi_score, na.rm = TRUE),
-    min_SDI = min(start_sdi_score, na.rm = TRUE)
-  )
-
-
 rides_SDI = citibike_df |>
   select(start_zipcode, end_zipcode, 
          start_sdi_score, end_sdi_score) |>
