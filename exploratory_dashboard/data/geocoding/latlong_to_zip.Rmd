@@ -1,0 +1,173 @@
+---
+title: "<span style='color: blue;'>Convert Latitude/Longitude to Zipcode</span>"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
+---
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+
+  &nbsp;
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE
+)
+
+library(tidyverse)
+library(tidygeocoder)
+
+```
+
+***
+  
+## <span style='color: blue;'>Geolocation Identifiers</span>
+
+ &nbsp;
+ 
+The **Citibike data** is coded by latitude/longitude, while the **Overweight** and **SDI** data are coded by Zipcode and UHF34 neighborhood. To enable merging of Citibike data with the health datasets, we need to transform coordinates to Zipcode, that can later be easily converted to UHF34 identifiers. 
+
+* We convert the Citibike location data from latitude/longitude to zip code using a package [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) which converts coordinates to addresses, from which we can extract zipcodes. 
+
+* The output of the code below is  a **crosswalk from coordinates to Zipcode** that is stored in our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/citibike_latlong_zip.csv) and used in our [Data Sources page](../../import_cleaning/data_import_clean.html). 
+  
+  * We generate a crosswalk here for efficiency purposes, as this takes ~20 minutes to execute, so is better suited as a one-time process. 
+ 
+  &nbsp;
+
+***
+
+## <span style='color: blue;'>Load Citibike Data</span>
+
+  &nbsp;
+  
+The following code loads and tidies the Citibike data, identically as described in [Data Sources](../../import_cleaning/data_import_clean.html).
+
+```{r}
+citibike <- 
+  tibble(
+    files = list.files("../../citibike/"),
+    path = str_c("../../citibike/", files)
+  ) |>
+  mutate(data = map(path, ~read_csv(.x, col_types = cols(
+    'end station id' = col_double(),
+    'start station id' = col_double()
+  )))) |>
+  unnest(cols = c(data))
+
+
+citibike_df <- citibike |>
+  janitor::clean_names() |>
+  select(-files, -path) |>
+  rename(trip_duration_sec = tripduration,
+         start_time = starttime,
+         stop_time = stoptime,
+         user_type = usertype)|>
+  mutate(gender = recode(gender,
+                         "0" = "Unknown",
+                         "1" = "Male",
+                         "2" = "Female"),
+         trip_duration_min = trip_duration_sec / 60,
+         age = 2019 - birth_year
+  ) |>
+  filter(
+    trip_duration_sec >= 300,
+    trip_duration_sec <= 86400,
+    as.Date(stop_time) >= as.Date("2019-01-01"),
+    as.Date(start_time) <= as.Date("2019-12-31")
+  )  |>
+  select(trip_duration_sec, trip_duration_min, everything())
+
+```
+
+### <span style='color: blue;'>Subset for Testing</span>
+
+  &nbsp;
+  
+The following code subsets the Citibike data, for faster testing of the geocoding process if desired.
+  
+```{r}
+citibike_df = citibike_df |>
+  head(n=10)
+```
+
+
+## <span style='color: blue;'>Extract Latitude/Longitude pairs from Citibike</span>
+
+  &nbsp;
+  
+For the crosswalk, we only need the coordinates from Citibke data, and can disregard the rest of the columns. We extract lat/long for both the **start** and **end** location for each ride. 
+
+We then combine these together, and de-duplicate, to generate a crosswalk wiht unique latitude/longitude/Zipcode combinations. 
+
+```{r get_latlong}
+citibike_start = citibike_df |>
+  janitor::clean_names() |>
+  select(start_station_latitude, start_station_longitude) |>
+  rename(latitude = start_station_latitude, longitude = start_station_longitude) |>
+  unique() # 1110
+
+citibike_end  = citibike_df |>
+  janitor::clean_names() |>
+  select(end_station_latitude, end_station_longitude) |>
+  rename(latitude = end_station_latitude, longitude = end_station_longitude) |>
+  unique() 
+
+lat_long = rbind(citibike_start, citibike_end) |>
+  unique()
+
+```
+
+Of the `r citibike_df |> nrow()` entries in the full Citibike dataset, there are `r citibike_start |> nrow()` unique start station coordinates, `r citibike_end |> nrow()` unique start station coordinates, and `r lat_long |> nrow()` unique coordinates overall.
+ 
+
+## <span style='color: blue;'>Convert to Zipcodes</span>
+
+  &nbsp;
+  
+We know feed in the identified coordinates to `tidygeocoder::reverse_geocode`, which takes latitude, longitude, and using the method `osm`, which calls an open-source geocoding service, [Nominatim](https://nominatim.org/), to identify addresses. 
+
+* Finally, we write our crosswalk to a CSV 
+
+
+```{r convert_to_zip}
+latlong_zip = lat_long |>
+  reverse_geocode(lat = latitude, long = longitude, 
+                  method = 'osm', full_results = TRUE) |>  
+  select(latitude, longitude, postcode) 
+
+head(latlong_zip) |>
+  knitr::kable()
+
+#write_csv(latlong_zip, "./data/geocoding/citibike_latlong_zip.csv")
+```
+
+For `r lat_long |> nrow()` coordinates, zipcodes were identified for `r latlong_zip |> filter(!is.na(postcode)) |> nrow()`, and `r latlong_zip |> filter(is.na(postcode)) |> nrow()` are missing zipcodes. These are handles later in data cleaning in [Data Sources](../../import_cleaning/data_import_clean.html), where we manually lookup the remaining zipcodes, which is feasible for such a small subset. The manually annotated coordinates are stored on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv).
+
+## <span style='color: blue;'>Merge to Citibike</span>
+
+  &nbsp;
+  
+The below code is just a quick test and preview of how we bring Zipcode back onto Citibike data. This is done in full in [Data Sources](../../import_cleaning/data_import_clean.html). 
+
+```{r, eval = FALSE}
+citibike_zip = citibike_df |>
+  left_join(latlong_zip, 
+            by = c("start_station_latitude" = "latitude",
+                   "start_station_longitude" = "longitude")) |>
+  rename("start_zipcode" = "postcode") |>
+  left_join(latlong_zip, 
+            by = c("end_station_latitude" = "latitude",
+                   "end_station_longitude" = "longitude")) |>
+  rename("end_zipcode" = "postcode") 
+ 
+```
+
