@@ -1,5 +1,5 @@
 ---
-title: "SDI Exploratoration"
+title: "<span style='color: blue;'>Social Deprivation Index</span>"
 output: 
   html_document:
     toc: true
@@ -8,114 +8,137 @@ output:
     code_folding: hide
 css: styles.css
 ---
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
 
-# SDI Exploratory anlyses
+------------------------------------------------------------------------
 
-We sough to gather data from the Social deprivation index (SDI) is an effort in generating composite measures of socioeconomic factors across NYC by census tract. We will use these datasets to explore CitiBike availability and usage patterns across neighborhoods.
-
-The data was found on the [SDI](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html) website. From there we downloaded the `rgcsdi-2015-2019-zcta.csv` file and imported it as below.
+[The social deprivation index (SDI)](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html) is an effort to generate a scoring system of socioeconomic factors using US census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage nonemployed adults under 65 years of age. For more details please see the webpage link.
 
 ```{r, include = FALSE}
 library(tidyverse)
 library(here)
+library(viridis)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
 	warning = FALSE)
 ```
 
-First we load in the datasets necessary.
-
-```{r, eval = TRUE}
-SDI_df <- read_csv(here("data/SDI_data/rgcsdi-2015-2019-zcta.csv")) |>
-  janitor::clean_names() |>
-  select(zcta5_fips, sdi_score)|>
-  rename(zip=zcta5_fips)
-
-joined_uhf_34_42 = read_csv(here("data/geocoding/joined_uhf_34_42.csv"))
+```{r load_data, include = FALSE}
+citibike_df = read_csv("../citibike_clean/citibike_clean.csv")
 ```
 
+  &nbsp;
+  
+In this webpage we will explore the SDI variable by start location and determine which summary statistic to use to coalece by neighborhood.
 
-## Join SDI data to UHF/Zip/Neighborhood data
-```{r, eval = TRUE}
-joined_SDI_zip_neighborhood = 
-  SDI_df |> 
-  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
-  mutate(zip = as.numeric(zip)) |> 
-  left_join(y = joined_uhf_34_42, by = "zip")
+ &nbsp;
+  
+Below is a table of summary statistics for SDI. 
+```{r }
+citibike_df |>
+  summarise(
+    mean_sdi = round(mean(start_sdi_score, na.rm = TRUE), 1),
+    sd_sdi = round(sd(start_sdi_score, na.rm = TRUE), 1),
+    median_sdi = round(median(start_sdi_score, na.rm = TRUE), 1),
+    q1_sdi = round(quantile(start_sdi_score, 0.25, na.rm = TRUE), 1),
+    q3_sdi = round(quantile(start_sdi_score, 0.75, na.rm = TRUE), 1),
+    iqr_sdi = round(IQR(start_sdi_score, na.rm = TRUE), 1),
+    max_sdi = round(max(start_sdi_score, na.rm = TRUE), 1),
+    min_sdi = round(min(start_sdi_score, na.rm = TRUE), 1)
+  )|>
+  pivot_longer(
+    cols = c("mean_sdi", "sd_sdi", "median_sdi", "q1_sdi", "q3_sdi", "iqr_sdi", "max_sdi", "min_sdi"),
+    names_to = "Statistic",
+    values_to = "Value"
+  )|>
+  knitr::kable()
 ```
 
-# Exploratory Analyses
+There is a wide range of SDI scores by start station location from `r citibike_df |> summarise(min_sdi = min(start_sdi_score, na.rm = TRUE)) %>% pull(min_sdi)` in zipdcode `r citibike_df %>% filter(start_sdi_score == min(start_sdi_score, na.rm = TRUE)) %>% select(start_zipcode)|>  distinct()|> pull()` which is in the neighborhood `r citibike_df %>% filter(start_sdi_score == min(start_sdi_score, na.rm = TRUE)) %>% select(start_uhf34_neighborhood)|>  distinct()|> pull()` and the borough `r citibike_df %>% filter(start_sdi_score == min(start_sdi_score, na.rm = TRUE)) %>% select(start_borough)|>  distinct()|> pull()` to  `r citibike_df |> summarise(max_sdi = max(start_sdi_score, na.rm = TRUE)) %>% pull(max_sdi)` in zipdcodes `r citibike_df %>% filter(start_sdi_score == max(start_sdi_score, na.rm = TRUE)) %>% select(start_zipcode)|>  distinct()|> pull()` which are in neighborhoods `r citibike_df %>% filter(start_sdi_score == max(start_sdi_score, na.rm = TRUE)) %>% select(start_uhf34_neighborhood)|>  distinct()|> pull()` and boroughs `r citibike_df %>% filter(start_sdi_score == max(start_sdi_score, na.rm = TRUE)) %>% select(start_borough)|>  distinct()|> pull()`.
 
-We then joined the UFH data to map neighborhoods on to zip codes. 
-```{r, eval = TRUE}
-joined_SDI_zip_neighborhood = 
-  SDI_df |> 
-  filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
-  mutate(zip = as.numeric(zip)) |> 
-  left_join(y = joined_uhf_34_42, by = "zip")
+  &nbsp;
 
-knitr::kable(head(joined_SDI_zip_neighborhood[,1:5]))
+Below are tables showing the top 5 highest SDI scores and lowest SDI scores by location.
 
-#write output for ease of use in other files
-#write_csv(joined_SDI_zip_neighborhood, here("data/SDI_data/SD_Zip_ufh.csv"))
+
+```{r highest}
+citibike_df |>
+  arrange(desc(start_sdi_score)) |>
+  select(start_zipcode, start_uhf34_neighborhood, start_borough, start_sdi_score)|>
+  distinct() |>
+  head(5) |>
+  knitr::kable()
 ```
 
-This output variables: `zip, sdi_score, uhf42, uhf42_neighborhood, uhf34, uhf34_neighborhood`.
+```{r lowest}
+citibike_df |>
+  arrange(start_sdi_score) |>
+  select(start_zipcode, start_uhf34_neighborhood, start_borough, start_sdi_score)|>
+  distinct() |>
+  head(5)|>
+  knitr::kable()
+```
 
-```{r  fig.width=7, fig.height=4}
-joined_SDI_zip_neighborhood %>% 
-  group_by(zip) %>%
-  summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = reorder(zip, -mean_SDI), y = mean_SDI)) +
+  &nbsp;
+
+Since SDI score is on the zipcode level, we next decide if mean or median is the better way to iterate across neighborhoods.
+
+```{r mean vs median by neighborhood}
+citibike_df |>
+  group_by(start_uhf34_neighborhood) |>
+  summarise(
+    mean_sdi = mean(start_sdi_score, na.rm = TRUE),
+    median_sdi = median(start_sdi_score, na.rm = TRUE),
+     max_sdi = round(max(start_sdi_score, na.rm = TRUE), 1),
+    min_sdi = round(min(start_sdi_score, na.rm = TRUE), 1)
+  )|>
+  knitr::kable()
+```
+
+Mean and median SDI scores are similar by start neighborhood. However median SDI scores tend to be lower and better capture the wide variation in score across neighborhood.
+
+  &nbsp;
+  
+Will next evaluate median SDI score by start zip code.
+
+```{r fig.width=7, fig.height=4}
+citibike_df %>% 
+  group_by(start_zipcode) %>%
+  summarize(median_SDI = median(start_sdi_score)) %>%
+  ggplot(aes(x = reorder(start_zipcode, -median_SDI), y = median_SDI)) +
   geom_histogram(stat = "identity") + 
   labs(
     title = "SDI score by Zip code",
     x = "Zip code",
     y = "SDI score"
   ) + 
+   scale_fill_viridis(discrete = TRUE) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+ 
 ```
 
-* Running an initial analysis by SDI score for zip code we can see a large range from 10% up to 100%
+It is difficult to discern the variation in start zip codes, but we can see there is a wide range.
 
+  &nbsp;
 
-We then evaluate the SDI scores by neighborhoods (based on both the uhf34 and uhf42 registrations).
-
-
-```{r fig.width=7, fig.height=4}
-joined_SDI_zip_neighborhood %>% 
-  group_by(uhf34_neighborhood) %>%
-  summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = reorder(uhf34_neighborhood, -mean_SDI), y = mean_SDI)) +
-  geom_bar(stat = "identity") + 
-  labs(
-    title = "Mean SDI score by Neighborhood",
-    x = "Neighborhood",
-    y = "Mean SDI score"
-  ) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-* Again we can see a max SDI score up to 100% (in East Harlem and South Bronx), with the lowest score in Souther St. 
-
-* Two neighborhoods, Chealsea Village and Flushing Clearview, lacked SDI scores. 
+Next will look at median SDI by start neighborhood.
 
 ```{r  fig.width=7, fig.height=4}
-joined_SDI_zip_neighborhood %>% 
-  group_by(uhf42_neighborhood) %>%
-  summarize(mean_SDI = mean(sdi_score)) %>%
-  ggplot(aes(x = reorder(uhf42_neighborhood, -mean_SDI), y = mean_SDI)) +
+citibike_df |>
+  group_by(start_uhf34_neighborhood) |>
+  summarize(median_SDI = median(start_sdi_score)) |>
+  ggplot(aes(x = reorder(start_uhf34_neighborhood, -median_SDI), y = median_SDI)) +
   geom_bar(stat = "identity") + 
   labs(
-    title = "Mean SDI score by Neighborhood",
     x = "Neighborhood",
-    y = "Mean SDI score"
+    y = "Median SDI score"
   ) + 
+  scale_fill_viridis(discrete = TRUE) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
-
-* Looking at the data by the uhf42 classifications again the peak scores are 100% in Crotona Tremont, East Harlem, and High Bridge Morrisania; lowest values in South Beach Tottenville. 
-
-* Again Chealsea Village and Flushing Clearview were missing values.
