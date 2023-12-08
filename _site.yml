@@ -4,23 +4,9 @@ navbar:
   title: "Home"
   right:
     - text: "Data Sources"
-      menu:
-        - text: 'Data Sources'
-          href: data_import_clean.html
-        - text: 'Coordinates to Zipcodes'
-          href: data/geocoding/latlong_to_zip.html
+      href: data_import_clean.html
     - text: "Analysis"
-      menu:
-        - text: "Overall Analaysis"
-          href: analysis.html
-        - text: "Air Quality"
-          href: exploratory/AirQual_exploratory.html
-        - text: "Social Deprivation Index"
-          href: exploratory/SDI_Exploratory.html
-        - text: "Overweight"
-          href: exploratory/Weight_exploratory.html
-        - text: "Modeling"
-          href: modeling/Modeling.html
+      href: analysis.html
     - text: "Project Report"
       href: project_report.html
     - text: "About Us"
