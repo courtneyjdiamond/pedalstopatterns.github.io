@@ -22,6 +22,8 @@ To explore the impact of weather trends on Citibike ridership in New York City, 
 This dataset includes air quality indexes measured across NYC boroughs. Our analysis aims to uncover relationships between air quality variations and Citibike ridership, offering insights into how environmental factors influence urban mobility patterns.
 
 ## Air Quality Exploratory analyses
+
+We first import data and tidy `Air Qality` dataset.
 ```{r}
 #import data
 air <- read_csv(here("data/air_quality/Air_Quality_20231126.csv")) 
@@ -37,10 +39,10 @@ air_quality_df = air |>
   filter(year == "2019")
 ```
 
+Added zip codes. The original data includes several varieties of `geo ids, including borough, citywide, uhf42, ,uhf34, and CD` (Community Districts). We decided to use `uhf42` and `uhf34` with `zipcodes`, so the other geo id varieties will be filtered out. 
+
 ```{r}
 # add zip codes
-# the original data includes several varieties of geo ids, including borough, citywide, uhf42, ,uhf34, and CD (Community Districts). We decided to use uhf42 and uhf34 with zipcodes, so the other geo id varieties will be filtered out. 
-
 air_geo =
   air_quality_df |>
   mutate(
@@ -48,7 +50,7 @@ air_geo =
     uhf34 = case_when(geo_type_name == "UHF34" ~ "1")
   )
 
-# break up by geocoding system, add zipcodes
+#break up by geocoding system, add zipcodes
 #uhf42
 air_zip_neighborhoods_42 =
   air_geo |>
@@ -89,58 +91,39 @@ write_csv(air_zip_uhf, here("data/air_quality/air_zip_uhf.csv"))
 
 ```
 
-Average Air Quality Index Across Time Periods
-```{r}
-air_quality_df |>
-  group_by(time_period) |>
-  summarise(avg_air_quality = mean(data_value)) |>
-  ggplot(aes(x = reorder(time_period, avg_air_quality), y = avg_air_quality)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  labs(title = "Average Air Quality Index Across Time Periods",
-       x = "Time Period",
-       y = "Average Air Quality Index") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
-```
 
+### Average Air Quality Index Across Time Periods, UHF Neighborhoods only
+```{r}
+annual_aq = air_zip_uhf |>
+  filter(time_period == "Annual Average 2019") 
+
+annual_aq|>
+  ggplot(aes(x = time_period, y = data_value)) +
+  geom_boxplot(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(title = "Air Quality Index for Annual Average 2019",
+       x = "Time Period",
+       y = "Air Quality Index") +
+  theme_minimal()
+
+# Calculate statistics
+midpoint <- median(annual_aq$data_value)
+low_quantile <- quantile(annual_aq$data_value, 0.25)
+top_quantile <- quantile(annual_aq$data_value, 0.75)
+
+```
 * There are three time periods: Annual average 2019, Winer 2019-20, Summer 2019. 
 
-* The range of values is from 12 - 17.5
+* The range of values is from `r min(annual_aq$data_value)` - `r max(annual_aq$data_value)`.
+Midpoint is `r median(annual_aq$data_value)`, low quantile is `r quantile(annual_aq$data_value, 0.25)`, and high quantile is `r quantile(annual_aq$data_value, 0.75)`.
 
-Average Air Quality Index Across Time Periods, UHF Neighborhoods only
-```{r}
-air_zip_uhf |>
-  group_by(time_period) |>
-  summarise(avg_air_quality = mean(data_value)) |>
-  ggplot(aes(x = reorder(time_period, avg_air_quality), y = avg_air_quality)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  labs(title = "Average Air Quality Index Across Time Periods",
-       x = "Time Period",
-       y = "Average Air Quality Index") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
-```
 
-* The range of values is from 12 - 17.5
 
-Air Quality Comparison
-```{r}
-air_quality_df |>
-  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  facet_wrap(~ name + measure_info, scales = "free_y", ncol = 3) +
-  labs(title = "Air Quality Comparison",
-       x = "Geographical Place",
-       y = "Data Value") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
-```
 
-* We are evaluating three data particles: Fine particles (PM 2.5), Nitrogen dioxide (NO2), and Ozone (O3).
+### We have evaluated three data particles: Fine particles (PM 2.5), Nitrogen dioxide (NO2), and Ozone (O3).
 
 * There is variability in values based by geopgraphic location. 
 
-Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
+### Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
 ```{r}
 air_particles =
   air_zip_uhf |>
@@ -159,7 +142,7 @@ air_particles |>
 
 * The highest concentration of Fine particles was in Greenpoint, with the lowest in South beach - Tottenville.
 
-Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
+### Air Quality Comparison, Fine Particles, UHF Neighborhoods Only, Annual Average
 ```{r}
 air_nitrogen =
   air_zip_uhf |>
@@ -178,7 +161,7 @@ air_nitrogen |>
 
 * Again the highest concentration of this measure, Nitrogen dioxide, was in Greenpoint, and lowest in South beach - Tottenville. 
 
-Air Quality Comparison, UHF Neighborhoods Only, Ozone
+### Air Quality Comparison, UHF Neighborhoods Only, Ozone
 ```{r}
 air_zip_uhf |>
   filter(name == "Ozone (O3)") |>
@@ -195,7 +178,7 @@ air_zip_uhf |>
 
 
 
-The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant.
+### The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant.
 ```{r}
 air_quality_df |>
   group_by(name) |>
@@ -208,7 +191,7 @@ air_quality_df |>
   )
 ```
 
-The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant. (UHF Neighborhoods Only)
+### The minimum, first quartile (Q1), median, third quartile (Q3), and maximum values for each pollutant. (UHF Neighborhoods Only)
 ```{r}
 air_zip_uhf |>
   group_by(name) |>
@@ -222,7 +205,7 @@ air_zip_uhf |>
 
 ```
 
-Distribution of Air Quality Pollutants
+### Distribution of Air Quality Pollutants
 ```{r}
 air_quality_df |>
   ggplot(aes(x = data_value, fill = name)) +
@@ -236,7 +219,7 @@ air_quality_df |>
 ```
 
 
-Distribution of Air Quality Pollutants, UHF Neighborhoods Only
+### Distribution of Air Quality Pollutants, UHF Neighborhoods Only
 ```{r}
 air_zip_uhf |>
   ggplot(aes(x = data_value, fill = name)) +
