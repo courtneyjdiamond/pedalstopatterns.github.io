@@ -13,7 +13,9 @@ css: styles.css
  
 # Laura O'Carroll
 
-[Learn more about Laura]
+Laura is a second year MPH student and a Senior Policy Analyst for the Chicago Department of Public Health. 
+
+[Learn more about Laura](https://github.com/laura0carroll)
 
  &nbsp;
 
