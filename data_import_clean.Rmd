@@ -310,7 +310,15 @@ uhf_34_df =
   pivot_longer(c("1_uhf":"3_uhf"), names_to = "uhf_name", values_to = "uhf42") |> 
   select(!uhf_name) |> 
   mutate(uhf34 = as.numeric(uhf34),
-         uhf42 = as.numeric(uhf42))
+         uhf42 = as.numeric(uhf42))|>
+  mutate(borough = case_when(
+    substring(uhf34, 1, 1) == "1" ~ "Bronx",
+    substring(uhf34, 1, 1) == "2" ~ "Brooklyn",
+    substring(uhf34, 1, 1) == "3" ~ "Manhattan",
+    substring(uhf34, 1, 1) == "4" ~ "Queens",
+    substring(uhf34, 1, 1) == "5" ~ "Staten Island",
+    TRUE ~ "Unknown"  # Handle any other values
+  ))
   
 ```
 
@@ -515,8 +523,9 @@ sdi_overweight =
                    by.y = c("zip", "uhf42", "uhf42_neighborhood"),
                    all.x = TRUE)  |>
   select("zip","uhf34","uhf34_neighborhood.x","uhf42","uhf42_neighborhood",
-         "sdi_score","percent_overweight") |>
-  rename(uhf34_neighborhood = uhf34_neighborhood.x) |>
+         "sdi_score","percent_overweight", "borough.x") |>
+  rename(uhf34_neighborhood = uhf34_neighborhood.x,
+         borough = borough.x) |>
   filter(!is.na(zip)) 
 
 remove(joined_overweight_zip_neighborhood)
@@ -532,7 +541,8 @@ citibike_df =
   left_join(y = sdi_overweight,
             by = join_by("start_zipcode" == "zip")) |>
   rename("start_sdi_score" = "sdi_score",
-         "start_percent_overweight" = "percent_overweight") 
+         "start_percent_overweight" = "percent_overweight",
+         "start_borough" = "borough") 
 
 remove(citibike_zip_neighborhoods)
 
@@ -540,7 +550,8 @@ citibike_df = citibike_df |>
   left_join(y = sdi_overweight,
             by = join_by("end_zipcode" == "zip")) |>
   rename("end_sdi_score" = "sdi_score",
-         "end_percent_overweight" = "percent_overweight") 
+         "end_percent_overweight" = "percent_overweight",
+         "end_borough" = "borough") 
 ```
 
 ### Merge AQ data onto citibike
@@ -575,7 +586,7 @@ citibike_df = citibike_df |>
          end_station_id, end_station_name,
          end_zipcode, end_uhf34_neighborhood,
          start_sdi_score, start_percent_overweight, start_aq,
-         end_sdi_score, end_percent_overweight, end_aq)
+         end_sdi_score, end_percent_overweight, end_aq, end_borough, start_borough)
 
 head(citibike_df) |>
   knitr::kable()
@@ -587,4 +598,4 @@ skimr::skim(citibike_df)
 write_csv(citibike_df, file = './data/citibike_clean.csv')
 ```
 
-The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`. 
+The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`.
