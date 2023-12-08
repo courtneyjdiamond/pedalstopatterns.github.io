@@ -36,6 +36,8 @@ library(tidyverse)
 library(pdftools)
 library(magrittr)
 library(here)
+library(plotly)
+library(leaflet)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -58,14 +60,30 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-<<<<<<< HEAD
+
+
 ```{r}
-citibike_zip_neighborhoods <- read_csv("citibike/citibike_zip_neighborhood.csv")
-=======
-```{r, eval = FALSE}
-citibike_df <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
->>>>>>> refs/remotes/origin/main
+citibike_df = read_csv('./citibike_clean/citibike_clean.csv') |>
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |> 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |>
+  unique()
+
+pal = colorNumeric(
+  palette = "viridis",
+  domain = citibike_df$sdi)
+
+citibike_df |>
+  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", overweight, "\nAQ (PM25): ", aq)) |> 
+  plot_ly(x = ~lat, y = ~long, type = "scatter", mode = "markers",
+          color = ~sdi, text = ~text_label)
+ 
 ```
+
 
 ```{r, eval = FALSE}
 citibike_zip_neighborhoods <- read.csv("/Users/Haley/Desktop/citibike_zip_neighborhoods.csv")
