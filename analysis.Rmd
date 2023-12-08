@@ -17,7 +17,7 @@ css: styles.css
 
 ***
 
-In order to explore New Yorker's use of the Citibike program, we examined data on rides, users demographics, neighborhood disparities, and health implications. By looking at these facets individually, and then in comparison through linear models, we sought to unravel the connections between bikes and health. 
+To epxlore New Yorkers' use of the Citibike program, we examined data on rides, users demographics, neighborhood disparities, and health implications. By looking at these facets individually, and then in comparison through exploratory data analysis and linear models, we sought to unravel the connections between bikes and health. 
 
 This page includes a few summary tables of the Citibike data, links to view deeper explorations of the air quality index, social deprivation index, and weight data, and links to our model page with full model charts and graphs. 
 
@@ -59,17 +59,8 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-<<<<<<< HEAD
-```{r, eval = FALSE}
-citibike_zip_neighborhoods <- read_csv("citibike/citibike_zip_neighborhood.csv")
-=======
-```{r, eval = FALSE}
-citibike_df <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
->>>>>>> refs/remotes/origin/main
-```
-
-```{r}
-citibike_df <- read.csv("/Users/Haley/Desktop/citibike_df.csv")
+```{r,}
+citibike_df = read_csv("./citibike_clean/citibike_clean.csv")
 ```
 
  &nbsp;
