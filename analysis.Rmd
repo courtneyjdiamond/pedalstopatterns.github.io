@@ -25,6 +25,7 @@ To explore New Yorkers' use of the Citibike program, we examined data on rides, 
 
 This page includes a few summary tables of the Citibike data, links to view deeper explorations of the air quality index, social deprivation index, and weight data, and links to our model page with full model charts and graphs. 
 
+
  &nbsp;
 
 # <span style='color: blue;'>Citibike Exploration</span>
@@ -37,10 +38,8 @@ This page includes a few summary tables of the Citibike data, links to view deep
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-library(pdftools)
-library(magrittr)
-library(here)
 library(viridis)
+library(plotly)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -103,9 +102,6 @@ There is consistency among stations available and used, with a mean of `r mean(s
 
 * **Bronx has only a single station**, which makes sense given [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/) that describes Citibike expansion into the Bronx just after the time we're observing here (late 2019). While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas. So we'll see if this seems to be indicated when we incorporate SDI below. 
 * Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
-
-
-
 
 
 This graph shows that most start and end rides occurred in Manhattan in September 2019. 
@@ -213,6 +209,66 @@ ggplot(citibike_df, aes(x = age, fill = "Count")) +
  
  ***
 
+
+
+# <span style='color: blue;'>Exploring Citibike with SDI, Overweight, and AQ </span>
+Below we get into some of the interactions between Citibike data and health outcomes. A deeper dive into this data can be found on our [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
+
+```{r health_plot}
+health_plot = citibike_df |>
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |> 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |>
+  unique()
+
+health_plot |>
+  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", 
+                            overweight, "\nAQ (PM25): ", aq)) |> 
+  plot_ly(x = ~lat, y = ~long, type = "scatter", mode = "markers",
+          color = ~sdi, text = ~text_label)
+
+```
+
+
+**Does station usage and availability vary by SDI?**
+
+```{r sdi_stations}
+stations_SDI = citibike_df |>
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough, start_sdi_score, end_sdi_score) |>
+  mutate(
+    Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    Station_Name = coalesce(end_station_name, start_station_name),
+    Borough = coalesce(end_borough, start_borough),
+    SDI = coalesce(start_sdi_score, end_sdi_score)
+    ) |>
+  group_by(Borough, Neighborhood) |>
+  summarize(SDI = mean(SDI),
+            Stations_Used = n_distinct(Station_Name)) |>
+  left_join(stations_available,
+            by = c("Borough" = "borough",
+                   "Neighborhood" = "uhf34_neighborhood")) |>
+  pivot_longer(c(Stations_Used, Stations_Available),names_to = "status", 
+               values_to = "count")
+
+stations_SDI |>
+  ggplot(aes(x = SDI, y = count, color = status)) + geom_point() +
+  facet_grid(~status)
+
+```
+
+There doesn't seem to be too much discernible pattern. The highest number of available stations, though, does appear in the lower SDI neighborhoods. As expected following our analysis above that usage and availability only vary for a few neighborhoods, it's not surprising that there's not much discernible difference here either! 
+
+ &nbsp;
+ 
+ ***
+
 # <span style='color: blue;'>Exploring Subsets </span>
 
 
@@ -225,38 +281,6 @@ ggplot(citibike_df, aes(x = age, fill = "Count")) +
  &nbsp;
  
  ***
-
-# <span style='color: blue;'>Exploring Citibike with SDI, Overweight, and AQ </span>
- 
-```{r kayla code, eval = FALSE}
-citibike_df = read_csv('./citibike_clean/citibike_clean.csv') |>
-  select(start_station_latitude, start_station_longitude,
-        start_sdi_score, start_percent_overweight, start_aq) |> 
-  rename(lat = start_station_latitude, 
-         long = start_station_longitude,
-         sdi = start_sdi_score,
-         overweight = start_percent_overweight,
-         aq = start_aq) |>
-  unique()
-
-pal = colorNumeric(
-  palette = "viridis",
-  domain = citibike_df$sdi)
-
-citibike_df |>
-  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", overweight, "\nAQ (PM25): ", aq)) |> 
-  plot_ly(x = ~lat, y = ~long, type = "scatter", mode = "markers",
-          color = ~sdi, text = ~text_label)
-
-
-```
-
-And we made an interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
-
- &nbsp;
- 
- ***
-
 # <span style='color: blue;'>Modeling</span>
 
 We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
