@@ -47,7 +47,7 @@ knitr::opts_chunk$set(message = FALSE,
 
 # Prepare Health Data 
 
-```{r}
+```{r load_health}
 data = read_csv("../citibike_clean/citibike_clean.csv") %>%
   select(start_zipcode, end_zipcode, 
          start_uhf34_neighborhood, end_uhf34_neighborhood, 
@@ -65,42 +65,14 @@ data = read_csv("../citibike_clean/citibike_clean.csv") %>%
             overweight = mean(overweight),
             mean(aq))
 
-```
-
-
-```{r, eval = FALSE}
-data = read_csv('../citibike_clean/sdi_overweight.csv') |>
-  select(uhf34, uhf34_neighborhood, percent_overweight, sdi_score)
-
-aq_df = read_csv("../citibike_clean/air_quality_clean.csv") |>
-  rename(uhf34 = geo_join_id,
-         neighborhood = geo_place_name)
-  #select(-measure, -geo_type_name, -time_period, 
-   #      -start_date, -message, -year) ```
-```
-
-## Combine Health Data
-```{r combine, eval = FALSE}
-data = data |>
-  left_join(y = aq_df,
-            by = join_by(uhf34)) |>
-  rename(pm25 = data_value)
-
-head(data) |>
+data |>
   knitr::kable()
+
 ```
 
-## Group by uhf34
-```{r, eval = TRUE}
-data = data |> group_by(uhf34_neighborhood) |>
-  summarize(sdi = mean(sdi_score),
-            overweight = mean(percent_overweight),
-            pm25 = mean(aq)) |>
-  filter(!is.na(uhf34))
 
-head(data) |> 
-  knitr::kable()
-```
+
+
 
 
 ```{r scatter}
