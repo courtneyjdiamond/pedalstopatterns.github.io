@@ -226,7 +226,7 @@ health_plot = citibike_df |>
 health_plot |>
   mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", 
                             overweight, "\nAQ (PM25): ", aq)) |> 
-  plot_ly(x = ~lat, y = ~long, type = "scatter", mode = "markers",
+  plot_ly(x = ~long, y = ~lat, type = "scatter", mode = "markers",
           color = ~sdi, text = ~text_label)
 
 ```
