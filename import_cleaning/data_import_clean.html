@@ -1603,21 +1603,21 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore"><strong>Data Sources and
-Overview</strong></h1>
+<h1 class="title toc-ignore"><span style="color: blue;">Data Sources and
+Overview</span></h1>
 
 </div>
 
 
-<div id="to-do" class="section level1">
-<h1>TO DO:</h1>
-<ul>
-<li>Add in line r code of mean values of different datasets (not just
-their rows)</li>
-</ul>
-</div>
-<div id="data-sources" class="section level1">
-<h1>Data Sources</h1>
+<style>
+h1 {
+font-weight: bold;
+}
+</style>
+<p> </p>
+<hr />
+<div id="data-sources" class="section level2">
+<h2><span style="color: blue;">Data Sources</span></h2>
 <p><a href="https://s3.amazonaws.com/tripdata/index.html"><strong>CitiBike
 Data</strong></a>: These datasets contain monthly logs of trip,
 including ride ID, the user’s status (subscriber or casual user), trip
@@ -1640,17 +1640,18 @@ NYC regarding the percent of people who are overweight per area.</p>
 Quality Index Data</strong></a>: These data originated from NYC Open
 Data, contributed by the Department of Hygiene and Mental Health and
 include air quality indexes measured across boroughs in NYC.</p>
+<hr />
 </div>
-<div id="invididual-dataset-imports-and-cleaning" class="section level1">
-<h1><strong>Invididual Dataset Imports and Cleaning</strong></h1>
+<div id="invididual-dataset-imports-and-cleaning" class="section level2">
+<h2><span style="color: blue;">Invididual Dataset Imports and
+Cleaning</span></h2>
+</div>
 <div id="citibike" class="section level2">
 <h2>Citibike</h2>
 <p>The citibike data was a collection of csv files that we downloaded
 and merged. We were specifically interested in 2019 as this was when SDI
 scores were available. We downloaded the data files from December 2018
 through January 2020.</p>
-<div id="data-import" class="section level3">
-<h3><em>Data Import</em></h3>
 <p>A look at the raw data:</p>
 <pre class="r"><code>citibike = 
   tibble(
@@ -1824,9 +1825,6 @@ citibike |&gt;
 </tr>
 </tbody>
 </table>
-</div>
-<div id="data-cleaning" class="section level3">
-<h3><em>Data Cleaning</em></h3>
 <p>The cleaning of the citibike data included the following steps:</p>
 <ul>
 <li>Recoding gender from numeric to text</li>
@@ -2034,11 +2032,8 @@ start_station_latitude, start_station_longitude, end_station_id,
 end_station_name, end_station_latitude, end_station_longitude, bikeid,
 user_type, birth_year, gender, age.</p>
 </div>
-</div>
 <div id="social-deprivation-index" class="section level2">
 <h2>Social Deprivation Index</h2>
-<div id="data-import-and-cleaning" class="section level3">
-<h3><em>Data Import and Cleaning</em></h3>
 <p>The SDI dataset was a csv. We renamed the zipcode variable to be more
 intuitive. As we were only interested in the entirety of the SDI score,
 we filtered the data to include zip code and sdi_score only.</p>
@@ -2089,11 +2084,8 @@ head(SDI_df) |&gt;
 </tbody>
 </table>
 </div>
-</div>
 <div id="overweight-data" class="section level2">
 <h2>Overweight data</h2>
-<div id="data-import-and-cleaning-1" class="section level3">
-<h3><em>Data Import and Cleaning</em></h3>
 <p>The overweight data was downloaded as csv files for “Overweight and
 Obese Adults.” We were specifically interested in 2019 as this was when
 SDI scores were available.</p>
@@ -2218,11 +2210,8 @@ head(overweight_df) |&gt;
 </table>
 <pre class="r"><code>#write_csv(overweight_df, &quot;data/SDI_data/overweight_data_clean.csv&quot;)</code></pre>
 </div>
-</div>
 <div id="air-quality" class="section level2">
 <h2>Air Quality</h2>
-<div id="data-import-and-cleaning-2" class="section level3">
-<h3><em>Data Import and Cleaning</em></h3>
 <p>The air quality data was a downloaded from csv files.</p>
 <p>The cleaning of the air quality index data included the following
 steps:</p>
@@ -2385,11 +2374,10 @@ head(air_quality_df) |&gt;
 variables in the dataframe are unique_id, indicator_id, name, measure,
 measure_info, geo_type_name, geo_join_id, geo_place_name, time_period,
 start_date, data_value, message, year.</p>
+<hr />
 </div>
-</div>
-</div>
-<div id="nyc-neighborhood-data-merging" class="section level1">
-<h1><strong>NYC Neighborhood Data Merging</strong></h1>
+<div id="nyc-neighborhood-data-merging" class="section level2">
+<h2><span style="color: blue;">NYC Neighborhood Data Merging</span></h2>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
@@ -2476,12 +2464,15 @@ dataframes and zipcode to create a neighborhood crosswalk.</li>
   rename(&quot;uhf34_neighborhood&quot; = &quot;neighborhood.y&quot;, 
          &quot;uhf42_neighborhood&quot; = &quot;neighborhood.x&quot;, 
          &quot;uhf42&quot; = &quot;uhf&quot;)</code></pre>
+<hr />
 </div>
-<div id="bring-neighborhood-to-health-datasets" class="section level1">
-<h1><strong>Bring Neighborhood to Health Datasets</strong></h1>
+<div id="bring-neighborhood-to-health-datasets" class="section level2">
+<h2><span style="color: blue;">Bring Neighborhood to Health
+Datasets</span></h2>
 <p>Now that we have a crosswalk among all location identifiers (UHF34,
 UHF42, and zipcode) used in our datasets, we’ll make sure they all have
 UHF34 so they can be merged together later.</p>
+</div>
 <div id="join-sdi-data-to-uhfzipneighborhood-data" class="section level2">
 <h2>Join SDI data to UHF/Zip/Neighborhood data</h2>
 <pre class="r"><code>joined_SDI_zip_neighborhood = 
@@ -2507,10 +2498,11 @@ air_quality_df =
   air_quality_df |&gt;
 select(data_value, neighborhood ) |&gt;
  distinct()</code></pre>
+<hr />
 </div>
-</div>
-<div id="bring-neighborhood-to-citibike-dataset" class="section level1">
-<h1><strong>Bring Neighborhood to Citibike Dataset</strong></h1>
+<div id="bring-neighborhood-to-citibike-dataset" class="section level2">
+<h2><span style="color: blue;">Bring Neighborhood to Citibike
+Dataset</span></h2>
 <p>The Citibike data is coded by latitude/longitude To enable merging of
 Citibike data with the health datasets, we need to transform coordinates
 to zipcode, that can later be easily converted to UHF34 identifiers.</p>
@@ -2526,6 +2518,7 @@ end_latitude/longitude. Each row will accordingly have a start_zipcode
 and end_zipcode.</li>
 </ul></li>
 </ul>
+</div>
 <div id="merge-citibike-with-zipcode" class="section level2">
 <h2>Merge Citibike with Zipcode</h2>
 <pre class="r"><code>latlong_zip = read_csv(&#39;../data/geocoding/citibike_latlong_zip.csv&#39;)
@@ -3023,14 +3016,15 @@ zipcodes, where a zipcode refers to a small domain of a business. While
 these could be pinpointed roughly to a UHF34 neighborhood manually, it
 is cleaner to simply omit them, as we still retain a substantial dataset
 size. The resulting dataset has 13313700 entries.</p>
+<hr />
 </div>
 </div>
-</div>
-<div id="final-dataset-merge-citibike-sdi-overweight-and-aq" class="section level1">
-<h1><strong>Final Dataset: Merge Citibike, SDI, Overweight, and
-AQ</strong></h1>
+<div id="final-dataset-merge-citibike-sdi-overweight-and-aqt" class="section level2">
+<h2><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
+Overweight, and AQt</span></h2>
 <p>Next we needed to create one large dataframe that merged the citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
+</div>
 <div id="merge-sdi-and-overweight-data" class="section level2">
 <h2>Merge SDI and Overweight data</h2>
 <p>SDI and overweight are joined together first by UHF42.</p>
@@ -3651,7 +3645,6 @@ head(citibike_df) |&gt;
 </tbody>
 </table>
 <pre class="r"><code>write_csv(citibike_df, file = &#39;../citibike_clean/citibike_clean.csv&#39;)</code></pre>
-</div>
 </div>
 
 

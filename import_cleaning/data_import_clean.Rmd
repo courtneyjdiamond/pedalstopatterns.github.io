@@ -551,6 +551,6 @@ head(citibike_df) |>
 skimr::skim(citibike_df)
 ```
 
-```{r, eval = False}
+```{r, eval = FALSE}
 write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
 ```
