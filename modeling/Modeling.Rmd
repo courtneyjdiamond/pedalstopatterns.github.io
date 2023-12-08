@@ -28,7 +28,7 @@ knitr::opts_chunk$set(message = FALSE,
 Before diving into understanding how [health metrics play into Citibike usage](Modeling.html),
 we wanted to explore interactions among the health metrics themselves. 
 
-* Note: Details on the datasources and how they were impored and cleaned can be found at [Data Sources](data_sources.html). Here, we'll just read in CSV's generated from those tidied dataframes! 
+* Note: Details on the datasources and how they were impored and cleaned can be found at [Data Sources](../import_cleaning/data_import_clean.html). Here, we'll just read in CSV's generated from those tidied dataframes! 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
