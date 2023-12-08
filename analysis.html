@@ -546,26 +546,26 @@ combined_df &lt;- bind_rows(
   citibike_df %&gt;%
     group_by(borough = start_borough) %&gt;%
     summarise(n_rides = n()) %&gt;%
-    top_n(10, wt = n_rides) %&gt;%
     mutate(station_type = &quot;Start Station&quot;),
   citibike_df %&gt;%
     group_by(borough = end_borough) %&gt;%
     summarise(n_rides = n()) %&gt;%
-    top_n(10, wt = n_rides) %&gt;%
     mutate(station_type = &quot;End Station&quot;)
-)
+)|&gt;
+  mutate(station_type = factor(station_type, levels = c(&quot;Start Station&quot;, &quot;End Station&quot;)))
 
 # Create faceted plot
-ggplot(combined_df, aes(x = reorder(borough, n_rides), y = n_rides)) +
+ggplot(combined_df, aes(x = reorder(borough, n_rides), y = n_rides, fill = borough)) +
   geom_bar(stat = &quot;identity&quot;) +
   labs(x = &quot;Borough&quot;, y = &quot;Number of Rides&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~station_type, scales = &quot;free_x&quot;)</code></pre>
+  scale_fill_viridis_d() +  # Using viridisLite for discrete color palette
+  facet_wrap(~station_type, scales = &quot;free_x&quot;) +
+  theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="analysis_files/figure-html/graph%20of%20station%20stop/start%20per%20borough-1.png" width="90%" /></p>
-<p>Here are the most popular starting and stopping stations in September
-2019 - also in Manhattan.</p>
-<pre class="r"><code># Assuming citibike_df is your dataframe
-combined_df &lt;- bind_rows(
+<p>Here are the 10 most popular starting and stopping stations in
+September 2019 - also in Manhattan.</p>
+<pre class="r"><code>combined_df &lt;- bind_rows(
   citibike_df %&gt;%
     group_by(station = start_station_name) %&gt;%
     summarise(n_rides = n()) %&gt;%
@@ -576,14 +576,16 @@ combined_df &lt;- bind_rows(
     summarise(n_rides = n()) %&gt;%
     top_n(10, wt = n_rides) %&gt;%
     mutate(station_type = &quot;End Station&quot;)
-)
+)|&gt;
+  mutate(station_type = factor(station_type, levels = c(&quot;Start Station&quot;, &quot;End Station&quot;)))
 
-# Create faceted plot
-ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides)) +
-  geom_bar(stat = &quot;identity&quot;)  +
+ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides, fill = station)) +
+  geom_bar(stat = &quot;identity&quot;) +
   labs(x = &quot;Station&quot;, y = &quot;Number of Rides&quot;) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~station_type, scales = &quot;free_x&quot;)</code></pre>
+  scale_fill_viridis(discrete = TRUE) + 
+  facet_wrap(~station_type, scales = &quot;free_x&quot;) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
 <p><img src="analysis_files/figure-html/start%20stations-1.png" width="90%" /></p>
 <p>Add in plot for rides per day of the week here:</p>
 </div>
@@ -598,6 +600,7 @@ citibike_df %&gt;%
 ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
   geom_bar(stat = &quot;identity&quot;) +
   scale_y_continuous(labels = scales::comma_format()) +
+  scale_fill_viridis(discrete = TRUE) +
   labs(x = &quot;User Type&quot;, y = &quot;Number of Rides&quot;, title = &quot;User Type Distribution&quot;)</code></pre>
 <p><img src="analysis_files/figure-html/rider%20per%20subscriber-1.png" width="90%" /></p>
 <p>Here is a graph of number of rides per gender: Males take the most
@@ -606,36 +609,63 @@ rides!</p>
   group_by(gender) %&gt;%
   summarise(n_rides = n()) |&gt;ggplot(aes(x = gender, y = n_rides, fill = gender)) +
   geom_bar(stat = &quot;identity&quot;) +
-  scale_fill_manual(values = c(&quot;Male&quot; = &quot;blue&quot;, &quot;Female&quot; = &quot;red&quot;, &quot;Unknown&quot; = &quot;yellow&quot;)) +
+   scale_fill_viridis(discrete = TRUE) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;Gender&quot;, y = &quot;Number of Rides&quot;, title = &quot;Gender Distribution&quot;)</code></pre>
 <p><img src="analysis_files/figure-html/rides%20per%20gender-1.png" width="90%" /></p>
 <p>This graph shows the distribution of ages: 30 year olds and 50 year
 olds use citibike the most!</p>
-<pre class="r"><code>ggplot(citibike_df, aes(x = age)) +
-  geom_histogram(binwidth = 5, fill = &quot;skyblue&quot;, color = &quot;black&quot;, alpha = 0.7) +
-   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+<pre class="r"><code>ggplot(citibike_df, aes(x = age, fill = &quot;Count&quot;)) +
+  geom_histogram(binwidth = 5, alpha = 0.7, color = &quot;black&quot;,) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
-  labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;)</code></pre>
+  labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_minimal()</code></pre>
 <p><img src="analysis_files/figure-html/age%20distribution-1.png" width="90%" /></p>
 </div>
 </div>
 <div id="exploring-subsets" class="section level1">
-<h1><span style="color: blue;">Exploring Subsets</span></h1>
+<h1><span style="color: blue;">Exploring Subsets </span></h1>
 <p><a href="exploratory/AirQual_exploratory.html">Air Quality
 index</a></p>
 <p><a href="exploratory/SDI_Exploratory.html">Social deprivation
 Index</a></p>
 <p><a href="exploratory/Weight_exploratory.html">Overweight
 Trends</a></p>
+<p> </p>
+<hr />
+</div>
+<div id="exploring-citibike-with-sdi-overweight-and-aq"
+class="section level1">
+<h1><span style="color: blue;">Exploring Citibike with SDI, Overweight,
+and AQ </span></h1>
+<pre class="r"><code>citibike_df = read_csv(&#39;./citibike_clean/citibike_clean.csv&#39;) |&gt;
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |&gt; 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |&gt;
+  unique()
+
+pal = colorNumeric(
+  palette = &quot;viridis&quot;,
+  domain = citibike_df$sdi)
+
+citibike_df |&gt;
+  mutate(text_label = str_c(&quot;SDI: &quot;, sdi, &quot;\nOverweight (%) &quot;, overweight, &quot;\nAQ (PM25): &quot;, aq)) |&gt; 
+  plot_ly(x = ~lat, y = ~long, type = &quot;scatter&quot;, mode = &quot;markers&quot;,
+          color = ~sdi, text = ~text_label)</code></pre>
 <p>And we made an interactive <a
 href="https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/">dashboard</a>
 to visualize some of these exploratory analyses all together!</p>
 <p> </p>
 <hr />
 </div>
-<div id="modelling" class="section level1">
-<h1><span style="color: blue;">Modelling</span></h1>
+<div id="modeling" class="section level1">
+<h1><span style="color: blue;">Modeling</span></h1>
 <p>We sought to develop linear models that would characterize the number
 of rides per station as a surrogate for utilization of citibikes.
 Predictors included Air quality measures, social deprivation index, and

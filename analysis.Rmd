@@ -36,6 +36,7 @@ library(tidyverse)
 library(pdftools)
 library(magrittr)
 library(here)
+library(viridis)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -104,28 +105,28 @@ combined_df <- bind_rows(
   citibike_df %>%
     group_by(borough = start_borough) %>%
     summarise(n_rides = n()) %>%
-    top_n(10, wt = n_rides) %>%
     mutate(station_type = "Start Station"),
   citibike_df %>%
     group_by(borough = end_borough) %>%
     summarise(n_rides = n()) %>%
-    top_n(10, wt = n_rides) %>%
     mutate(station_type = "End Station")
-)
+)|>
+  mutate(station_type = factor(station_type, levels = c("Start Station", "End Station")))
 
 # Create faceted plot
-ggplot(combined_df, aes(x = reorder(borough, n_rides), y = n_rides)) +
+ggplot(combined_df, aes(x = reorder(borough, n_rides), y = n_rides, fill = borough)) +
   geom_bar(stat = "identity") +
   labs(x = "Borough", y = "Number of Rides") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~station_type, scales = "free_x")
+  scale_fill_viridis_d() +  # Using viridisLite for discrete color palette
+  facet_wrap(~station_type, scales = "free_x") +
+  theme(legend.position = "bottom") 
 ```
 
-Here are the most popular starting and stopping stations in September 2019 - also in Manhattan.
+Here are the 10 most popular starting and stopping stations in September 2019 - also in Manhattan.
 
 ```{r start stations}
 
-# Assuming citibike_df is your dataframe
 combined_df <- bind_rows(
   citibike_df %>%
     group_by(station = start_station_name) %>%
@@ -137,14 +138,17 @@ combined_df <- bind_rows(
     summarise(n_rides = n()) %>%
     top_n(10, wt = n_rides) %>%
     mutate(station_type = "End Station")
-)
+)|>
+  mutate(station_type = factor(station_type, levels = c("Start Station", "End Station")))
 
-# Create faceted plot
-ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides)) +
-  geom_bar(stat = "identity")  +
+ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides, fill = station)) +
+  geom_bar(stat = "identity") +
   labs(x = "Station", y = "Number of Rides") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~station_type, scales = "free_x")
+  scale_fill_viridis(discrete = TRUE) + 
+  facet_wrap(~station_type, scales = "free_x") +
+  theme(legend.position = "bottom")
+
 
 ```
 
@@ -162,6 +166,7 @@ citibike_df %>%
 ggplot(aes(x = user_type, y = n_rides, fill = user_type)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma_format()) +
+  scale_fill_viridis(discrete = TRUE) +
   labs(x = "User Type", y = "Number of Rides", title = "User Type Distribution")
 ```
 
@@ -173,7 +178,7 @@ citibike_df %>%
   group_by(gender) %>%
   summarise(n_rides = n()) |>ggplot(aes(x = gender, y = n_rides, fill = gender)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("Male" = "blue", "Female" = "red", "Unknown" = "yellow")) +
+   scale_fill_viridis(discrete = TRUE) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = "Gender", y = "Number of Rides", title = "Gender Distribution")
 ```
@@ -181,14 +186,17 @@ citibike_df %>%
 This graph shows the distribution of ages: 30 year olds and 50 year olds use citibike the most!
 
 ```{r age distribution}
-ggplot(citibike_df, aes(x = age)) +
-  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
-   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+
+ggplot(citibike_df, aes(x = age, fill = "Count")) +
+  geom_histogram(binwidth = 5, alpha = 0.7, color = "black",) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
-  labs(x = "Age", y = "Number of Rides", title = "Age Distribution")
+  labs(x = "Age", y = "Number of Rides", title = "Age Distribution") +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_minimal()
 ```
 
-# <span style='color: blue;'>Exploring Subsets</span>
+# <span style='color: blue;'>Exploring Subsets </span>
 
 
 [Air Quality index](exploratory/AirQual_exploratory.html)
@@ -197,13 +205,42 @@ ggplot(citibike_df, aes(x = age)) +
 
 [Overweight Trends](exploratory/Weight_exploratory.html) 
 
+ &nbsp;
+ 
+ ***
+
+# <span style='color: blue;'>Exploring Citibike with SDI, Overweight, and AQ </span>
+ 
+```{r kayla code, eval = FALSE}
+citibike_df = read_csv('./citibike_clean/citibike_clean.csv') |>
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |> 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |>
+  unique()
+
+pal = colorNumeric(
+  palette = "viridis",
+  domain = citibike_df$sdi)
+
+citibike_df |>
+  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", overweight, "\nAQ (PM25): ", aq)) |> 
+  plot_ly(x = ~lat, y = ~long, type = "scatter", mode = "markers",
+          color = ~sdi, text = ~text_label)
+
+
+```
+
 And we made an interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
 
  &nbsp;
  
  ***
- 
-# <span style='color: blue;'>Modelling</span>
+
+# <span style='color: blue;'>Modeling</span>
 
 We sought to develop linear models that would characterize the number of rides per station as a surrogate for utilization of citibikes. Predictors included Air quality measures, social deprivation index, and percentage of overweight individuals in a neighborhood. 
 
