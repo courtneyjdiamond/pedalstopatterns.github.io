@@ -23,6 +23,10 @@ The initial file had no column headers, so we had to create headers and saved in
 ```{r, include = FALSE}
 library(tidyverse)
 library(here)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
 ```
 
 

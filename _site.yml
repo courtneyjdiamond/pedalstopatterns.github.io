@@ -4,7 +4,7 @@ navbar:
   title: "Home"
   right:
     - text: "Data Sources"
-      href: import_cleaning/data_import_clean.html
+      href: data_import_clean.html
     - text: "Analysis"
       href: analysis.html
     - text: "Project Report"

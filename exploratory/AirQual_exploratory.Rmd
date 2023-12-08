@@ -11,6 +11,10 @@ css: styles.css
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(here)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
 ```
 
 To explore the impact of weather trends on Citibike ridership in New York City, we used [Air Quality](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) dataset from the [NYC Open Data](https://opendata.cityofnewyork.us/), provided by the Department of Hygiene and Mental Health. 

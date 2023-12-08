@@ -329,7 +329,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="import_cleaning/data_import_clean.html">Data Sources</a>
+  <a href="data_import_clean.html">Data Sources</a>
 </li>
 <li>
   <a href="analysis.html">Analysis</a>
@@ -403,7 +403,11 @@ charts and graphs.</p>
 <div id="geographic-utilization" class="section level2">
 <h2><span style="color: blue;">Geographic utilization</span></h2>
 <p> </p>
+<<<<<<< HEAD
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read_csv(&quot;citibike/citibike_zip_neighborhood.csv&quot;)</code></pre>
+=======
+<pre class="r"><code>citibike_df &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)</code></pre>
+>>>>>>> refs/remotes/origin/main
 <pre class="r"><code>citibike_zip_neighborhoods &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_zip_neighborhoods.csv&quot;)</code></pre>
 <p>Here is a table of the number of stations per neighborhood.</p>
 <pre class="r"><code>station = citibike_zip_neighborhoods %&gt;%
@@ -417,6 +421,7 @@ charts and graphs.</p>
   summarize(Number_of_Stations = n())|&gt;
   arrange(desc(Number_of_Stations))|&gt;
      knitr:: kable()</code></pre>
+<<<<<<< HEAD
 <table>
 <thead>
 <tr class="header">
@@ -527,6 +532,8 @@ charts and graphs.</p>
 </tr>
 </tbody>
 </table>
+=======
+>>>>>>> refs/remotes/origin/main
 <p>Here is a table of the number of rides per start neighborhood.</p>
 <pre class="r"><code>citibike_zip_neighborhoods |&gt;
 group_by(start_uhf34_neighborhood) |&gt;

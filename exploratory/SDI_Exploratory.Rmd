@@ -18,6 +18,10 @@ The data was found on the [SDI](https://www.graham-center.org/maps-data-tools/so
 ```{r, include = FALSE}
 library(tidyverse)
 library(here)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
 ```
 
 First we load in the datasets necessary.

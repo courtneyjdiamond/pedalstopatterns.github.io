@@ -54,8 +54,8 @@ The following code loads and tidies the Citibike data, identically as described 
 ```{r}
 citibike <- 
   tibble(
-    files = list.files("../../citibike/"),
-    path = str_c("../../citibike/", files)
+    files = list.files("../../citibike_alt/"),
+    path = str_c("../../citibike_alt/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
