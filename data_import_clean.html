@@ -820,6 +820,33 @@ user_type, birth_year, gender, month, age.</p>
 <p>Due to large sample size that limits technical processing
 feasibility, we decided to focus on only a month of Citibike data. To do
 so, we look at the distribution of number of rides by month.</p>
+<p>Before limiting the data to September, we want to get a list of all
+stations in the dataset for future exploration:</p>
+<pre class="r"><code>start_station = citibike_df |&gt;
+  distinct(start_station_id, start_station_name,
+         start_station_latitude, start_station_longitude) |&gt;
+  rename(
+    station_id = start_station_id,
+    station_name = start_station_name,
+    latitude = start_station_latitude,
+    longitude = start_station_longitude
+  )
+
+end_station = citibike_df |&gt;
+  distinct(end_station_id, end_station_name,
+         end_station_latitude, end_station_longitude) |&gt;
+  rename(
+    station_id = end_station_id,
+    station_name = end_station_name,
+    latitude = end_station_latitude,
+    longitude = end_station_longitude
+  )
+
+
+stations = rbind(start_station, end_station) |&gt;
+  unique() 
+  
+write_csv(stations, &quot;./citibike_clean/stations.csv&quot;)</code></pre>
 <pre class="r"><code>citibike_df |&gt;
   group_by(month) |&gt;
   summarize(n_rides = n()) |&gt;

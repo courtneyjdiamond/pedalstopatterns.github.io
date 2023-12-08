@@ -120,9 +120,42 @@ head(citibike_df) |>
 ```
 
 
+
+
 The citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
 
 Due to large sample size that limits technical processing feasibility, we decided to focus on only a month of Citibike data. To do so, we look at the distribution of number of rides by month. 
+
+Before limiting the data to September, we want to get a list of all stations in the dataset for future exploration:
+```{r unique_stations}
+start_station = citibike_df |>
+  distinct(start_station_id, start_station_name,
+         start_station_latitude, start_station_longitude) |>
+  rename(
+    station_id = start_station_id,
+    station_name = start_station_name,
+    latitude = start_station_latitude,
+    longitude = start_station_longitude
+  )
+
+end_station = citibike_df |>
+  distinct(end_station_id, end_station_name,
+         end_station_latitude, end_station_longitude) |>
+  rename(
+    station_id = end_station_id,
+    station_name = end_station_name,
+    latitude = end_station_latitude,
+    longitude = end_station_longitude
+  )
+
+
+stations = rbind(start_station, end_station) |>
+  unique() 
+  
+write_csv(stations, "./citibike_clean/stations.csv")
+
+```
+
 
 ```{r citibike_plot}
 citibike_df |>
