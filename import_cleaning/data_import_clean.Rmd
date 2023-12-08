@@ -57,8 +57,8 @@ A look at the raw data:
 ```{r import citibike}
 citibike = 
   tibble(
-    files = list.files("../citibike"),
-    path = str_c("../citibike/", files)
+    files = list.files("../citibike_alt/"),
+    path = str_c("../citibike_alt/", files)
   ) |>
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     'end station id' = col_double(),
@@ -538,6 +538,8 @@ A view at the final dataset, as well as overall summary of variables included an
 citibike_df = citibike_df |>
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
+         start_station_latitude, start_station_longitude, 
+         end_station_latitude, end_station_latitude,
          start_station_id, start_station_name,
          start_zipcode, start_uhf34_neighborhood,
          end_station_id, end_station_name,
@@ -551,6 +553,6 @@ head(citibike_df) |>
 skimr::skim(citibike_df)
 ```
 
-```{r, eval = FALSE}
-write_csv(citibike_df, file = '../citibike_clean/citibike_clean.csv')
+```{r}
+write_csv(citibike_df, file = '../data/citibike_clean.csv')
 ```
