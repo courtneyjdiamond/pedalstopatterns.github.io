@@ -1959,7 +1959,7 @@ included and their missingness:</p>
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
          start_station_latitude, start_station_longitude, 
-         end_station_latitude, end_station_latitude,
+         end_station_latitude, end_station_longitude,
          start_station_id, start_station_name,
          start_zipcode, start_uhf34_neighborhood,
          end_station_id, end_station_name,
@@ -1969,7 +1969,7 @@ included and their missingness:</p>
 
 head(citibike_df) |&gt;
   knitr::kable()</code></pre>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="1%" />
 <col width="2%" />
@@ -1979,6 +1979,7 @@ head(citibike_df) |&gt;
 <col width="4%" />
 <col width="5%" />
 <col width="5%" />
+<col width="4%" />
 <col width="4%" />
 <col width="3%" />
 <col width="6%" />
@@ -1990,7 +1991,7 @@ head(citibike_df) |&gt;
 <col width="7%" />
 <col width="3%" />
 <col width="5%" />
-<col width="2%" />
+<col width="1%" />
 <col width="3%" />
 <col width="5%" />
 <col width="1%" />
@@ -2008,6 +2009,7 @@ head(citibike_df) |&gt;
 <th align="right">start_station_latitude</th>
 <th align="right">start_station_longitude</th>
 <th align="right">end_station_latitude</th>
+<th align="right">end_station_longitude</th>
 <th align="right">start_station_id</th>
 <th align="left">start_station_name</th>
 <th align="right">start_zipcode</th>
@@ -2037,6 +2039,7 @@ head(citibike_df) |&gt;
 <td align="right">40.73056</td>
 <td align="right">-73.97398</td>
 <td align="right">40.73222</td>
+<td align="right">-73.98166</td>
 <td align="right">3733</td>
 <td align="left">Avenue C &amp; E 18 St</td>
 <td align="right">10009</td>
@@ -2064,6 +2067,7 @@ head(citibike_df) |&gt;
 <td align="right">40.68292</td>
 <td align="right">-73.99318</td>
 <td align="right">40.69308</td>
+<td align="right">-73.97179</td>
 <td align="right">3329</td>
 <td align="left">Degraw St &amp; Smith St</td>
 <td align="right">11217</td>
@@ -2091,6 +2095,7 @@ head(citibike_df) |&gt;
 <td align="right">40.78473</td>
 <td align="right">-73.96962</td>
 <td align="right">40.76585</td>
+<td align="right">-73.98691</td>
 <td align="right">3168</td>
 <td align="left">Central Park West &amp; W 85 St</td>
 <td align="right">10024</td>
@@ -2118,6 +2123,7 @@ head(citibike_df) |&gt;
 <td align="right">40.74620</td>
 <td align="right">-73.98856</td>
 <td align="right">40.76030</td>
+<td align="right">-73.99884</td>
 <td align="right">486</td>
 <td align="left">Broadway &amp; W 29 St</td>
 <td align="right">10019</td>
@@ -2145,6 +2151,7 @@ head(citibike_df) |&gt;
 <td align="right">40.70201</td>
 <td align="right">-73.92377</td>
 <td align="right">40.70624</td>
+<td align="right">-73.93387</td>
 <td align="right">3775</td>
 <td align="left">Suydam St &amp; Knickerbocker Ave</td>
 <td align="right">11237</td>
@@ -2172,6 +2179,7 @@ head(citibike_df) |&gt;
 <td align="right">40.70201</td>
 <td align="right">-73.92377</td>
 <td align="right">40.70624</td>
+<td align="right">-73.93387</td>
 <td align="right">3775</td>
 <td align="left">Suydam St &amp; Knickerbocker Ave</td>
 <td align="right">11237</td>
@@ -2205,7 +2213,7 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
-<td align="left">25</td>
+<td align="left">26</td>
 </tr>
 <tr class="even">
 <td align="left">_______________________</td>
@@ -2221,7 +2229,7 @@ head(citibike_df) |&gt;
 </tr>
 <tr class="odd">
 <td align="left">numeric</td>
-<td align="left">15</td>
+<td align="left">16</td>
 </tr>
 <tr class="even">
 <td align="left">POSIXct</td>
@@ -2441,6 +2449,19 @@ head(citibike_df) |&gt;
 <td align="left">▂▃▇▅▁</td>
 </tr>
 <tr class="even">
+<td align="left">end_station_longitude</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-73.98</td>
+<td align="right">0.02</td>
+<td align="right">-74.03</td>
+<td align="right">-74.00</td>
+<td align="right">-73.99</td>
+<td align="right">-73.97</td>
+<td align="right">-73.91</td>
+<td align="left">▂▇▃▂▁</td>
+</tr>
+<tr class="odd">
 <td align="left">start_station_id</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2453,7 +2474,7 @@ head(citibike_df) |&gt;
 <td align="right">3858.00</td>
 <td align="left">▇▁▁▁▅</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">start_zipcode</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2466,7 +2487,7 @@ head(citibike_df) |&gt;
 <td align="right">11385.00</td>
 <td align="left">▇▁▁▁▂</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">end_station_id</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2479,7 +2500,7 @@ head(citibike_df) |&gt;
 <td align="right">3858.00</td>
 <td align="left">▇▁▁▁▅</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">end_zipcode</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2492,7 +2513,7 @@ head(citibike_df) |&gt;
 <td align="right">11385.00</td>
 <td align="left">▇▁▁▁▂</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">start_sdi_score</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2505,7 +2526,7 @@ head(citibike_df) |&gt;
 <td align="right">100.00</td>
 <td align="left">▃▇▇▂▇</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">start_percent_overweight</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2518,7 +2539,7 @@ head(citibike_df) |&gt;
 <td align="right">71.20</td>
 <td align="left">▇▁▁▁▁</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">start_aq</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2531,7 +2552,7 @@ head(citibike_df) |&gt;
 <td align="right">10.02</td>
 <td align="left">▁▅▁▇▇</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">end_sdi_score</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2544,7 +2565,7 @@ head(citibike_df) |&gt;
 <td align="right">100.00</td>
 <td align="left">▃▇▇▂▇</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">end_percent_overweight</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2557,7 +2578,7 @@ head(citibike_df) |&gt;
 <td align="right">71.20</td>
 <td align="left">▇▁▁▁▁</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">end_aq</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -2616,22 +2637,18 @@ head(citibike_df) |&gt;
 </tbody>
 </table>
 <pre class="r"><code>write_csv(citibike_df, file = &#39;./citibike_clean/citibike_clean.csv&#39;)</code></pre>
-<p>The tidied citibike dataframe includes 1628960 trips and 25 variables
+<p>The tidied citibike dataframe includes 1628960 trips and 26 variables
 named bikeid, user_type, gender, age, start_time, stop_time,
 start_station_latitude, start_station_longitude, end_station_latitude,
-start_station_id, start_station_name, start_zipcode,
-start_uhf34_neighborhood, end_station_id, end_station_name, end_zipcode,
-end_uhf34_neighborhood, start_sdi_score, start_percent_overweight,
-start_aq, end_sdi_score, end_percent_overweight, end_aq, end_borough,
-start_borough.</p>
-</div>
-</div>
-<div id="stations-analysis" class="section level2">
-<h2>Stations Analysis</h2>
-<p>For some extra analysis work, we want to understand the full
-availability of stations, not just the ones used in September, So we
-also have to join zipcode and UHF34 neighborhood to our full station
-data.</p>
+end_station_longitude, start_station_id, start_station_name,
+start_zipcode, start_uhf34_neighborhood, end_station_id,
+end_station_name, end_zipcode, end_uhf34_neighborhood, start_sdi_score,
+start_percent_overweight, start_aq, end_sdi_score,
+end_percent_overweight, end_aq, end_borough, start_borough.</p>
+<p>##¬¬ Stations Analysis For some extra analysis work, we want to
+understand the full availability of stations, not just the ones used in
+September, So we also have to join zipcode and UHF34 neighborhood to our
+full station data.</p>
 <pre class="r"><code>stations = stations |&gt;
   left_join(latlong_zip, 
             by = c(&quot;latitude&quot; ,&quot;longitude&quot;)) |&gt;
@@ -2654,6 +2671,7 @@ data.</p>
             by = join_by(&quot;zipcode&quot; == &quot;zip&quot;)) 
 
 write_csv(stations, &quot;./citibike_clean/stations.csv&quot;)</code></pre>
+</div>
 </div>
 
 
