@@ -1,0 +1,41 @@
+year,geo_type,geo_id,geo_rank,geography,number,percent,percent_low,percent_high
+2019,UHF34,101,3,Kingsbridge - Riverdale,37000,52.4,40.8,63.8
+2019,UHF34,102,3,Northeast Bronx,103000,69.6,59.7,78
+2019,UHF34,103,3,Fordham - Bronx Pk,122000,71.1,61.1,79.3
+2019,UHF34,104,3,Pelham - Throgs Neck,152000,66.4,58.7,73.4
+2019,UHF34,201,3,Greenpoint,40000,41.8,31,53.6
+2019,UHF34,202,3,Downtown - Heights - Slope,86000,50.8,41.8,59.7
+2019,UHF34,203,3,Bedford Stuyvesant - Crown Heights,148000,62.9,55,70.1
+2019,UHF34,204,3,East New York,97000,71.2,60.2,80.2
+2019,UHF34,205,3,Sunset Park,37000,41.1,29.6,53.6
+2019,UHF34,206,3,Borough Park,134000,59,50.3,67.1
+2019,UHF34,207,3,East Flatbush - Flatbush,136000,58.9,50.3,66.9
+2019,UHF34,208,3,Canarsie - Flatlands,109000,72.1,60.5,81.3
+2019,UHF34,209,3,Bensonhurst - Bay Ridge,91000,57,48.1,65.5
+2019,UHF34,210,3,Coney Island - Sheepshead Bay,136000,58.6,50.3,66.5
+2019,UHF34,211,3,Williamsburg - Bushwick,89000,61.8,50.8,71.7
+2019,UHF34,301,3,Washington Heights,126000,64.6,55,73.1
+2019,UHF34,302,3,Central Harlem - Morningside Heights,84000,68.7,58,77.7
+2019,UHF34,303,3,East Harlem,56000,70.1,58.2,79.7
+2019,UHF34,304,3,Upper West Side,79000,43.4,32.7,54.7
+2019,UHF34,401,3,Long Island City - Astoria,98000,56.4,45.7,66.4
+2019,UHF34,402,3,West Queens,223000,62.8,55,70
+2019,UHF34,403,3,Flushing - Clearview,86000,43,31.9,54.8
+2019,UHF34,405,3,Ridgewood - Forest Hills,122000,61.6,53,69.5
+2019,UHF34,407,3,Southwest Queens,123000,59.3,50.7,67.4
+2019,UHF34,408,3,Jamaica,124000,59.5,49.5,68.8
+2019,UHF34,409,3,Southeast Queens,105000,68.7,56.9,78.5
+2019,UHF34,410,3,Rockaways,58000,75.6,64.2,84.3
+2019,UHF34,305307,3,Upper East Side-Gramercy,113000,36.5,29.5,44.1
+2019,UHF34,306308,3,Chelsea-Village,77000,38.1,29,48.2
+2019,UHF34,309310,3,Union Square-Lower Manhattan,84000,40.5,31.9,49.7
+2019,UHF34,404406,3,Bayside Little Neck-Fresh Meadows,84000,58.9,47.3,69.7
+2019,UHF34,501502,3,Northern SI,96000,67.7,57.4,76.6
+2019,UHF34,503504,3,Southern SI,133000,62.7,53.8,70.8
+2019,UHF34,105106107,3,South Bronx,253000,65.4,58.7,71.6
+2019,Borough,1,1,Bronx,679000,66.2,62.4,69.9
+2019,Borough,2,1,Brooklyn,1119000,58.9,56,61.7
+2019,Borough,3,1,Manhattan,619000,47.6,43.8,51.5
+2019,Borough,4,1,Queens,1047000,59.9,56.6,63.1
+2019,Borough,5,1,Staten Island,233000,64.7,58.1,70.7
+2019,Citywide,1,0,New York City,3697000,58.4,56.7,60
