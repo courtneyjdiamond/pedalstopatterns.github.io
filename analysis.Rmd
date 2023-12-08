@@ -72,6 +72,10 @@ citibike_df <- read.csv("./data/geocoding/citibike_zip_neighborhoods.csv")
 citibike_df <- read.csv("/Users/Haley/Desktop/citibike_df.csv")
 ```
 
+ &nbsp;
+ 
+ ***
+
 This table shows the number of stations per neighborhood used in September.
 
 ```{r table of stations per neighborhoods}
@@ -188,13 +192,18 @@ This graph shows the distribution of ages: 30 year olds and 50 year olds use cit
 ```{r age distribution}
 
 ggplot(citibike_df, aes(x = age, fill = "Count")) +
-  geom_histogram(binwidth = 5, alpha = 0.7, color = "black",) +
+  geom_histogram(binwidth = 5, alpha = 0.7, color = "black") +
   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = "Age", y = "Number of Rides", title = "Age Distribution") +
   scale_fill_viridis(discrete = TRUE) +
-  theme_minimal()
+  theme_minimal() +
+  guides(fill = FALSE)
 ```
+
+ &nbsp;
+ 
+ ***
 
 # <span style='color: blue;'>Exploring Subsets </span>
 

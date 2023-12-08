@@ -409,6 +409,8 @@ charts and graphs.</p>
 <pre class="r"><code>citibike_df &lt;- read.csv(&quot;./data/geocoding/citibike_zip_neighborhoods.csv&quot;)
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; refs/remotes/origin/main</code></pre>
 <pre class="r"><code>citibike_df &lt;- read.csv(&quot;/Users/Haley/Desktop/citibike_df.csv&quot;)</code></pre>
+<p> </p>
+<hr />
 <p>This table shows the number of stations per neighborhood used in
 September.</p>
 <pre class="r"><code>station &lt;- citibike_df %&gt;%
@@ -616,13 +618,16 @@ rides!</p>
 <p>This graph shows the distribution of ages: 30 year olds and 50 year
 olds use citibike the most!</p>
 <pre class="r"><code>ggplot(citibike_df, aes(x = age, fill = &quot;Count&quot;)) +
-  geom_histogram(binwidth = 5, alpha = 0.7, color = &quot;black&quot;,) +
+  geom_histogram(binwidth = 5, alpha = 0.7, color = &quot;black&quot;) +
   scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(labels = scales::comma_format()) +
   labs(x = &quot;Age&quot;, y = &quot;Number of Rides&quot;, title = &quot;Age Distribution&quot;) +
   scale_fill_viridis(discrete = TRUE) +
-  theme_minimal()</code></pre>
+  theme_minimal() +
+  guides(fill = FALSE)</code></pre>
 <p><img src="analysis_files/figure-html/age%20distribution-1.png" width="90%" /></p>
+<p> </p>
+<hr />
 </div>
 </div>
 <div id="exploring-subsets" class="section level1">
