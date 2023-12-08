@@ -413,29 +413,43 @@ charts and graphs.</p>
 <h2><span style="color: blue;">Geographic utilization</span></h2>
 <p> </p>
 <p> </p>
-<p><strong>This table shows the number of stations per neighborhood used
-in September.</strong></p>
-<pre class="r"><code>citibike_df %&gt;%
+<p><strong>This table shows the number of stations per neighborhood
+available and used in September.</strong></p>
+<pre class="r"><code>stations_available = stations_df |&gt;
+  group_by(borough, uhf34_neighborhood) |&gt;
+  summarize(Stations_Available = n()) 
+
+station_usage = citibike_df |&gt;
   filter(!is.na(end_station_name) | !is.na(start_station_name)) %&gt;%
-  select(
-    end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood,
-    start_borough, end_borough
-  ) %&gt;%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough) |&gt;
   distinct(
     Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
     Station_Name = coalesce(end_station_name, start_station_name),
     Borough = coalesce(end_borough, start_borough)
-  ) |&gt;
- group_by(Borough, Neighborhood) %&gt;%
-  summarize(Number_of_Stations = n()) %&gt;%
-  arrange(Borough, desc(Number_of_Stations))|&gt;
-     knitr:: kable()</code></pre>
+    ) |&gt;
+  group_by(Borough, Neighborhood) |&gt;
+  summarize(Stations_Used = n()) |&gt;
+  left_join(stations_available,
+            by = c(&quot;Borough&quot; = &quot;borough&quot;,
+                   &quot;Neighborhood&quot; = &quot;uhf34_neighborhood&quot;)) 
+station_usage |&gt;
+  arrange(Borough, desc(Stations_Used)) |&gt;
+  knitr::kable()</code></pre>
 <table>
+<colgroup>
+<col width="12%" />
+<col width="44%" />
+<col width="17%" />
+<col width="24%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Borough</th>
 <th align="left">Neighborhood</th>
-<th align="right">Number_of_Stations</th>
+<th align="right">Stations_Used</th>
+<th align="right">Stations_Available</th>
 </tr>
 </thead>
 <tbody>
@@ -443,105 +457,141 @@ in September.</strong></p>
 <td align="left">Bronx</td>
 <td align="left">Kingsbridge Riverdale</td>
 <td align="right">1</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
 <td align="left">Downtown Heights Slope</td>
 <td align="right">109</td>
+<td align="right">124</td>
 </tr>
 <tr class="odd">
 <td align="left">Brooklyn</td>
 <td align="left">Greenpoint</td>
 <td align="right">52</td>
+<td align="right">62</td>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
 <td align="left">Williamsburg Bushwick</td>
 <td align="right">49</td>
+<td align="right">87</td>
 </tr>
 <tr class="odd">
 <td align="left">Brooklyn</td>
 <td align="left">Bedford Stuyvesant Crown Heights</td>
 <td align="right">37</td>
+<td align="right">39</td>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
 <td align="left">East New York</td>
 <td align="right">13</td>
+<td align="right">26</td>
 </tr>
 <tr class="odd">
 <td align="left">Brooklyn</td>
 <td align="left">East Flatbush Flatbush</td>
 <td align="right">12</td>
+<td align="right">13</td>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
 <td align="left">Sunset Park</td>
+<td align="right">2</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="left">Brooklyn</td>
 <td align="left">Bensonhurst Bay Ridge</td>
 <td align="right">1</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
 <td align="left">Coney Island Sheepshead Bay</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">Manhattan</td>
 <td align="left">Chelsea Village</td>
 <td align="right">107</td>
+<td align="right">145</td>
 </tr>
 <tr class="even">
 <td align="left">Manhattan</td>
 <td align="left">Union Square, Lower Manhattan</td>
 <td align="right">92</td>
+<td align="right">109</td>
 </tr>
 <tr class="odd">
 <td align="left">Manhattan</td>
 <td align="left">Upper East Side Gramercy</td>
 <td align="right">69</td>
+<td align="right">92</td>
 </tr>
 <tr class="even">
 <td align="left">Manhattan</td>
 <td align="left">Upper West Side</td>
 <td align="right">42</td>
+<td align="right">46</td>
 </tr>
 <tr class="odd">
 <td align="left">Manhattan</td>
 <td align="left">East Harlem</td>
 <td align="right">39</td>
+<td align="right">41</td>
 </tr>
 <tr class="even">
 <td align="left">Manhattan</td>
 <td align="left">Central Harlem Morningside Heights</td>
 <td align="right">30</td>
+<td align="right">32</td>
 </tr>
 <tr class="odd">
 <td align="left">Manhattan</td>
 <td align="left">Washington Heights Inwood</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">Queens</td>
 <td align="left">Long Island City Astoria</td>
 <td align="right">71</td>
+<td align="right">74</td>
 </tr>
 <tr class="odd">
 <td align="left">Queens</td>
 <td align="left">West Queens</td>
+<td align="right">5</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="left">Queens</td>
 <td align="left">Ridgewood Forest Hills</td>
 <td align="right">1</td>
+<td align="right">18</td>
 </tr>
 </tbody>
 </table>
-<p>Bronx only has a single station used,</p>
+<p>There is consistency among stations available and used, with a mean
+of 84.01 (range: 5.56, 100)</p>
+<ul>
+<li><strong>Bronx has only a single station</strong>, which makes sense
+given <a
+href="https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/">this
+article</a> that describes Citibike expansion into the Bronx just after
+the time we’re observing here (late 2019). While we see fairly
+consistent nummber of stations used to stations available, a <a
+href="https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/">later
+article in 2023</a> does show that many stations are unreliable, and
+that this disproportionately impacts low-income areas. So we’ll see if
+this seems to be indicated when we incorporate SDI below.</li>
+<li>Some of the biggest discrepancies in availability and usage are in
+the following neighborhoods: East New York, Williamsburg Bushwick,
+Ridgewood Forest Hills</li>
+</ul>
 <p>This graph shows that most start and end rides occurred in Manhattan
 in September 2019.</p>
 <pre class="r"><code># Assuming citibike_df is your dataframe
