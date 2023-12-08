@@ -45,9 +45,30 @@ knitr::opts_chunk$set(message = FALSE,
 ```
 
 
-# Load Health Data 
+# Prepare Health Data 
 
 ```{r}
+data = read_csv("../citibike_clean/citibike_clean.csv") %>%
+  select(start_zipcode, end_zipcode, 
+         start_uhf34_neighborhood, end_uhf34_neighborhood, 
+         start_sdi_score, end_sdi_score,
+         start_percent_overweight, end_percent_overweight,
+         start_aq, end_aq) |>
+  mutate(
+    zipcode = coalesce(start_zipcode, end_zipcode),
+    neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    sdi = coalesce(start_sdi_score, end_sdi_score),
+    overweight = coalesce(start_percent_overweight, end_percent_overweight),
+    aq = coalesce(start_aq, end_aq)) |>
+  group_by(neighborhood) |>
+  summarize(sdi = mean(sdi),
+            overweight = mean(overweight),
+            mean(aq))
+
+```
+
+
+```{r, eval = FALSE}
 data = read_csv('../citibike_clean/sdi_overweight.csv') |>
   select(uhf34, uhf34_neighborhood, percent_overweight, sdi_score)
 
@@ -59,7 +80,7 @@ aq_df = read_csv("../citibike_clean/air_quality_clean.csv") |>
 ```
 
 ## Combine Health Data
-```{r combine}
+```{r combine, eval = FALSE}
 data = data |>
   left_join(y = aq_df,
             by = join_by(uhf34)) |>
@@ -70,11 +91,11 @@ head(data) |>
 ```
 
 ## Group by uhf34
-```{r}
-data = data |> group_by(uhf34, uhf34_neighborhood) |>
+```{r, eval = TRUE}
+data = data |> group_by(uhf34_neighborhood) |>
   summarize(sdi = mean(sdi_score),
             overweight = mean(percent_overweight),
-            pm25 = mean(pm25)) |>
+            pm25 = mean(aq)) |>
   filter(!is.na(uhf34))
 
 head(data) |> 
@@ -220,6 +241,14 @@ We can interpret the Beta statistics as:
 * For every increase in percentage of residents that are overweight by 1%, there is a decrease of sum of rides by 1.43, with all other variables held constant. 
 
 * However, with interaction terms, this does vary slightly.
+
+  * For interaction term AQI*median_SDI, this means that if both AQI and median_SDI increase by 1, the net change to sum of rides is decrease of 1.27, if overweight percentage is constant. 
+  
+  * For interaction AQI*overweight, if both of them increase by 1, the net change to sum of rides is a decrease of 1.36, if median SDI remains constant. 
+  
+  * For interaction median_SDI*overweight, if both increase by 1, the net change to sum of rides is a decrease of 1.92, if AQI (Fine Particles) remains constant. 
+  
+  * And for the three way interacton term, if all three increase by 1, the net change to sum of rides is decrease of 1.35. 
 
 
 ```{r, eval = TRUE}
