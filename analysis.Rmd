@@ -17,7 +17,11 @@ css: styles.css
 
 ***
 
-To epxlore New Yorkers' use of the Citibike program, we examined data on rides, users demographics, neighborhood disparities, and health implications. By looking at these facets individually, and then in comparison through exploratory data analysis and linear models, we sought to unravel the connections between bikes and health. 
+To explore New Yorkers' use of the Citibike program, we examined data on rides, users demographics, neighborhood disparities, and health implications. By looking at these facets individually, and then in comparison through exploratory data analysis and linear models, we sought to unravel the connections between bikes and health and  answer some key questions:
+
+* Is social deprivation index predictive of the number of stations? 
+* Is the availability of stations, or the usage patterns, indicative of overweight?
+* Do our measures of health and social status vary with citibike usage?
 
 This page includes a few summary tables of the Citibike data, links to view deeper explorations of the air quality index, social deprivation index, and weight data, and links to our model page with full model charts and graphs. 
 
@@ -59,18 +63,17 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-```{r,}
+```{r load_data, include = FALSE}
 citibike_df = read_csv("./citibike_clean/citibike_clean.csv")
+stations_df = read_csv("./citibike_clean/stations.csv")
 ```
 
  &nbsp;
  
- ***
 
-This table shows the number of stations per neighborhood used in September.
-
+**This table shows the number of stations per neighborhood used in September.**
 ```{r table of stations per neighborhoods}
-station <- citibike_df %>%
+citibike_df %>%
   filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
   select(
     end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood,
@@ -80,18 +83,16 @@ station <- citibike_df %>%
     Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
     Station_Name = coalesce(end_station_name, start_station_name),
     Borough = coalesce(end_borough, start_borough)
-  )
-
-  station %>%
+  ) |>
  group_by(Borough, Neighborhood) %>%
   summarize(Number_of_Stations = n()) %>%
-  arrange(Borough)|>
+  arrange(Borough, desc(Number_of_Stations))|>
      knitr:: kable()
 ```
 
+Bronx only has a single station used, 
 
 This graph shows that most start and end rides occurred in Manhattan in September 2019. 
-
 
 ```{r graph of station stop/start per borough}
 

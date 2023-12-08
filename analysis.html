@@ -387,11 +387,20 @@ style="color: blue;">Analysis</span></h1>
   }
 </style>
 <hr />
-<p>To epxlore New Yorkers’ use of the Citibike program, we examined data
+<p>To explore New Yorkers’ use of the Citibike program, we examined data
 on rides, users demographics, neighborhood disparities, and health
 implications. By looking at these facets individually, and then in
 comparison through exploratory data analysis and linear models, we
-sought to unravel the connections between bikes and health.</p>
+sought to unravel the connections between bikes and health and answer
+some key questions:</p>
+<ul>
+<li>Is social deprivation index predictive of the number of
+stations?</li>
+<li>Is the availability of stations, or the usage patterns, indicative
+of overweight?</li>
+<li>Do our measures of health and social status vary with citibike
+usage?</li>
+</ul>
 <p>This page includes a few summary tables of the Citibike data, links
 to view deeper explorations of the air quality index, social deprivation
 index, and weight data, and links to our model page with full model
@@ -403,12 +412,10 @@ charts and graphs.</p>
 <div id="geographic-utilization" class="section level2">
 <h2><span style="color: blue;">Geographic utilization</span></h2>
 <p> </p>
-<pre class="r"><code>citibike_df = read_csv(&quot;./citibike_clean/citibike_clean.csv&quot;)</code></pre>
 <p> </p>
-<hr />
-<p>This table shows the number of stations per neighborhood used in
-September.</p>
-<pre class="r"><code>station &lt;- citibike_df %&gt;%
+<p><strong>This table shows the number of stations per neighborhood used
+in September.</strong></p>
+<pre class="r"><code>citibike_df %&gt;%
   filter(!is.na(end_station_name) | !is.na(start_station_name)) %&gt;%
   select(
     end_station_name, end_uhf34_neighborhood, start_station_name, start_uhf34_neighborhood,
@@ -418,12 +425,10 @@ September.</p>
     Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
     Station_Name = coalesce(end_station_name, start_station_name),
     Borough = coalesce(end_borough, start_borough)
-  )
-
-  station %&gt;%
+  ) |&gt;
  group_by(Borough, Neighborhood) %&gt;%
   summarize(Number_of_Stations = n()) %&gt;%
-  arrange(Borough)|&gt;
+  arrange(Borough, desc(Number_of_Stations))|&gt;
      knitr:: kable()</code></pre>
 <table>
 <thead>
@@ -441,8 +446,38 @@ September.</p>
 </tr>
 <tr class="even">
 <td align="left">Brooklyn</td>
+<td align="left">Downtown Heights Slope</td>
+<td align="right">109</td>
+</tr>
+<tr class="odd">
+<td align="left">Brooklyn</td>
+<td align="left">Greenpoint</td>
+<td align="right">52</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">49</td>
+</tr>
+<tr class="odd">
+<td align="left">Brooklyn</td>
 <td align="left">Bedford Stuyvesant Crown Heights</td>
 <td align="right">37</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="left">East New York</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">Brooklyn</td>
+<td align="left">East Flatbush Flatbush</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="left">Sunset Park</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="left">Brooklyn</td>
@@ -455,49 +490,9 @@ September.</p>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td align="left">Brooklyn</td>
-<td align="left">Downtown Heights Slope</td>
-<td align="right">109</td>
-</tr>
-<tr class="even">
-<td align="left">Brooklyn</td>
-<td align="left">East Flatbush Flatbush</td>
-<td align="right">12</td>
-</tr>
-<tr class="odd">
-<td align="left">Brooklyn</td>
-<td align="left">East New York</td>
-<td align="right">13</td>
-</tr>
-<tr class="even">
-<td align="left">Brooklyn</td>
-<td align="left">Greenpoint</td>
-<td align="right">52</td>
-</tr>
-<tr class="odd">
-<td align="left">Brooklyn</td>
-<td align="left">Sunset Park</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">Brooklyn</td>
-<td align="left">Williamsburg Bushwick</td>
-<td align="right">49</td>
-</tr>
-<tr class="odd">
-<td align="left">Manhattan</td>
-<td align="left">Central Harlem Morningside Heights</td>
-<td align="right">30</td>
-</tr>
-<tr class="even">
 <td align="left">Manhattan</td>
 <td align="left">Chelsea Village</td>
 <td align="right">107</td>
-</tr>
-<tr class="odd">
-<td align="left">Manhattan</td>
-<td align="left">East Harlem</td>
-<td align="right">39</td>
 </tr>
 <tr class="even">
 <td align="left">Manhattan</td>
@@ -516,6 +511,16 @@ September.</p>
 </tr>
 <tr class="odd">
 <td align="left">Manhattan</td>
+<td align="left">East Harlem</td>
+<td align="right">39</td>
+</tr>
+<tr class="even">
+<td align="left">Manhattan</td>
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">30</td>
+</tr>
+<tr class="odd">
+<td align="left">Manhattan</td>
 <td align="left">Washington Heights Inwood</td>
 <td align="right">1</td>
 </tr>
@@ -526,16 +531,17 @@ September.</p>
 </tr>
 <tr class="odd">
 <td align="left">Queens</td>
-<td align="left">Ridgewood Forest Hills</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">Queens</td>
 <td align="left">West Queens</td>
 <td align="right">5</td>
 </tr>
+<tr class="even">
+<td align="left">Queens</td>
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">1</td>
+</tr>
 </tbody>
 </table>
+<p>Bronx only has a single station used,</p>
 <p>This graph shows that most start and end rides occurred in Manhattan
 in September 2019.</p>
 <pre class="r"><code># Assuming citibike_df is your dataframe
