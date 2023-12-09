@@ -198,7 +198,7 @@ age = ggplot(citibike_df, aes(x = age, fill = "Count")) +
 ```
 
 
-Which NYers use Citibikes the most - subscribers, males, and those ages 30 year and 50 year!
+Which NYers use Citibikes the most - subscribers, males, and those aged 30 years and 50 years!
 
  &nbsp;
 
@@ -210,28 +210,7 @@ Which NYers use Citibikes the most - subscribers, males, and those ages 30 year 
 
 Below we explore some of the interactions between Citibike data and health variables. 
 
-Below is a plot of station latitude and longitude that displays SDI, AQ and percentage overweight.
-
-```{r health_plot}
-health_plot = citibike_df |>
-  select(start_station_latitude, start_station_longitude,
-        start_sdi_score, start_percent_overweight, start_aq) |> 
-  rename(lat = start_station_latitude, 
-         long = start_station_longitude,
-         sdi = start_sdi_score,
-         overweight = start_percent_overweight,
-         aq = start_aq) |>
-  unique()
-
-health_plot |>
-  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", 
-                            overweight, "\nAQ (PM25): ", aq)) |> 
-  plot_ly(x = ~long, y = ~lat, type = "scatter", mode = "markers",
-          color = ~sdi, text = ~text_label)
-
-```
-
-A deeper dive into this exploration can be found on our [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
+A deep dive into the relationship between Citibike and the health variables can be found on our interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together!
 
  &nbsp;
 
@@ -241,7 +220,7 @@ A deeper dive into this exploration can be found on our [dashboard](https://cour
  
 **Does station usage and availability vary by median SDI by neighborhood?**
 
-Of note: we will use median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood.
+Of note: we will use median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood. See [here](Exploration.html) for a more detailed description.
 
 ```{r sdi_stations}
 stations_SDI = citibike_df |>
@@ -410,6 +389,27 @@ Unlike median SDI, there doesn't seem to be a dip in ridership for the low range
 # [Exploration of Variables ]{style="color: blue;"}
 
  &nbsp;
+ 
+ Below is a plot of station latitude and longitude that displays SDI, AQ and percentage overweight.
+
+```{r health_plot}
+health_plot = citibike_df |>
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |> 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |>
+  unique()
+
+health_plot |>
+  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", 
+                            overweight, "\nAQ (PM25): ", aq)) |> 
+  plot_ly(x = ~long, y = ~lat, type = "scatter", mode = "markers",
+          color = ~sdi, text = ~text_label)
+
+```
 
 For exploration of social deprivation index, overweight, and air quality check out [here](Exploration.html).
 
