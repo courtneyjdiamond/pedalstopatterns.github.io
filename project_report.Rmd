@@ -696,7 +696,7 @@ stations = stations |>
 
   &nbsp;
 
-Citi Bike Geographic Analysis
+ *Citi Bike Geographic Analysis*
 
 We made a table of the stations used and available per neighborhood.
 
@@ -761,12 +761,12 @@ And the 10 most popular starting and stopping stations.
 ![](analysis_files/figure-html/start stations-1.png)
   &nbsp;
   
-Citi Bike user demographics
+ *Citi Bike user demographics*
 
 ![](analysis_files/figure-html/user_demographics-1.png)
  &nbsp;
  
-Citi Bike Geographic Utilization with Health Metrics 
+ *Citi Bike Geographic Utilization with Health Metrics*
 
   * We used median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood. See [here](Exploration.html) for a more detailed description.
   
@@ -782,7 +782,7 @@ And we looked at percentage overweight and station use/availability by neighborh
 ![](analysis_files/figure-html/overweight_stations-1.png)
  &nbsp;
 
-Citi Bike Ridership and Health Metrics
+ *Citi Bike Ridership and Health Metrics*
 
 * We looked at zipcodes instead of neighborhood in order to have more datapoints to evaluate a trend (we only had 20 neighborhoods.)
 
@@ -800,7 +800,7 @@ The best part is that we made an interactive [dashboard](https://courtneyjdiamon
 
 &nbsp;
 
-Exploration of Health Metrics
+ *Exploration of Health Metrics*
 
 We performed an exploration of of the health variables individually by NYC location. For the full page, [check this out](Exploration.html), but here are some highlights.
 
