@@ -152,5 +152,5 @@ head(latlong_zip) |>
 
 For `r lat_long |> nrow()` coordinates, zipcodes were identified for `r latlong_zip |> filter(!is.na(postcode)) |> nrow()`, and `r latlong_zip |> filter(is.na(postcode)) |> nrow()` are missing zipcodes. These are handles later in data cleaning in [Data Sources](../../data_import_clean.html), where we manually lookup the remaining zipcodes, which is feasible for such a small subset. The manually annotated coordinates are stored on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv).
 
-Now we are ready for the dataset to be merged with our Citibike data. This is done in [Data Sources](./data_import_clean.html). 
+Now we are ready for the dataset to be merged with our Citibike data. This is done in [Data Sources](../../data_import_clean.html). 
 
