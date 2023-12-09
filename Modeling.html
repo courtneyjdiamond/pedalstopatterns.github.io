@@ -630,15 +630,18 @@ strongly.</p>
 Citibike data for NYC by location. This is coupled with interesting
 trends in health metrics:</p>
 <ul>
-<li><p>For both Fine Particles and Nitrogen dioxoide Greenpoint had the
-highest values, and South Beach - Tottenville the lowest.</p></li>
+<li><p>For Air Quality index, in terms of fine particles (which we used
+for modeling) the highest values were in Chelsea Village, and lowest in
+Rockaways (similar findings for Nitrogen Dioxide). The opposite
+relationship was true for Ozone levels.</p></li>
 <li><p>For SDI scores, there was some variability in ranges based on
 grouping by zip code, uhf34 or uhf43 neighborhood classifications.
-However, across them all there were large ranges in scores from
-10-100.</p></li>
+However, across them all there were large ranges in scores from 10-100.
+The neighborhood with the highest score was East Harlem, and the lowest
+was in Upper East Side Gramercy.</p></li>
 <li><p>Percentage of neighborhood residents who were overweight varied
-broadly from the low 30%, with the lowest being Upper East
-Side-Gramercy, and up to nearly 80% in Rockaways.</p></li>
+from low 40s in Chelsea Village, up to over 53% in East
+Flatbush.</p></li>
 </ul>
 <p>As such we elected to model potential interactions between the mean
 aggregate rides in geographic neighborhoods in NYC and median Air
@@ -721,6 +724,11 @@ fit_model %&gt;%
        x = &quot;predictor&quot; ,
        y = &quot;residual&quot;)</code></pre>
 <p><img src="Modeling_files/figure-html/first%20model-1.png" width="90%" /></p>
+<ul>
+<li>We see that although there is no over linear or higher order
+relationship between predictor value and residual, there are discrete
+collections along the x-axis.</li>
+</ul>
 <p>We can interpret the Beta coefficients as:</p>
 <ul>
 <li><p>For every increase in AQI (Fine Particles) by 1, there is an
@@ -738,7 +746,9 @@ variables held constant.</p></li>
 <p><img src="Modeling_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
 <ul>
 <li>We also plotted the performance of our model looking at linearity,
-influential observations, and normality of residuals.</li>
+influential observations, and normality of residuals. The normality of
+the residuals and influental observations are what we would look for,
+but the lineary and normality of residuals do show some skewness.</li>
 </ul>
 </div>
 <div id="our-second-model" class="section level2">
@@ -844,6 +854,11 @@ fit_model_interactions %&gt;%
        x = &quot;predictor&quot; ,
        y = &quot;residual&quot;)</code></pre>
 <p><img src="Modeling_files/figure-html/second%20model-1.png" width="90%" /></p>
+<ul>
+<li>Again see that although there is no over linear or higher order
+relationship between predictor value and residual, there are discrete
+collections along the x-axis.</li>
+</ul>
 <p>We can interpret the Beta coefficients as:</p>
 <ul>
 <li><p>For every increase in air quality (fine particles) by 1, there is
@@ -872,6 +887,12 @@ Particles) remains constant.</p></li>
 </ul>
 <pre class="r"><code>performance::check_model(fit_model_interactions, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
 <p><img src="Modeling_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<ul>
+<li>Similiar to our model without interaction terms, we see that the
+linearity and normality of residuals show some skewness, and now even a
+bit of the normality of residuals. However, it still does not have any
+overtly influential observations with high leverage score.</li>
+</ul>
 </div>
 <div id="cross-validation-of-our-regression-models"
 class="section level2">
@@ -1048,6 +1069,11 @@ fit_overweight %&gt;%
        x = &quot;predictor&quot; ,
        y = &quot;residual&quot;)</code></pre>
 <p><img src="Modeling_files/figure-html/predict%20overweight-1.png" width="90%" /></p>
+<ul>
+<li>There are some inverse linear relationships seen in our plotting
+residuals to predictor values, suggesting a possible underlying
+relationship.</li>
+</ul>
 <p>When interpreting the Beta coefficients for predicting percentage
 overweight:</p>
 <ul>
@@ -1114,6 +1140,10 @@ fit_AQI %&gt;%
        x = &quot;predictor&quot; ,
        y = &quot;residual&quot;)</code></pre>
 <p><img src="Modeling_files/figure-html/predict%20AQI-1.png" width="90%" /></p>
+<ul>
+<li>Again, there are some inverse linear relationships seen in our
+plotting residuals to predictor values.</li>
+</ul>
 <p>When interpreting the Beta coefficients for predicting Air quality:
 (all were significant).</p>
 <ul>
@@ -1179,6 +1209,10 @@ fit_sdi %&gt;%
        x = &quot;predictor&quot; ,
        y = &quot;residual&quot;)</code></pre>
 <p><img src="Modeling_files/figure-html/predict%20SDI-1.png" width="90%" /></p>
+<ul>
+<li>Here the inverse linear relationships seen in our plotting residuals
+to predictor values are less overt than the prior two.</li>
+</ul>
 <p>When interpreting the beta statistics for predicting SDI score:</p>
 <ul>
 <li><p>For every increase in AQI by one point, there is a increase of
@@ -1308,7 +1342,7 @@ SDI as outcomes.</li>
   #save_kable(file = &quot;compare_healthoutcomes_glm.png&quot;)</code></pre>
 <ul>
 <li>We can see that the model with the highest R2 was when the outcome
-was overweight values, with R2 = 0.757, with AQI next and SDI the
+was overweight values, with R2 = 0.752, with AQI next and SDI the
 lowest.</li>
 </ul>
 </div>
