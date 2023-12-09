@@ -15,6 +15,39 @@ css: styles.css
 </style>
 
   &nbsp;
+  
+```{r setup, include=FALSE}
+library(tidyverse)
+library(viridis)
+library(plotly)
+library(patchwork)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(ggridges)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+```{r load_data, include = FALSE}
+citibike_df = read_csv("./citibike_clean/citibike_clean.csv")
+stations_df = read_csv("./citibike_clean/stations.csv")
+```
+
 
 ***
 
@@ -40,7 +73,7 @@ As public health students grappling with the daily commute in the dynamic landsc
    
   * <u>User Demographics</u>: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
   
-  * <u>Health Implications</u>: Beyond transportation statistics, we aim to explore whether CitiBike use is related to health disparities and socioeconomic variables among NYers. This involves exploring associations between CitiBike ridership and bike availability with social deprivation indices, air quality, and being overweight.
+  * <u>Health Implications</u>: Beyond transportation statistics, we aim to explore whether CitiBike use is related to health disparities and socioeconomic variables among NYers. This involves exploring associations between CitiBike ridership and bike availability with social deprivation indices (SDI), air quality, and being overweight.
 
 Overall, we aim to understand how CitiBike intersects with public health and urban life in NYC.
 
@@ -59,7 +92,28 @@ After spending time on the airbnb data sources in class, we were particularly in
 
 Initially, our view of this project was very grandiose. We wanted to explore all Citibike usage patterns throughout 2019. We specifically chose 2019 as we wanted to use the social deprivation index score which was most recently available for 2019. However, we quickly realized that examining data from all of 2019 was too much data (around 1 million rides) and consistently led to problems knitting. Instead we decided to limit our data to one month, September, which had the largest number of rides. The trade off was that we were unable to examine seasonal trends and ridership. We were particularly interested in rides and ridership during times of year that suggested tourist usage, especially around holidays, but this area of exploration was discarded.
 
-Instead, we focused on questions related to ridership and usage - who uses Citibike and where in NYC do they use it? Throughout the evolution of our project, we also decided to emphasize the exploration of health, environment, and socioeconomic variables, which introduced a more nuanced layer to our data exploration by providing a health and equity lense. 
+Instead, we focused on questions related to Citibike usership and geographic utilization? Throughout the evolution of our project, we also decided to emphasize the exploration of health and socioeconomic variables, which introduced a more nuanced layer to our data exploration by providing a health and equity lens. 
+
+We specifically wanted to answer the following questions:
+
+### 1. Geographic Utilization
+
+   a. How many stations are there in each neighborhood and borough of NYC?
+   
+   b. Where are the most common stations?
+
+### 2. User Demographics
+
+   a. Who is the typical Citibike User?
+
+### 3. Health Implications
+
+   a. Are there disparities in Citibike stations per neighborhood or ridership? Is there a relationship to the social deprivation index.
+   
+   b. Are there differences in Citibike stations per neighborhood or ridership that is related to obesity? Do NYers who are overweight use Citibike more or less?
+   
+   c. Can we build a model of Citibike utilization that integrates disparities, both social and environmental, and also health factors.
+
 
 ***
 
@@ -72,9 +126,105 @@ Data: Source, scraping method, cleaning, etc.
 ***
 
 ## <span style='color: blue;'>Exploratory Analysis</span>
-Exploratory analysis: Visualizations, summaries, and exploratory statistical analyses. Justify the steps you took, and show any major changes to your ideas.
 
   &nbsp;
+  
+We began our analysis by focusing on an exploration of the Citibike geographic data. We made a table of the stations used and available per neighborhood.
+
+```{r station_usage, echo=FALSE}
+stations_available = stations_df|>
+  group_by(borough, uhf34_neighborhood) |>
+  summarize(Stations_Available = n()) 
+
+station_usage = citibike_df |>
+  filter(!is.na(end_station_name) | !is.na(start_station_name)) %>%
+  select(end_station_name, end_uhf34_neighborhood, 
+         start_station_name, start_uhf34_neighborhood,
+         start_borough, end_borough) |>
+  distinct(
+    Neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    Station_Name = coalesce(end_station_name, start_station_name),
+    Borough = coalesce(end_borough, start_borough)
+    ) |>
+  group_by(Borough, Neighborhood) |>
+  summarize(Stations_Used = n()) |>
+  left_join(stations_available,
+            by = c("Borough" = "borough",
+                   "Neighborhood" = "uhf34_neighborhood")) 
+station_usage |>
+  arrange(Borough, desc(Stations_Used)) |>
+  knitr::kable()
+
+```
+  &nbsp;
+
+We next looked at number of rides per borough.
+
+![](analysis_files/figure-html/graph of station stop/start per borough-1.png)
+  &nbsp;
+
+And the 10 most popular starting and stopping stations.
+
+![](analysis_files/figure-html/start stations-1.png)
+  &nbsp;
+  
+Next we looked at user demographics. 
+
+![](analysis_files/figure-html/user_demographics-1.png)
+ &nbsp;
+ 
+Next, we explored the relationship between Citibike geographic utilization and SDI and percentage overweight by neighborhood. 
+
+  * We used median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood. See [here](Exploration.html) for a more detailed description.
+  
+ &nbsp;
+
+We looked at median SDI and station use/availability by neighborhood.
+
+![](analysis_files/figure-html/sdi_stations-1.png)
+ &nbsp;
+
+And we looked at percentage overweight and station use/availability by neighborhood
+
+![](analysis_files/figure-html/overweight_stations-1.png)
+ &nbsp;
+
+Next, we looked at ridership and median SDI at the zipcode level. 
+
+* We looked at zipcodes instead of neighborhood in order to have more datapoints to evaluate a trend (we only had 20 neighborhoods.)
+
+![](analysis_files/figure-html/sdi_rides_zipcode-1.png)
+ &nbsp;
+ 
+And ridership and percentage overweight at the zipcode level.
+
+![](analysis_files/figure-html/overweight_rides_zipcode-1.png)
+&nbsp;
+
+The best part is that we made an interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize the relationship between Citibike and the health variables all together!
+
+&nbsp;
+
+Finally, we performed an exploration of of the health variables individually by NYC location: [Check this out](Exploration.html) and also the plot below. 
+
+```{r , echo=FALSE}
+health_plot = citibike_df |>
+  select(start_station_latitude, start_station_longitude,
+        start_sdi_score, start_percent_overweight, start_aq) |> 
+  rename(lat = start_station_latitude, 
+         long = start_station_longitude,
+         sdi = start_sdi_score,
+         overweight = start_percent_overweight,
+         aq = start_aq) |>
+  unique()
+
+health_plot |>
+  mutate(text_label = str_c("SDI: ", sdi, "\nOverweight (%) ", 
+                            overweight, "\nAQ (PM25): ", aq)) |> 
+  plot_ly(x = ~long, y = ~lat, type = "scatter", mode = "markers",
+          color = ~sdi, text = ~text_label)
+
+```
 
 ***
 
