@@ -61,6 +61,50 @@ shinyjs::useShinyjs()
   &nbsp;
 
 ***
+
+## <span style="color: blue;">Notes for Reproducibility</span>
+
+<u>Folder structure</u>
+
+The datasets powering this project are quite large (over 1.3 million observations for a single borough in a single month!). In order to successfully host this project via GitHub, we needed to utilize the .gitignore file to store our data. To successfully reproduce this project on one’s own machine, **please create the following two folders in your own local project directory**:
+
+`“citibike”`: this folder stores the individual Citibike data files for each month of 2019 and is needed to create our final composite dataset.
+
+`“citibike_clean”`: this folder stores our final composite dataset with all joined health metrics.
+
+In the `"citibike”` folder, **please download and store the following files from the [Citibike page](https://s3.amazonaws.com/tripdata/index.html)**:
+
+ - `201812-citibike-tripdata.csv`
+ - `201901-citibike-tripdata.csv`
+ - `201902-citibike-tripdata.csv`
+ - `201903-citibike-tripdata.csv`
+ - `201904-citibike-tripdata.csv`
+ - `201905-citibike-tripdata.csv`
+ - `201906-citibike-tripdata.csv`
+ - `201907-citibike-tripdata.csv`
+ - `201908-citibike-tripdata.csv`
+ - `201909-citibike-tripdata.csv`
+ - `201910-citibike-tripdata.csv`
+ - `201911-citibike-tripdata.csv`
+ - `201912-citibike-tripdata.csv`
+ - `202001-citibike-tripdata.csv`
+
+<u>Packages required</u> 
+
+In addition to the packages we’ve installed throughout the course of P8105 ([tidyverse](https://www.tidyverse.org/), [ggplot2](https://ggplot2.tidyverse.org/), [plotly](https://plotly.com/r/), [shiny](https://www.rstudio.com/products/shiny/), [shinyjs](https://deanattali.com/shinyjs/), [mgcv](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf), [knitr](https://yihui.org/knitr/), [modelr](https://modelr.tidyverse.org/), [patchwork](https://patchwork.data-imaginist.com/index.html), [viridis](https://sjmgarnier.github.io/viridis/ ), [ggridges](https://wilkelab.org/ggridges/), [flexdashboard](https://pkgs.rstudio.com/flexdashboard/)), we recommend installing the following packages for smooth knitting of any RMD files:
+
+  - [tidygeocoder](https://jessecambon.github.io/tidygeocoder/)
+  - [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf)
+  - [see](https://easystats.github.io/see/)
+  - [here](https://here.r-lib.org/)
+  - [performance](https://easystats.github.io/performance/)
+  - [magrittr](https://magrittr.tidyverse.org/)
+  - [pdftools](https://docs.ropensci.org/pdftools/)
+
+&nbsp;
+
+
+***
   
 ## <span style="color: blue;">Team Members</span>
   - Laura O'Carroll, lgo2107<br>

@@ -451,6 +451,71 @@ health and urban life in NYC.</p>
 <p><link here to embed video>  </p>
 <hr />
 </div>
+<div id="notes-for-reproducibility" class="section level2">
+<h2><span style="color: blue;">Notes for Reproducibility</span></h2>
+<p><u>Folder structure</u></p>
+<p>The datasets powering this project are quite large (over 1.3 million
+observations for a single borough in a single month!). In order to
+successfully host this project via GitHub, we needed to utilize the
+.gitignore file to store our data. To successfully reproduce this
+project on one’s own machine, <strong>please create the following two
+folders in your own local project directory</strong>:</p>
+<p><code>“citibike”</code>: this folder stores the individual Citibike
+data files for each month of 2019 and is needed to create our final
+composite dataset.</p>
+<p><code>“citibike_clean”</code>: this folder stores our final composite
+dataset with all joined health metrics.</p>
+<p>In the <code>"citibike”</code> folder, <strong>please download and
+store the following files from the <a
+href="https://s3.amazonaws.com/tripdata/index.html">Citibike
+page</a></strong>:</p>
+<ul>
+<li><code>201812-citibike-tripdata.csv</code></li>
+<li><code>201901-citibike-tripdata.csv</code></li>
+<li><code>201902-citibike-tripdata.csv</code></li>
+<li><code>201903-citibike-tripdata.csv</code></li>
+<li><code>201904-citibike-tripdata.csv</code></li>
+<li><code>201905-citibike-tripdata.csv</code></li>
+<li><code>201906-citibike-tripdata.csv</code></li>
+<li><code>201907-citibike-tripdata.csv</code></li>
+<li><code>201908-citibike-tripdata.csv</code></li>
+<li><code>201909-citibike-tripdata.csv</code></li>
+<li><code>201910-citibike-tripdata.csv</code></li>
+<li><code>201911-citibike-tripdata.csv</code></li>
+<li><code>201912-citibike-tripdata.csv</code></li>
+<li><code>202001-citibike-tripdata.csv</code></li>
+</ul>
+<p><u>Packages required</u></p>
+<p>In addition to the packages we’ve installed throughout the course of
+P8105 (<a href="https://www.tidyverse.org/">tidyverse</a>, <a
+href="https://ggplot2.tidyverse.org/">ggplot2</a>, <a
+href="https://plotly.com/r/">plotly</a>, <a
+href="https://www.rstudio.com/products/shiny/">shiny</a>, <a
+href="https://deanattali.com/shinyjs/">shinyjs</a>, <a
+href="https://cran.r-project.org/web/packages/mgcv/mgcv.pdf">mgcv</a>,
+<a href="https://yihui.org/knitr/">knitr</a>, <a
+href="https://modelr.tidyverse.org/">modelr</a>, <a
+href="https://patchwork.data-imaginist.com/index.html">patchwork</a>, <a
+href="https://sjmgarnier.github.io/viridis/">viridis</a>, <a
+href="https://wilkelab.org/ggridges/">ggridges</a>, <a
+href="https://pkgs.rstudio.com/flexdashboard/">flexdashboard</a>), we
+recommend installing the following packages for smooth knitting of any
+RMD files:</p>
+<ul>
+<li><a
+href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a></li>
+<li><a
+href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf">RColorBrewer</a></li>
+<li><a href="https://easystats.github.io/see/">see</a></li>
+<li><a href="https://here.r-lib.org/">here</a></li>
+<li><a
+href="https://easystats.github.io/performance/">performance</a></li>
+<li><a href="https://magrittr.tidyverse.org/">magrittr</a></li>
+<li><a href="https://docs.ropensci.org/pdftools/">pdftools</a></li>
+</ul>
+<p> </p>
+<hr />
+</div>
 <div id="team-members" class="section level2">
 <h2><span style="color: blue;">Team Members</span></h2>
 <ul>
