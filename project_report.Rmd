@@ -262,6 +262,8 @@ Citibike use prediction with Health Metric Modeling
 Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 
 
 * The first was utilization of Citibike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
+
+![](Beta_ride_model.png)
   
 * We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
 
@@ -270,6 +272,10 @@ Health Metric Prediction including Citibike
 We then sought to see if conversely health metrics may be able to be predicted by the other metrics, and Citibike utilization. 
 
 * We created three linear models to predict for Air Quality, SDI, and percentage overweight each, using the other factors and number of rides as the predictors. 
+
+![](Beta_Overweight_model.png)
+
+  * One such model presented here is that to predict for percentage overweight. 
 
   &nbsp;
 
