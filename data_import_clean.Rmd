@@ -244,7 +244,7 @@ The cleaning of the air quality index data included the following steps:
 * Filtering data to 2019
 * Filtering to geolocation type UHF34, as this is consistent with our other datasets (more on this below!)
 * Filtering to annual values, as this dataset also has seasonal values
-* Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer avereage values for Ozone (O3) levels. For the purpose of only a single value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality index.  
+* Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer average values for Ozone (O3) levels. For the purpose of only a single value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality index.  
 
 A look at the tidied dataset: 
 
@@ -274,13 +274,13 @@ The AQ dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_qu
   
 ## <span style='color: blue;'>NYC Neighborhood Data Merging</span>
 
-To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by the NYC government. We used UHF 34 instead of other UHF codes, such as UHF 42, as UHF 34 had the least number of neighborhoods and is therefore more comparable (contains the largest area per neighborhood).
+To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital Fund (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by the NYC government. We used UHF 34 instead of other UHF codes, such as UHF 42, as UHF 34 had the least number of neighborhoods and is therefore more comparable (contains the largest area per neighborhood).
 
   * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
 
 We did the following:
 
-1. **UHF 42 to Zipcode** First we converted UHF 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf). Below we import this table and tidied it into a dataframe
+1. **UHF 42 to Zipcode** First we converted UHF 42 codes to zip codes, as the overweight dataframe included UHF 42 codes. We found a table that mapped UHF 42 codes to zip codes from a NYC gov  [**pdf**](https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf). Below we import this table and tidied it into a dataframe.
 
 
 ```{r uhf_zip}
@@ -412,7 +412,7 @@ select(data_value, neighborhood ) |>
 
 The Citi Bike data is coded by latitude/longitude. To enable merging of Citi Bike data with the health datasets, we need to transform coordinates to zipcode, which can later be easily converted to UHF 34 identifiers.
 
-* To get zipcodes for each  latitude/longitude pair in the Citi Bike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
+* To get zipcodes for each  latitude/longitude pair in the Citi Bike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created can be found [here](latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
 
   * Note: Every Citi Bike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
   
@@ -465,7 +465,7 @@ citibike_zip |>
 
 #### *Manual Zipcode Completion*
 
-For the above missing zipcodes, we manually coded based on latitude, longitude, and `station_name` to identify what the correct zipcode. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
+For the above missing zipcodes, we manually coded based on latitude, longitude, and `station_name` to identify what the correct zipcode. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our github [here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
 
 
 ```{r manual_zip}

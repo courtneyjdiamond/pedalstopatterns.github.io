@@ -1090,7 +1090,7 @@ values</li>
 <li>Filtering to Fine Particles (PM 2.5) (the original dataset also had
 Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values
 for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer
-avereage values for Ozone (O3) levels. For the purpose of only a single
+average values for Ozone (O3) levels. For the purpose of only a single
 value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality
 index.</li>
 </ul>
@@ -1248,7 +1248,7 @@ start_date, data_value, message, year.</p>
 <div id="nyc-neighborhood-data-merging" class="section level2">
 <h2><span style="color: blue;">NYC Neighborhood Data Merging</span></h2>
 <p>To combine datasets, they all need to have the same geographic
-identifier. We decided to use United Hospital (UHF) 34 codes which
+identifier. We decided to use United Hospital Fund (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
 by the NYC government. We used UHF 34 instead of other UHF codes, such
 as UHF 42, as UHF 34 had the least number of neighborhoods and is
@@ -1265,7 +1265,7 @@ href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/"><s
 to zip codes, as the overweight dataframe included UHF 42 codes. We
 found a table that mapped UHF 42 codes to zip codes from a NYC gov <a
 href="https://www.nyc.gov/assets/doh/downloads/pdf/ah/zipcodetable.pdf"><strong>pdf</strong></a>.
-Below we import this table and tidied it into a dataframe</li>
+Below we import this table and tidied it into a dataframe.</li>
 </ol>
 <pre class="r"><code>uhf_zip = 
   pdf_text(&quot;./data/geocoding/zipcodetable.pdf&quot;) |&gt; 
@@ -1396,8 +1396,8 @@ identifiers.</p>
 <li><p>To get zipcodes for each latitude/longitude pair in the Citi Bike
 data, we used the <a
 href="https://jessecambon.github.io/tidygeocoder/">tidygeocoder</a>
-packager. The full code with details of how that was created <a
-href="latlong_to_zip.html">can be found here</a>. Here, we import the
+packager. The full code with details of how that was created can be
+found <a href="latlong_to_zip.html">here</a>. Here, we import the
 latitude/longitude to zipcode crosswalk that we generated.</p>
 <ul>
 <li>Note: Every Citi Bike entry has a start_latitude/longitude, and
@@ -1599,10 +1599,10 @@ remove(citibike_df)</code></pre>
 longitude, and <code>station_name</code> to identify what the correct
 zipcode. Upon manually exploration, these looked like some data quality
 issues with the coordinates, but based on the staton name we were able
-to identify the correct zipcode. We stored this work in a .csv on our <a
-href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
-here</a>. The code below implements filling in those missing zipcode
-values.</p>
+to identify the correct zipcode. We stored this work in a .csv on our
+github <a
+href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">here</a>.
+The code below implements filling in those missing zipcode values.</p>
 <pre class="r"><code>citibike_zip = citibike_zip |&gt;
   mutate(start_zipcode = case_when(start_station_name == &quot;Broadway &amp; W 32 St&quot; ~ 10001,
                                start_station_name == &quot;Cooper Square &amp; Astor Pl&quot; ~ 10003,
