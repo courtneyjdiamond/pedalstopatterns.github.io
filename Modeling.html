@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Modeling</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Data Sources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_import_clean.html">Data Sources</a>
+    </li>
+    <li>
+      <a href="data/geocoding/latlong_to_zip.html">Coordinates to Zipcodes</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analysis.html">Overall Analaysis</a>
+    </li>
+    <li>
+      <a href="Exploration.html">Exploration of Variables</a>
+    </li>
+    <li>
+      <a href="Modeling.html">Modeling</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="project_report.html">Project Report</a>
+</li>
+<li>
+  <a href="about_us.html">About Us</a>
+</li>
+<li>
+  <a href="mailto:&lt;jl5934@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/courtneyjdiamond/p8105_final_project">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://citibikenyc.com/">
+    <span class="fa fa-solid fa-bicycle"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><span
+style="color: blue;">Modeling</span></h1>
+
+</div>
+
+
+<p> </p>
+<hr />
+<div id="modeling-health-metrics" class="section level1">
+<h1>Modeling Health Metrics</h1>
+<p>Before diving into understanding how health metrics play into
+Citibike usage, we wanted to explore interactions among the health
+metrics themselves.</p>
+<ul>
+<li>Note: Details on the datasources and how they were impored and
+cleaned can be found at <a href="./data_import_clean.html">Data
+Sources</a>. Here, we’ll just read in CSV’s generated from those tidied
+dataframes!</li>
+</ul>
+<div id="prepare-health-data" class="section level2">
+<h2>Prepare Health Data</h2>
+<pre class="r"><code>citibike_df = read_csv(&quot;./citibike_clean/citibike_clean.csv&quot;)</code></pre>
+<pre class="r"><code>data = citibike_df %&gt;%
+  select(start_zipcode, end_zipcode, 
+         start_uhf34_neighborhood, end_uhf34_neighborhood, 
+         start_sdi_score, end_sdi_score,
+         start_percent_overweight, end_percent_overweight,
+         start_aq, end_aq) |&gt;
+  mutate(
+    zipcode = coalesce(start_zipcode, end_zipcode),
+    neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+    sdi = coalesce(start_sdi_score, end_sdi_score),
+    overweight = coalesce(start_percent_overweight, end_percent_overweight),
+    aq = coalesce(start_aq, end_aq)) |&gt;
+  group_by(neighborhood) |&gt;
+  summarize(sdi = median(sdi),
+            overweight = mean(overweight),
+            mean(aq))
+
+data |&gt;
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">neighborhood</th>
+<th align="right">sdi</th>
+<th align="right">overweight</th>
+<th align="right">mean(aq)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bedford Stuyvesant Crown Heights</td>
+<td align="right">83</td>
+<td align="right">55.46047</td>
+<td align="right">7.313404</td>
+</tr>
+<tr class="even">
+<td align="left">Bensonhurst Bay Ridge</td>
+<td align="right">74</td>
+<td align="right">54.25877</td>
+<td align="right">7.279620</td>
+</tr>
+<tr class="odd">
+<td align="left">Central Harlem Morningside Heights</td>
+<td align="right">70</td>
+<td align="right">49.58276</td>
+<td align="right">8.267167</td>
+</tr>
+<tr class="even">
+<td align="left">Chelsea Village</td>
+<td align="right">60</td>
+<td align="right">40.37892</td>
+<td align="right">9.236154</td>
+</tr>
+<tr class="odd">
+<td align="left">Coney Island Sheepshead Bay</td>
+<td align="right">88</td>
+<td align="right">53.90426</td>
+<td align="right">7.643318</td>
+</tr>
+<tr class="even">
+<td align="left">Downtown Heights Slope</td>
+<td align="right">74</td>
+<td align="right">52.52867</td>
+<td align="right">7.488393</td>
+</tr>
+<tr class="odd">
+<td align="left">East Flatbush Flatbush</td>
+<td align="right">84</td>
+<td align="right">55.79617</td>
+<td align="right">7.181058</td>
+</tr>
+<tr class="even">
+<td align="left">East Harlem</td>
+<td align="right">74</td>
+<td align="right">51.13325</td>
+<td align="right">8.235316</td>
+</tr>
+<tr class="odd">
+<td align="left">East New York</td>
+<td align="right">84</td>
+<td align="right">53.02611</td>
+<td align="right">7.595024</td>
+</tr>
+<tr class="even">
+<td align="left">Greenpoint</td>
+<td align="right">88</td>
+<td align="right">46.85374</td>
+<td align="right">8.281926</td>
+</tr>
+<tr class="odd">
+<td align="left">Kingsbridge Riverdale</td>
+<td align="right">63</td>
+<td align="right">43.43667</td>
+<td align="right">8.582564</td>
+</tr>
+<tr class="even">
+<td align="left">Long Island City Astoria</td>
+<td align="right">76</td>
+<td align="right">54.11247</td>
+<td align="right">8.086751</td>
+</tr>
+<tr class="odd">
+<td align="left">Ridgewood Forest Hills</td>
+<td align="right">88</td>
+<td align="right">51.80701</td>
+<td align="right">7.942542</td>
+</tr>
+<tr class="even">
+<td align="left">Sunset Park</td>
+<td align="right">74</td>
+<td align="right">51.38981</td>
+<td align="right">7.374469</td>
+</tr>
+<tr class="odd">
+<td align="left">Union Square, Lower Manhattan</td>
+<td align="right">60</td>
+<td align="right">40.45240</td>
+<td align="right">9.093228</td>
+</tr>
+<tr class="even">
+<td align="left">Upper East Side Gramercy</td>
+<td align="right">51</td>
+<td align="right">41.70314</td>
+<td align="right">8.926927</td>
+</tr>
+<tr class="odd">
+<td align="left">Upper West Side</td>
+<td align="right">63</td>
+<td align="right">45.20966</td>
+<td align="right">8.203077</td>
+</tr>
+<tr class="even">
+<td align="left">Washington Heights Inwood</td>
+<td align="right">51</td>
+<td align="right">43.59915</td>
+<td align="right">8.269662</td>
+</tr>
+<tr class="odd">
+<td align="left">West Queens</td>
+<td align="right">76</td>
+<td align="right">55.10576</td>
+<td align="right">8.053322</td>
+</tr>
+<tr class="even">
+<td align="left">Williamsburg Bushwick</td>
+<td align="right">88</td>
+<td align="right">54.15444</td>
+<td align="right">7.626626</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>scatter_plot = data |&gt;
+  ggplot(aes(x = sdi, y = overweight)) + geom_point()</code></pre>
+</div>
+<div id="build-health-model" class="section level2">
+<h2>Build Health model</h2>
+<pre class="r"><code>fit = lm(overweight ~ sdi, data = data)
+
+fit |&gt; 
+  broom::tidy() |&gt; 
+  select(term, estimate, p.value) |&gt;
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">23.769</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">sdi</td>
+<td align="right">0.353</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>scatter_plot &lt;- scatter_plot + 
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x, se = FALSE, color = &quot;blue&quot;)
+
+ggsave(&quot;scatter_plot.png&quot;, plot = scatter_plot, width = 6, height = 4)</code></pre>
+<p>This means that for every one-unit increase in SDI, overweight
+percentage is estimated to increase by 0.194, assuming all other factors
+remain constant. They are positively correlated, but not very
+strongly.</p>
+<p> </p>
+<hr />
+</div>
+</div>
+<div id="modeling-citibike-with-health-metrics" class="section level1">
+<h1>Modeling Citibike with Health Metrics</h1>
+<p>Our exploratory analyses noted some interesting trends in the
+Citibike data for NYC by location. This is coupled with interesting
+trends in health metrics:</p>
+<ul>
+<li><p>For both Fine Particles and Nitrogen dioxoide Greenpoint had the
+highest values, and South Beach - Tottenville the lowest.</p></li>
+<li><p>For SDI scores, there was some variability in ranges based on
+grouping by zip code, uhf34 or uhf43 neighborhood classifications.
+However, across them all there were large ranges in scores from
+10-100.</p></li>
+<li><p>Percentage of neighborhood residents who were overweight varied
+broadly from the low 30%, with the lowest being Upper East
+Side-Gramercy, and up to nearly 80% in Rockaways.</p></li>
+</ul>
+<p>As such we elected to model potential interactions between the mean
+aggregate rides in geographic neighborhoods in NYC and median Air
+Quality (AQI), median SDI, and percentage overweight to see if they
+could predict citibike usage in a geographic area.</p>
+<div id="prepare-citibike-with-health-data" class="section level2">
+<h2>Prepare Citibike with Health Data</h2>
+<p>We first summarized the citibike ride data by start station to make a
+new variable, <code>n_rides</code>. We then also calculate mean values
+of each of the health metrics for the start station location
+(<code>AQI</code>, <code>median_sdi</code>, and
+<code>overweight</code>).</p>
+<pre class="r"><code>citibike_group_by_station &lt;- citibike_df %&gt;%
+  group_by(start_station_name) %&gt;%
+  summarize(n_rides = n(), 
+            AQI = median(start_aq),
+            median_sdi = median(start_sdi_score), 
+            overweight = mean(start_percent_overweight), 
+            mean_age = mean(age)
+  )</code></pre>
+</div>
+<div id="our-first-model" class="section level2">
+<h2>Our first model:</h2>
+<p>Outcome: Sum of rides per start station</p>
+<p>Predictors: Health metrics for the location the start station is
+located in: <code>AQI</code>, <code>Median_SDI</code>,
+<code>overweight</code>.</p>
+<pre class="r"><code>fit_model = lm(n_rides ~ AQI + median_sdi + overweight, data = citibike_group_by_station)
+
+fit_model %&gt;%
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-4958.850602</td>
+<td align="right">1275.604289</td>
+<td align="right">-3.887452</td>
+<td align="right">0.0001106</td>
+</tr>
+<tr class="even">
+<td align="left">AQI</td>
+<td align="right">1030.484483</td>
+<td align="right">104.374843</td>
+<td align="right">9.872920</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">median_sdi</td>
+<td align="right">-4.840801</td>
+<td align="right">3.969773</td>
+<td align="right">-1.219415</td>
+<td align="right">0.2230815</td>
+</tr>
+<tr class="even">
+<td align="left">overweight</td>
+<td align="right">-16.978056</td>
+<td align="right">11.523326</td>
+<td align="right">-1.473364</td>
+<td align="right">0.1410851</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>citibike_group_by_station %&gt;%
+  modelr::add_residuals(fit_model) %&gt;%
+  modelr::add_predictions(fit_model) %&gt;%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = &quot;Model of rides per station&quot;,
+       x = &quot;predictor&quot; ,
+       y = &quot;residual&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/first%20model-1.png" width="90%" /></p>
+<p>We can interpret the Beta coefficients as:</p>
+<ul>
+<li><p>For every increase in AQI (Fine Particles) by 1, there is an
+increase of sum of rides by 9.87, with all other variables held
+constant. This is the only value that is significant with
+p&lt;0.05.</p></li>
+<li><p>For every increase in median SDI score by one point, there is a
+decrease of sum of rides by 1.22, with all other variables held
+constant.</p></li>
+<li><p>For every increase in percentage of residents that are overweight
+by 1%, there is a decrease of mean rides by 1.47, with all other
+variables held constant.</p></li>
+</ul>
+<pre class="r"><code>performance::check_model(fit_model, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
+<p><img src="Modeling_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<ul>
+<li>We also plotted the performance of our model looking at linearity,
+influential observations, and normality of residuals.</li>
+</ul>
+</div>
+<div id="our-second-model" class="section level2">
+<h2>Our second model:</h2>
+<p>Outcome: Number of rides per start station Predictors: * Health
+metrics for the location the start station is located in:
+<code>AQI</code>, <code>Median_SDI</code>, <code>Overweight</code>.</p>
+<ul>
+<li><p>Interactions including:</p>
+<ul>
+<li><p>Two way interactions: AQI * Median_SDI, AQI * Overweight,
+Median_SDI * Overweight</p></li>
+<li><p>Three way interaction: AQI * Median_SDI * Overweight</p></li>
+</ul></li>
+</ul>
+<pre class="r"><code>fit_model_interactions = lm(n_rides ~ AQI + median_sdi + overweight + AQI*median_sdi + AQI*overweight + AQI*median_sdi*overweight, data = citibike_group_by_station)
+
+fit_model_interactions %&gt;%
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="36%" />
+<col width="18%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">25224.955680</td>
+<td align="right">1.665574e+04</td>
+<td align="right">1.514490</td>
+<td align="right">0.1303380</td>
+</tr>
+<tr class="even">
+<td align="left">AQI</td>
+<td align="right">-2292.943542</td>
+<td align="right">2.173513e+03</td>
+<td align="right">-1.054948</td>
+<td align="right">0.2918009</td>
+</tr>
+<tr class="odd">
+<td align="left">median_sdi</td>
+<td align="right">-687.945354</td>
+<td align="right">1.996670e+02</td>
+<td align="right">-3.445463</td>
+<td align="right">0.0006030</td>
+</tr>
+<tr class="even">
+<td align="left">overweight</td>
+<td align="right">-594.828203</td>
+<td align="right">4.158046e+02</td>
+<td align="right">-1.430548</td>
+<td align="right">0.1529914</td>
+</tr>
+<tr class="odd">
+<td align="left">AQI:median_sdi</td>
+<td align="right">84.347087</td>
+<td align="right">2.609435e+01</td>
+<td align="right">3.232389</td>
+<td align="right">0.0012832</td>
+</tr>
+<tr class="even">
+<td align="left">AQI:overweight</td>
+<td align="right">62.616462</td>
+<td align="right">5.567403e+01</td>
+<td align="right">1.124698</td>
+<td align="right">0.2610899</td>
+</tr>
+<tr class="odd">
+<td align="left">median_sdi:overweight</td>
+<td align="right">14.336004</td>
+<td align="right">4.848095e+00</td>
+<td align="right">2.957039</td>
+<td align="right">0.0032072</td>
+</tr>
+<tr class="even">
+<td align="left">AQI:median_sdi:overweight</td>
+<td align="right">-1.785503</td>
+<td align="right">6.544508e-01</td>
+<td align="right">-2.728247</td>
+<td align="right">0.0065216</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>citibike_group_by_station %&gt;%
+  modelr::add_residuals(fit_model_interactions) %&gt;%
+  modelr::add_predictions(fit_model_interactions) %&gt;%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = &quot;Model of rides per station - with interaction terms&quot;,
+       x = &quot;predictor&quot; ,
+       y = &quot;residual&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/second%20model-1.png" width="90%" /></p>
+<p>We can interpret the Beta coefficients as:</p>
+<ul>
+<li><p>For every increase in air quality (fine particles) by 1, there is
+a decrease of sum of rides by 1.05, with all other variables held
+constant.</p></li>
+<li><p>For every increase in median SDI score by one point, there is a
+decrease of sum of rides by 3.45, with all other variables held
+constant.</p></li>
+<li><p>For every increase in percentage of residents that are overweight
+by 1%, there is a decrease of sum of rides by 1.43, with all other
+variables held constant.</p></li>
+<li><p>However, with interaction terms, this does vary slightly.</p>
+<ul>
+<li><p>For interaction term AQI*median_SDI, this means that if both AQI
+and median_SDI increase by 1, the net change to sum of rides is decrease
+of 1.27, if overweight percentage is constant.</p></li>
+<li><p>For interaction AQI*overweight, if both of them increase by 1,
+the net change to sum of rides is a decrease of 1.36, if median SDI
+remains constant.</p></li>
+<li><p>For interaction median_SDI*overweight, if both increase by 1, the
+net change to sum of rides is a decrease of 1.92, if AQI (Fine
+Particles) remains constant.</p></li>
+<li><p>And for the three way interacton term, if all three increase by
+1, the net change to sum of rides is decrease of 1.35.</p></li>
+</ul></li>
+</ul>
+<pre class="r"><code>performance::check_model(fit_model_interactions, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
+<p><img src="Modeling_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+</div>
+<div id="cross-validation-of-our-regression-models"
+class="section level2">
+<h2>Cross-Validation of our Regression Models</h2>
+<p>We next built a cross-validation by 100 splits (where there are no
+missing values). We will utilize this to evaluate the models by
+calculating their RMSE.</p>
+<pre class="r"><code>cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$AQI), ] %&gt;%
+  crossv_mc(100) 
+
+#cv_df =  crossv_mc(citibike_group_by_station, 100) 
+
+cv_df = 
+  cv_df |&gt; 
+  mutate(
+    fit_model  = map(train, \(df) lm(n_rides ~ AQI + median_sdi + overweight, data = df)), 
+    fit_model_interactions  = map(train, \(df) lm(n_rides ~ AQI + median_sdi + overweight + AQI*median_sdi + AQI*overweight + AQI*median_sdi*overweight, data = df))) |&gt;  
+  mutate(
+    rmse_model = map2_dbl(fit_model, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_model_interactions = map2_dbl(fit_model_interactions, test, \(mod, df) rmse(model = mod, data = df)))</code></pre>
+<p>Density plot:</p>
+<pre class="r"><code>cv_df |&gt; 
+  select(starts_with(&quot;rmse&quot;)) |&gt; 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) |&gt; 
+  mutate(model = fct_inorder(model)) |&gt; 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(title = &quot;Density Plot of RMSE values&quot;, 
+       x = &quot;Model&quot;,
+       y = &quot;Frequency&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/density%20plot-1.png" width="90%" /></p>
+<ul>
+<li>Our density plot does show that there is a wide range of values for
+our models, suggesting there may be difficulty in accurately predicting
+our outcome of mean rides with our input variables.</li>
+</ul>
+<pre class="r"><code>performance::compare_performance(fit_model, fit_model_interactions) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="5%" />
+<col width="7%" />
+<col width="5%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="5%" />
+<col width="8%" />
+<col width="10%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Model</th>
+<th align="right">AIC</th>
+<th align="right">AIC_wt</th>
+<th align="right">AICc</th>
+<th align="right">AICc_wt</th>
+<th align="right">BIC</th>
+<th align="right">BIC_wt</th>
+<th align="right">R2</th>
+<th align="right">R2_adjusted</th>
+<th align="right">RMSE</th>
+<th align="right">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">fit_model</td>
+<td align="left">lm</td>
+<td align="right">13005.58</td>
+<td align="right">0</td>
+<td align="right">13005.66</td>
+<td align="right">0</td>
+<td align="right">13028.56</td>
+<td align="right">0</td>
+<td align="right">0.3627544</td>
+<td align="right">0.3601284</td>
+<td align="right">1733.369</td>
+<td align="right">1738.124</td>
+</tr>
+<tr class="even">
+<td align="left">fit_model_interactions</td>
+<td align="left">lm</td>
+<td align="right">12916.40</td>
+<td align="right">1</td>
+<td align="right">12916.65</td>
+<td align="right">1</td>
+<td align="right">12957.76</td>
+<td align="right">1</td>
+<td align="right">0.4419803</td>
+<td align="right">0.4365851</td>
+<td align="right">1622.043</td>
+<td align="right">1630.980</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#performance::compare_performance(fit_model, fit_model_interactions) %&gt;%
+ # knitr::kable() %&gt;% 
+  #kable_styling() %&gt;%
+  #save_kable(file = &quot;compare_rides_glm.png&quot;)</code></pre>
+<ul>
+<li><p>Our model without interaction terms had an R2 of 0.360.</p></li>
+<li><p>Our model with interaction terms had an R2 of 0.442, suggesting
+that there are interactions amongst these health metrics that when taken
+into consideration improve the predictive ability of our model for sum
+of rides per station.</p></li>
+</ul>
+</div>
+<div id="reverse-regression-models" class="section level2">
+<h2>Reverse regression models:</h2>
+<p>Next we sought to see if there were any reverse predictive
+relationships. Such that with a combination of mean number of rides and
+the other health metrics, we could predict the outcome of mean AQI, SDI,
+or percentage overweight for a location.</p>
+<pre class="r"><code>fit_overweight = lm(overweight ~ AQI + median_sdi + n_rides, data = citibike_group_by_station)
+
+fit_overweight %&gt;%
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">89.9889039</td>
+<td align="right">2.4509306</td>
+<td align="right">36.716219</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">AQI</td>
+<td align="right">-6.5271919</td>
+<td align="right">0.2624537</td>
+<td align="right">-24.869882</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">median_sdi</td>
+<td align="right">0.1790606</td>
+<td align="right">0.0109008</td>
+<td align="right">16.426439</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">n_rides</td>
+<td align="right">-0.0001751</td>
+<td align="right">0.0001188</td>
+<td align="right">-1.473364</td>
+<td align="right">0.1410851</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>citibike_group_by_station %&gt;%
+  modelr::add_residuals(fit_overweight) %&gt;%
+  modelr::add_predictions(fit_overweight) %&gt;%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = &quot;Model of mean percentage overweight&quot;,
+       x = &quot;predictor&quot; ,
+       y = &quot;residual&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/predict%20overweight-1.png" width="90%" /></p>
+<p>When interpreting the Beta coefficients for predicting percentage
+overweight:</p>
+<ul>
+<li><p>For every increase in Air quality (fine particles) by one point,
+there is a decrease of percentage overweight by 24.87</p></li>
+<li><p>For every increase in median SDI by one point, there is an
+increase in percentage overweight by 16.43</p></li>
+<li><p>For every increase in sum of number of rides by one, there is a
+decrease in percentage overweight by 1.47, although this value was not
+significant.</p></li>
+</ul>
+<pre class="r"><code>fit_AQI = lm(AQI ~ overweight + median_sdi + n_rides, data = citibike_group_by_station)
+
+fit_AQI %&gt;%
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">11.0574109</td>
+<td align="right">0.1294166</td>
+<td align="right">85.44045</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">overweight</td>
+<td align="right">-0.0703738</td>
+<td align="right">0.0028297</td>
+<td align="right">-24.86988</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">median_sdi</td>
+<td align="right">0.0041510</td>
+<td align="right">0.0013162</td>
+<td align="right">3.15385</td>
+<td align="right">0.0016775</td>
+</tr>
+<tr class="even">
+<td align="left">n_rides</td>
+<td align="right">0.0001146</td>
+<td align="right">0.0000116</td>
+<td align="right">9.87292</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>citibike_group_by_station %&gt;%
+  modelr::add_residuals(fit_AQI) %&gt;%
+  modelr::add_predictions(fit_AQI) %&gt;%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = &quot;Model of mean AQI&quot;,
+       x = &quot;predictor&quot; ,
+       y = &quot;residual&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/predict%20AQI-1.png" width="90%" /></p>
+<p>When interpreting the Beta coefficients for predicting Air quality:
+(all were significant).</p>
+<ul>
+<li><p>For every increase in percentage overweight by one point, there
+is a decrease of AQI by 24.87</p></li>
+<li><p>For every increase in median SDI by one point, there is an
+increase in AQI by 3.15</p></li>
+<li><p>For every increase in sum of number of rides by one, there is a
+increase in AQI by 9.87</p></li>
+</ul>
+<pre class="r"><code>fit_sdi = lm(median_sdi ~ AQI + overweight + n_rides, data = citibike_group_by_station)
+
+fit_sdi %&gt;%
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-27.7668064</td>
+<td align="right">11.9758270</td>
+<td align="right">-2.318571</td>
+<td align="right">0.0206944</td>
+</tr>
+<tr class="even">
+<td align="left">AQI</td>
+<td align="right">3.2471457</td>
+<td align="right">1.0295816</td>
+<td align="right">3.153850</td>
+<td align="right">0.0016775</td>
+</tr>
+<tr class="odd">
+<td align="left">overweight</td>
+<td align="right">1.5101889</td>
+<td align="right">0.0919365</td>
+<td align="right">16.426439</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">n_rides</td>
+<td align="right">-0.0004211</td>
+<td align="right">0.0003453</td>
+<td align="right">-1.219415</td>
+<td align="right">0.2230815</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>citibike_group_by_station %&gt;%
+  modelr::add_residuals(fit_sdi) %&gt;%
+  modelr::add_predictions(fit_sdi) %&gt;%
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point() + 
+  labs(title = &quot;Model of mean SDI&quot;,
+       x = &quot;predictor&quot; ,
+       y = &quot;residual&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/predict%20SDI-1.png" width="90%" /></p>
+<p>When interpreting the beta statistics for predicting SDI score:</p>
+<ul>
+<li><p>For every increase in AQI by one point, there is a increase of
+median SDI by 3.15</p></li>
+<li><p>For every increase in percentage overweight by one point, there
+is an increase in median SDI by 16.43</p></li>
+<li><p>For every increase in sum of number of rides by one, there is a
+decrease in median SDI by 1.22, but this value was not significant
+(p&lt;0.05)</p></li>
+</ul>
+<pre class="r"><code>cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$AQI), ] %&gt;%
+  crossv_mc(100) 
+
+#cv_df =  crossv_mc(citibike_group_by_station, 100) 
+
+cv_df = 
+  cv_df |&gt; 
+  mutate(
+    fit_overweight  = map(train, \(df) lm(overweight ~ AQI + median_sdi + n_rides, data = df)), 
+    fit_sdi  = map(train, \(df) lm(median_sdi ~ AQI + overweight + n_rides, data = df)), 
+    fit_AQI  = map(train, \(df) lm(AQI ~ overweight + median_sdi + n_rides, data = df))) |&gt;  
+  mutate(
+    rmse_overweight = map2_dbl(fit_overweight, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_sdi = map2_dbl(fit_sdi, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_AQI = map2_dbl(fit_AQI, test, \(mod, df) rmse(model = mod, data = df)))
+
+cv_df |&gt; 
+  select(starts_with(&quot;rmse&quot;)) |&gt; 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) |&gt; 
+  mutate(model = fct_inorder(model)) |&gt; 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  labs(title = &quot;Density Plot of RMSE values&quot;, 
+       x = &quot;Model&quot;,
+       y = &quot;Frequency&quot;)</code></pre>
+<p><img src="Modeling_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<ul>
+<li>Here we can see that there is a much large spread compared to our
+RMSE density plots when predicting for mean number of rides. However,
+the least spread of RMSE values are for AQI, and largest are for median
+SDI as outcomes.</li>
+</ul>
+<pre class="r"><code>performance::compare_performance(fit_overweight, fit_sdi, fit_AQI) %&gt;%
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="13%" />
+<col width="5%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="6%" />
+<col width="8%" />
+<col width="10%" />
+<col width="9%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Model</th>
+<th align="right">AIC</th>
+<th align="right">AIC_wt</th>
+<th align="right">AICc</th>
+<th align="right">AICc_wt</th>
+<th align="right">BIC</th>
+<th align="right">BIC_wt</th>
+<th align="right">R2</th>
+<th align="right">R2_adjusted</th>
+<th align="right">RMSE</th>
+<th align="right">Sigma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">fit_overweight</td>
+<td align="left">lm</td>
+<td align="right">4600.735</td>
+<td align="right">0</td>
+<td align="right">4600.818</td>
+<td align="right">0</td>
+<td align="right">4623.714</td>
+<td align="right">0</td>
+<td align="right">0.7519890</td>
+<td align="right">0.7509669</td>
+<td align="right">5.5667394</td>
+<td align="right">5.5820117</td>
+</tr>
+<tr class="even">
+<td align="left">fit_sdi</td>
+<td align="left">lm</td>
+<td align="right">6161.554</td>
+<td align="right">0</td>
+<td align="right">6161.636</td>
+<td align="right">0</td>
+<td align="right">6184.533</td>
+<td align="right">0</td>
+<td align="right">0.4526422</td>
+<td align="right">0.4503866</td>
+<td align="right">16.1665203</td>
+<td align="right">16.2108730</td>
+</tr>
+<tr class="odd">
+<td align="left">fit_AQI</td>
+<td align="left">lm</td>
+<td align="right">1284.840</td>
+<td align="right">1</td>
+<td align="right">1284.923</td>
+<td align="right">1</td>
+<td align="right">1307.819</td>
+<td align="right">1</td>
+<td align="right">0.7011549</td>
+<td align="right">0.6999234</td>
+<td align="right">0.5780205</td>
+<td align="right">0.5796063</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#performance::compare_performance(fit_overweight, fit_sdi, fit_AQI) %&gt;%
+ # knitr::kable() %&gt;% 
+  #kable_styling() %&gt;%
+  #save_kable(file = &quot;compare_healthoutcomes_glm.png&quot;)</code></pre>
+<ul>
+<li>We can see that the model with the highest R2 was when the outcome
+was overweight values, with R2 = 0.757, with AQI next and SDI the
+lowest.</li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

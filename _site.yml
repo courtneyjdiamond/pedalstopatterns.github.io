@@ -16,7 +16,7 @@ navbar:
         - text: "Exploration of Variables"
           href: Exploration.html
         - text: "Modeling"
-          href: modeling/Modeling.html
+          href: Modeling.html
     - text: "Project Report"
       href: project_report.html
     - text: "About Us"
