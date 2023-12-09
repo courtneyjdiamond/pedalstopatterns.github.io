@@ -1,0 +1,490 @@
+---
+title: "<span style='color: blue;'>Exploration of Variables</span>"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
+---
+
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
+```
+
+------------------------------------------------------------------------
+
+# Socal Deprivation Index Exploration
+
+ &nbsp;
+ 
+[The social deprivation index (SDI)](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html) is an effort to generate a scoring system of socioeconomic factors using US census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage nonemployed adults under 65 years of age. For more details please see the webpage link.
+
+In this webpage we will explore the SDI variable by start location and determine which summary statistic to use to coalesce by neighborhood.
+
+  &nbsp;
+
+### Load Data
+
+```{r load SDI data}
+citibike_df = read_csv("./citibike_clean/citibike_clean.csv")
+
+head(citibike_df) |>
+  knitr::kable()
+```
+
+ &nbsp;
+  
+### Summary Statistics
+
+```{r }
+citibike_df |>
+  summarise(
+    mean_sdi = round(mean(start_sdi_score, na.rm = TRUE), 1),
+    sd_sdi = round(sd(start_sdi_score, na.rm = TRUE), 1),
+    median_sdi = round(median(start_sdi_score, na.rm = TRUE), 1),
+    q1_sdi = round(quantile(start_sdi_score, 0.25, na.rm = TRUE), 1),
+    q3_sdi = round(quantile(start_sdi_score, 0.75, na.rm = TRUE), 1),
+    iqr_sdi = round(IQR(start_sdi_score, na.rm = TRUE), 1),
+    max_sdi = round(max(start_sdi_score, na.rm = TRUE), 1),
+    min_sdi = round(min(start_sdi_score, na.rm = TRUE), 1)
+  )|>
+  pivot_longer(
+    cols = c("mean_sdi", "sd_sdi", "median_sdi", "q1_sdi", "q3_sdi", "iqr_sdi", "max_sdi", "min_sdi"),
+    names_to = "Statistic",
+    values_to = "Value"
+  )|>
+  knitr::kable()
+```
+
+Since SDI score is on the zipcode level, we next decide if mean or median is the better way to iterate across neighborhoods.
+
+```{r mean vs median by neighborhood}
+citibike_df |>
+  group_by(start_uhf34_neighborhood) |>
+  summarise(
+    mean_sdi = mean(start_sdi_score, na.rm = TRUE),
+    median_sdi = median(start_sdi_score, na.rm = TRUE),
+     max_sdi = round(max(start_sdi_score, na.rm = TRUE), 1),
+    min_sdi = round(min(start_sdi_score, na.rm = TRUE), 1)
+  )|>
+  knitr::kable()
+```
+
+Mean and median SDI scores are similar by start neighborhood. However median SDI scores tend to be lower and better capture the wide variation in score across neighborhood.
+
+  &nbsp;
+  
+### Median SDI by Start Zipcode
+
+```{r sdi zip}
+plot = citibike_df |>
+  group_by(start_zipcode) |>
+  summarize(median_SDI = median(start_sdi_score)) |>
+ggplot(aes(x = reorder(start_zipcode, -median_SDI), y = median_SDI,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(x = "Start Zipcode", y = "Median SDI")  
+
+print(plot)
+ 
+```
+
+It is difficult to discern the variation in start zip codes, but we can see there is a wide range.
+
+  &nbsp;
+
+### Median SDI by Start Neighborhood
+
+```{r  sdi neighborhood}
+plot = citibike_df |>
+  group_by(start_uhf34_neighborhood) |>
+  summarize(median_SDI = median(start_sdi_score)) |>
+ggplot(aes(x = reorder(start_uhf34_neighborhood, -median_SDI), y = median_SDI,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(x = "Start Neighborhood", y = "Median SDI")  
+
+print(plot)
+
+```
+
+------------------------------------------------------------------------
+
+# AirQuality Dataset Exploration
+
+
+[The air quality index (AQ)](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC. An exploration of AQ is below.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
+```
+
+  &nbsp;
+
+## Load Data
+
+```{r}
+#import data
+air_quality_df = read_csv("./data/air_quality/Air_Quality_20231126.csv") |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |>
+  filter(year == "2019")
+
+joined_uhf_34_42 =  read_csv("./data/geocoding/joined_uhf_34_42.csv")
+
+# add zip codes
+air_geo =
+  air_quality_df |>
+  mutate(
+    uhf34 = case_when(geo_type_name == "UHF34" ~ "1")
+  )
+
+#break up by geocoding system, add zipcodes
+
+# uhf34
+air_zip_neighborhoods_34 =
+  air_geo |>
+  filter(uhf34 == "1") |>
+  select(-uhf34, - message)
+
+air_zip_neighborhoods_34 =
+  left_join(air_zip_neighborhoods_34, y = (joined_uhf_34_42),
+            by = join_by("geo_join_id" == "uhf34")) 
+
+air_final =
+  air_zip_neighborhoods_34 |>
+  select(-uhf34_neighborhood) |>
+filter(!duplicated(unique_id))
+
+
+head(air_final) |>
+  knitr::kable()
+
+```
+ &nbsp;
+  
+## Summary Statistics  Across 2019
+
+Average Air Quality Index Across Time Periods in 2019
+
+```{r}
+annual_aq = air_final |>
+  filter(time_period == "Annual Average 2019") 
+
+annual_aq|>
+  ggplot(aes(x = time_period, y = data_value)) +
+  geom_boxplot(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+       x = "Time Period",
+       y = "Air Quality Index") +
+  theme_minimal()
+
+# Calculate statistics
+midpoint <- median(annual_aq$data_value)
+low_quantile <- quantile(annual_aq$data_value, 0.25)
+top_quantile <- quantile(annual_aq$data_value, 0.75)
+
+```
+
+Summary of data particles: Fine particles (PM 2.5), Nitrogen dioxide (NO2), and Ozone (O3)
+
+```{r}
+air_final |>
+  group_by(name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+```{r}
+air_final|>
+  ggplot(aes(x = data_value, fill = name)) +
+  geom_histogram(binwidth = 1, position = "dodge", alpha = 0.7) +
+  facet_wrap(~ name, scales = "free") +
+  labs(
+       x = "Data Value",
+       y = "Frequency",
+       fill = "Pollutant") +
+  theme_minimal()
+```
+
+## Evaluation of data particles by Neighborhood
+
+ &nbsp;
+
+### Fine Particles by Neighborhoods
+
+Comparison of fine particles by neighborhood 
+
+```{r}
+air_particles =
+  air_final |>
+  filter(name == "Fine particles (PM 2.5)")
+
+air_particles |>
+  filter(time_period == "Annual Average 2019") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue")  +
+  labs(
+       x = "Neighborhood",
+       y = "Mean Fine particles (mcg/m3)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of fine particles by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Fine particles (PM 2.5)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+ &nbsp;
+ 
+### Nitrogen Dioxide (NO2) by Neighborhoods
+
+Comparison of NO2 by neighborhood 
+
+```{r}
+air_nitrogen =
+  air_final |>
+  filter(name == "Nitrogen dioxide (NO2)")
+
+air_nitrogen |>
+  filter(time_period == "Annual Average 2019") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue")  +
+  labs(x = "Neighborhood",
+       y = "Mean Nitrogen dioxide (ppb)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of NO2 by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Nitrogen dioxide (NO2)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  ) |>
+  knitr::kable()
+```
+
+ &nbsp;
+ 
+### Ozone (NO2) by Neighborhoods
+
+Comparison of O3 by neighborhood 
+
+```{r}
+air_final |>
+  filter(name == "Ozone (O3)") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(
+       x = "Neighborhood",
+       y = "Mean Ozone (ppb)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of O3 by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Ozone (O3)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+------------------------------------------------------------------------
+
+ &nbsp;
+ 
+# Overweight Exploration
+
+The [overweight data](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113) contains publicly available data from NYC regarding the percent of people who are overweight per area. An exploration of this dataset is below.
+
+## Load Data
+
+```{r load_data}
+
+overweight_data = citibike_df |>
+  select(start_station_latitude,
+         start_station_longitude,
+         start_uhf34_neighborhood,
+         start_zipcode,
+         end_station_latitude,
+         end_station_longitude,
+         end_uhf34_neighborhood,
+         start_borough, end_borough,
+         end_zipcode,
+         start_percent_overweight, 
+         end_percent_overweight) |>
+  mutate(neighborhood = coalesce(end_uhf34_neighborhood, start_uhf34_neighborhood),
+         lat = coalesce(end_station_latitude, start_station_latitude),
+         long = coalesce(end_station_longitude, start_station_longitude),
+         borough = coalesce(start_borough, end_borough),
+         zipcode = coalesce(start_zipcode, end_zipcode),
+         overweight = coalesce(start_percent_overweight, end_percent_overweight)) |>
+  unique()
+
+
+head(overweight_data) |>
+  knitr::kable()
+```
+
+
+## Summary Statistics
+
+```{r stats}
+overweight_data |>  
+  summarize(
+    mean = mean(overweight, na.rm = TRUE),
+    min = min(overweight, na.rm = TRUE),
+    max = max(overweight, na.rm = TRUE),
+    median = median(overweight, na.rm = TRUE),
+    std = sd(overweight, na.rm = TRUE)
+  ) |>
+  knitr::kable()
+
+
+```
+
+
+## Percent by Zipcode
+```{r zip}
+percent_obese =
+overweight_data |>
+ggplot(aes(x = reorder(zipcode, -overweight), y = overweight,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
+
+print(percent_obese)
+
+
+```
+
+## Percent by Neighborhood
+
+```{r uhf}
+percent_obese =
+overweight_data |>
+  group_by(neighborhood) |>
+  summarize(overweight = mean(overweight)) |>
+ggplot(aes(x = reorder(neighborhood, -overweight), y = overweight,)) +
+  geom_point() +  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
+
+print(percent_obese)
+
+
+```
+
+
+```{r}
+# Create a leaflet map
+
+# Select the necessary columns
+map_data <- overweight_data %>%
+  select(lat, long, overweight)
+
+map <- leaflet(data = map_data) %>%
+  addTiles()  # Add map tiles (you can use different tile providers)
+
+# Add color-coded circles based on overweight percentage
+map <- map %>%
+  addCircleMarkers(
+    radius = 5,  # Adjust the circle size as needed
+    fillColor = ~colorFactor("Blues", map_data$overweight)(overweight),
+    color = "black",
+    fillOpacity = 0.7,
+    popup = ~paste("Overweight Percentage:", overweight, "%"),
+    label = ~paste("Overweight Percentage:", overweight, "%")
+  )
+
+# Display the map
+map
+
+```
+
+
+
+
+
+
+
+
+

@@ -39,7 +39,7 @@ Hyun Jin is a first-year master’s student in Biostatistics, Clinical Research 
 
 # Jesus Luevano
 
-Jesus is a MS candidate, and a third year Gastroenterology fellow. 
+Jesus is a second year MS POR candidate. He is also a third year Gastroenterology Fellow at Columbia University Medical Center. 
 
 [Learn more about Jesus](https://github.com/jmlue)
 
@@ -55,6 +55,6 @@ Kayla is a PhD student in the Department of Biomedical Informatics. She is in [D
 
 # Haley Zylberberg
 
-Haley is a MS candidate. She is a also a third year Gastroenterology Fellow.
+She is a second year MS POR candidate. He is also a third year Gastroenterology Fellow at Columbia University Medical Center. 
 
 [Learn more about Haley](https://haleyzylberberg.github.io/)
