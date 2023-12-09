@@ -205,7 +205,21 @@ The best part is that we made an interactive [dashboard](https://courtneyjdiamon
 
 &nbsp;
 
-Finally, we performed an exploration of of the health variables individually by NYC location: [Check this out](Exploration.html) and also the plot below. 
+Finally, we performed an exploration of of the health variables individually by NYC location. [Check this out for a full view](Exploration.html), but here are some highlights.
+
+Median SDI by Neighborhood in 2019.
+
+![](Exploration_files/figure-html/sdi neighborhood-1.png)
+
+Mean Fine Particles by Neighborhood in 2019.
+
+![](Exploration_files/figure-html/unnamed-chunk-8-1.png)
+
+Percent of adults classified as overweight or obese by neighborhood.
+
+![](Exploration_files/figure-html/uhf-1.png)
+
+We also made this plot of latitute/longitude of NYC by SDI, percentage overweight, and AQI (Mean fine particle (PM 2.5)) below. 
 
 ```{r , echo=FALSE}
 health_plot = citibike_df |>
