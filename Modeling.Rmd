@@ -8,6 +8,15 @@ output:
     code_folding: hide
 css: styles.css
 ---
+
+```{=html}
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+```
+
  &nbsp;
  
  ***
