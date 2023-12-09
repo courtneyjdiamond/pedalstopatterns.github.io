@@ -225,7 +225,7 @@ Which New Yorkers use Citi Bikes the most - subscribers, males, and those aged 3
 
 ------------------------------------------------------------------------
 
-# [Exploring Citibike with SDI, Overweight, and AQ]{style="color: blue;"}
+# [Exploring Citibike with Health Variables: SDI and Overweight]{style="color: blue;"}
 
  &nbsp;
 
@@ -407,7 +407,7 @@ Unlike median SDI, there doesn't seem to be a dip in ridership for the low range
 
 ------------------------------------------------------------------------
 
-# [Exploration of Variables ]{style="color: blue;"}
+# [Exploration of Health Variables]{style="color: blue;"}
 
  &nbsp;
  
@@ -441,6 +441,6 @@ For exploration of social deprivation index, overweight, and air quality check o
 
  &nbsp;
 
-We developed a linear model that characterizes the number of rides per station as a surrogate for utilization of Citi Bikes. Predictors included median air quality, median social deprivation index, and percentage of overweight individuals in a neighborhood. We then iterated on these models.
+We developed linear models that characterizes the number of rides per station as a surrogate for utilization of Citi Bikes. Predictors included median air quality, median social deprivation index, and percentage of overweight individuals in a neighborhood. We then iterated on these models.
 
 [For fun with modeling see here!](Modeling.html)
