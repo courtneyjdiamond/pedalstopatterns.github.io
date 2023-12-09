@@ -1,5 +1,5 @@
 ---
-title: "Modeling"
+title: "<span style='color: blue;'>Modeling</span>"
 output: 
   html_document:
     toc: true
@@ -8,6 +8,9 @@ output:
     code_folding: hide
 css: styles.css
 ---
+ &nbsp;
+ 
+ ***
 
 ```{r libraries, include = FALSE}
 library(tidyverse)
@@ -23,13 +26,12 @@ knitr::opts_chunk$set(message = FALSE,
 )
 ```
 
-# Modeling Health Outcomes
-
+# Modeling Health Metrics
 
 Before diving into understanding how [health metrics play into Citibike usage](Modeling.html),
 we wanted to explore interactions among the health metrics themselves. 
 
-* Note: Details on the datasources and how they were impored and cleaned can be found at [Data Sources](../import_cleaning/data_import_clean.html). Here, we'll just read in CSV's generated from those tidied dataframes! 
+* Note: Details on the datasources and how they were impored and cleaned can be found at [Data Sources](../data_import_clean.html). Here, we'll just read in CSV's generated from those tidied dataframes! 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -45,11 +47,14 @@ knitr::opts_chunk$set(message = FALSE,
 )
 ```
 
+## Prepare Health Data 
 
-# Prepare Health Data 
+```{r load data}
+citibike_df = read_csv("../citibike_clean/citibike_clean.csv")
+```
 
 ```{r load_health}
-data = read_csv("../citibike_clean/citibike_clean.csv") %>%
+data = citibike_df %>%
   select(start_zipcode, end_zipcode, 
          start_uhf34_neighborhood, end_uhf34_neighborhood, 
          start_sdi_score, end_sdi_score,
@@ -70,9 +75,6 @@ data |>
   knitr::kable()
 
 ```
-
-
-
 
 
 
@@ -100,20 +102,11 @@ scatter_plot + geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "
 
 This means that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly. 
 
+ &nbsp;
+ 
+ ***
 
-# Regression Models for Statistical Analyses 
-
-For regression analysis, the merged data set was created by reading in Air Quality, Social Disparity Index, overweight percentages and merged with our Citibike dataset for September 2019 (peak usage month). To convert zip code data to neighborhoods we utilized ufh34/42 coding. 
-
-This finalized dataset was imported in as `citibike.df`.
-
-```{r load data}
-citibike.df = read_csv("../citibike_clean/citibike_clean.csv")
-
-```
-
-
-## Citibike + health metrics modeling
+# Modeling Citibike with Health Metrics 
 
 Our exploratory analyses noted some interesting trends in the Citibike data for NYC by location. This is coupled with interesting trends in health metrics:
 
@@ -123,12 +116,14 @@ Our exploratory analyses noted some interesting trends in the Citibike data for 
 
 * Percentage of neighborhood residents who were overweight varied broadly from the low 30%, with the lowest being Upper East Side-Gramercy, and up to nearly 80% in Rockaways. 
 
-As such we elected to model potential interactions between the mean aggregate rides in geographic neighborhoods in NYC and Air Quality Index (AQI), SDI, and percentage overweight to see if they could predict citibike usage in a geographic area. 
+As such we elected to model potential interactions between the mean aggregate rides in geographic neighborhoods in NYC and median Air Quality (AQI), median SDI, and percentage overweight to see if they could predict citibike usage in a geographic area. 
 
-We first summarized the citibike ride data by start station to make a new variable, `n_rides`. We then also calculate mean values of each of the health metrics for the start station location (`AQI`, `median_sdi`, and `overweight`). 
+## Prepare Citibike with Health Data 
+
+We first summarized the citibike ride data by start station to make a new variable, `n_rides`. We then also calculate mean values of each of the health metrics for the start station location (`AQI`, `median_sdi`, and `overweight`).
 
 ```{r location summaries, eval = TRUE}
-citibike_group_by_station <- citibike.df %>%
+citibike_group_by_station <- citibike_df %>%
   group_by(start_station_name) %>%
   summarize(n_rides = n(), 
             AQI = median(start_aq),
@@ -232,7 +227,7 @@ performance::check_model(fit_model_interactions, check = c("linearity", "outlier
 
 ## Cross-Validation of our Regression Models 
 
-First we built a cross-validation by 100 splits (where there are no missing values). We will utilize this to evaluate the models by calculating their RMSE.
+We next built a cross-validation by 100 splits (where there are no missing values). We will utilize this to evaluate the models by calculating their RMSE.
 
 ```{r CV, eval = TRUE}
 cv_df = citibike_group_by_station[complete.cases(citibike_group_by_station$AQI), ] %>%
@@ -266,7 +261,7 @@ cv_df |>
        y = "Frequency")
 ```
 
-* Our density plot does show that there is a wide range of values for our models, suggesting there may be difficulty in accurately predicing out outcome of mean rides with our input variables.
+* Our density plot does show that there is a wide range of values for our models, suggesting there may be difficulty in accurately predicting our outcome of mean rides with our input variables.
 
 ```{r}
 performance::compare_performance(fit_model, fit_model_interactions) %>% 
