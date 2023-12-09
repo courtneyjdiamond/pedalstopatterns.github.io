@@ -18,7 +18,8 @@ css: styles.css
 
   &nbsp;
   
-*Exploring citibike trends throughout NYC in 2019*
+  *Exploring citibike trends across NYC in September 2019*
+
 
   &nbsp;
   

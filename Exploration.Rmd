@@ -134,10 +134,11 @@ print(plot)
 
 ------------------------------------------------------------------------
 
-# AirQuality Dataset Exploration
+# Air Quality Dataset Exploration
 
-
-[The air quality index (AQ)](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC. An exploration of AQ is below.
+ &nbsp;
+ 
+The [air quality index (AQ)](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC. An exploration of AQ is below.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(message = FALSE,
@@ -370,6 +371,8 @@ air_final |>
  &nbsp;
  
 # Overweight Exploration
+
+ &nbsp;
 
 The [overweight data](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113) contains publicly available data from NYC regarding the percent of people who are overweight per area. An exploration of this dataset is below.
 
