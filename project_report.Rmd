@@ -82,7 +82,7 @@ Overall, we aim to understand how CitiBike intersects with public health and urb
 ***
 ## <span style='color: blue;'>Related Work</span>
 
-After spending time on the airbnb data sources in class, we were particularly interested in exploring an NYC dataset. As we are public health students and our group also includes healthcare professionals our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
+After spending time on the airbnb data sources in class, we were particularly interested in exploring a NYC dataset. As we are public health students, and our group also includes healthcare professionals, our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
 
   &nbsp;
 
@@ -255,22 +255,21 @@ Health Metric Modeling
 Before building a model to understanding how health metrics play into Citibike usage, we wanted to explore interactions among the SDI and percentage overweight themselves.
 
 ![](scatter_plot.png)
-Citibike with Health Metric Modeling
+
+
+Citibike use prediction with Health Metric Modeling
 
 Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 
 
-  * The first was utilization of Citibike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
-  * We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
+* The first was utilization of Citibike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
+  
+* We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
 
-We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
+Health Metric Prediction including Citibike
 
-![](modeling/compare_rides_models.png)
+We then sought to see if conversely health metrics may be able to be predicted by the other metrics, and Citibike utilization. 
 
-We then sought to see if conversely health metrics may be able to be predicted by the other metrics, and Citibike utilization. We created three linear models to predict for Air Quality, SDI, and percentage overweight each, using the other factors and number of rides as the predictors. 
-
-* We found that the models had less variability in RMSE, and higher R2 values, in particular for percentage overweight. 
-
-![](modeling/compare_healthoutcomes.png)
+* We created three linear models to predict for Air Quality, SDI, and percentage overweight each, using the other factors and number of rides as the predictors. 
 
   &nbsp;
 
@@ -278,3 +277,20 @@ We then sought to see if conversely health metrics may be able to be predicted b
 
 ## <span style='color: blue;'>Discussion</span>
 Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
+
+
+Modeling:
+
+* Citibike use prediction with Health Metric Modeling: 
+
+  * We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
+
+![](compare_rides_glm_cropped.png)
+
+* Health Metric Prediction including Citibike
+
+  * We found that the models had less variability in RMSE, and higher R2 values than our prior models trying to predict Citibike usage. Our most impressive model was to predict for percentage overweight. 
+
+![](compare_healthoutcomes_glm_cropped.png)
+
+
