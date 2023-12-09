@@ -254,7 +254,7 @@ Health Metric Modeling
 
 Before building a model to understanding how health metrics play into Citibike usage, we wanted to explore interactions among the SDI and percentage overweight themselves.
 
-![](modeling/scatter_plot.png)
+![](scatter_plot.png)
 Citibike with Health Metric Modeling
 
 Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 

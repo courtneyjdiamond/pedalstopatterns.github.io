@@ -422,4 +422,4 @@ For exploration of social deprivation index, overweight, and air quality check o
 
 We developed a linear model that characterizes the number of rides per station as a surrogate for utilization of Citibikes. Predictors included median air quality, median social deprivation index, and percentage of overweight individuals in a neighborhood. We then iterated on these models.
 
-[For fun with modeling see here!](modeling/Modeling.html)
+[For fun with modeling see here!](Modeling.html)
