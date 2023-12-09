@@ -166,7 +166,7 @@ ggplot(combined_df, aes(x = reorder(station, n_rides), y = n_rides, fill = stati
 
 **Distribution of User Type Demographics:**
 
-```{r}
+```{r user_demographics}
 user_type = citibike_df %>%
   group_by(user_type) %>%
   summarise(n_rides = n()) |>
@@ -407,17 +407,11 @@ Unlike median SDI, there doesn't seem to be a dip in ridership for the low range
 
 ------------------------------------------------------------------------
 
-# [Exploring Subsets ]{style="color: blue;"}
+# [Exploration of Variables ]{style="color: blue;"}
 
  &nbsp;
 
-The below pages explore the basic characteristics of the individual health datasets.
-
-[Air Quality index](exploratory/AirQual_exploratory.html)
-
-[Social deprivation Index](exploratory/SDI_Exploratory.html)
-
-[Overweight Trends](exploratory/Weight_exploratory.html)
+For exploration of social deprivation index, overweight, and air quality check out [here](Exploration.html).
 
 
 ------------------------------------------------------------------------
