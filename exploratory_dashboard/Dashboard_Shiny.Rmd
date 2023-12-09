@@ -1,5 +1,5 @@
 ---
-title: Visualizing AQI, SDI, and Overweight Data by Citibike Station
+title: Visualizing AQI, SDI, and Overweight Data at Citibike Stations Across Boroughs
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -16,7 +16,7 @@ library(plotly)
 library(here)
 library(shiny)
 library(shinyjs)
-
+library(RColorBrewer)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -42,8 +42,23 @@ scale_fill_discrete = scale_fill_viridis_d
 ```{r datasets, include = FALSE}
 # setwd("./exploratory_dashboard")
 
-citibike_df = read_csv("data/citibike_clean.csv")
-stations_df = read_csv("data/stations.csv")
+start_stations_manhattan = read_csv("data/start_stations_Manhattan.csv")
+start_stations_brooklyn = read_csv("data/start_stations_Brooklyn.csv")
+start_stations_queens = read_csv("data/start_stations_Queens.csv")
+start_stations_bronx = read_csv("data/start_stations_Bronx.csv")
+
+start_stations = rbind(start_stations_manhattan, start_stations_brooklyn, start_stations_queens, start_stations_bronx)
+
+end_stations_manhattan = read_csv("data/end_stations_Manhattan.csv")
+end_stations_brooklyn = read_csv("data/end_stations_Brooklyn.csv")
+end_stations_queens = read_csv("data/end_stations_Queens.csv")
+end_stations_bronx = read_csv("data/end_stations_Bronx.csv")
+end_stations = rbind(end_stations_manhattan, end_stations_brooklyn, end_stations_queens, end_stations_bronx)
+
+start_end_manhattan = read_csv("data/start_end_Manhattan.csv")
+start_end_brooklyn = read_csv("data/start_end_Brooklyn.csv")
+start_end_queens = read_csv("data/start_end_Queens.csv")
+start_end_bronx = read_csv("data/start_end_Bronx.csv")
 
 ```
 
@@ -55,9 +70,7 @@ This is a test header.
 
 ```{r inputs, echo = FALSE}
 
-borough = citibike_df |> 
-  pull(start_borough) |> 
-  unique()
+borough = c("Manhattan", "Brooklyn", "Bronx", "Queens")
 
 
 selectInput(
@@ -73,7 +86,7 @@ extra_variable = c("AQI", "SDI", "Percent Overweight")
 
 radioButtons(
   inputId = "health_var",
-  label = h3("Select a Health Metric"),
+  label = h3("Select a Health Metric (for GeoMap only)"),
   choices = extra_variable,
   selected = "AQI"
 )
@@ -94,7 +107,7 @@ borough_here = input$borough_choice
 
 if (input$health_var == "AQI") {
   
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
   distinct(start_station_name, .keep_all = TRUE) |> 
   select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
@@ -105,7 +118,7 @@ if (input$health_var == "AQI") {
 
 
 else if (input$health_var == "Percent Overweight") {
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
   distinct(start_station_name, .keep_all = TRUE) |> 
   select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
@@ -115,7 +128,7 @@ else if (input$health_var == "Percent Overweight") {
 
 else if (input$health_var == "SDI") {
   
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
   distinct(start_station_name, .keep_all = TRUE) |> 
   select(start_station_name, start_zipcode, start_station_latitude, start_station_longitude, start_uhf34_neighborhood, start_borough, start_sdi_score, start_percent_overweight, start_aq) |> 
@@ -133,34 +146,164 @@ else if (input$health_var == "SDI") {
 
 ```{r, echo = FALSE}
 
-fig <- plot_ly(
-    type = "sankey",
-    orientation = "h",
 
-    node = list(
-      label = c("A1", "A2", "B1", "B2", "C1", "C2"),
-      color = c("blue", "blue", "blue", "blue", "blue", "blue"),
-      pad = 15,
-      thickness = 20,
-      line = list(
-        color = "black",
-        width = 0.5
-      )
-    ),
+renderPlotly({
 
-    link = list(
-      source = c(0,1,0,2,3,3),
-      target = c(2,3,3,4,4,5),
-      value =  c(8,4,2,8,4,2)
-    )
-  )
-fig <- fig %>% layout(
-    title = "Basic Sankey Diagram",
-    font = list(
-      size = 10
-    )
-)
+if (input$borough_choice == "Manhattan") {
+  
+sankey_man =
+  start_end_manhattan |>  
+  mutate(node1 = case_match(start_uhf34_neighborhood,
+                           "Union Square, Lower Manhattan (Start)" ~ 0,
+                           "Upper West Side (Start)" ~ 1, 
+                           "Chelsea Village (Start)" ~ 2,
+                           "Upper East Side Gramercy (Start)" ~ 3,
+                           "East Harlem (Start)" ~ 4,
+                           "Central Harlem Morningside Heights (Start)" ~ 5,
+                           "Washington Heights Inwood (Start)" ~ 6),
+         node2 = case_match(end_uhf34_neighborhood,
+                           "Union Square, Lower Manhattan (End)" ~ 7,
+                           "Upper West Side (End)" ~ 8, 
+                           "Chelsea Village (End)" ~ 9,
+                           "Upper East Side Gramercy (End)" ~ 10,
+                           "East Harlem (End)" ~ 11,
+                           "Central Harlem Morningside Heights (End)" ~ 12,
+                           "Washington Heights Inwood (End)" ~ 13))
 
+ 
+sankey_plot_man = 
+  plot_ly(type = "sankey",
+          orientation = "h",
+          node = list(
+                label = c("Union Square, Lower Manhattan (Start)", "Upper West Side (Start)", "Chelsea Village (Start)", "Upper East Side Gramercy (Start)", "East Harlem (Start)", "Central Harlem Morningside Heights (Start)", "Washington Heights Inwood (Start)", "Union Square, Lower Manhattan (End)", "Upper West Side (End)", "Chelsea Village (End)", "Upper East Side Gramercy (End)", "East Harlem (End)", "Central Harlem Morningside Heights (End)", "Washington Heights Inwood (End)"),
+                color = c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F"),
+                pad = 15,
+                thickness = 20,
+                line = list(color = "black",width = 0.5)),
+          link = list(
+                source = sankey_man |>  pull(node1),
+                target = sankey_man |>  pull(node2),
+                value =  sankey_man |>  pull(n)))
+
+sankey_plot_man |> 
+  layout(
+    title = "Citibike Trips Completed in Manhattan",
+    font = list(size = 10))  
+  
+}
+
+
+else if (input$borough_choice == "Brooklyn") {
+  
+sankey_bklyn =
+  start_end_brooklyn |>
+  mutate(node1 = case_match(start_uhf34_neighborhood,
+                            "Downtown Heights Slope (Start)" ~ 0,
+                            "Williamsburg Bushwick (Start)" ~ 1, 
+                            "Greenpoint (Start)" ~ 2,
+                            "East New York (Start)" ~ 3,
+                            "Bedford Stuyvesant Crown Heights (Start)" ~ 4,
+                            "East Flatbush Flatbush (Start)" ~ 5,
+                            "Coney Island Sheepshead Bay (Start)" ~ 6,
+                            "Bensonhurst Bay Ridge (Start)" ~ 7,
+                            "Sunset Park (Start)" ~ 8),
+         node2 = case_match(end_uhf34_neighborhood,
+                           "Downtown Heights Slope (End)" ~ 9,
+                            "Williamsburg Bushwick (End)" ~ 10, 
+                            "Greenpoint (End)" ~ 11,
+                            "East New York (End)" ~ 12,
+                            "Bedford Stuyvesant Crown Heights (End)" ~ 13,
+                            "East Flatbush Flatbush (End)" ~ 14,
+                            "Coney Island Sheepshead Bay (End)" ~ 15,
+                            "Bensonhurst Bay Ridge (End)" ~ 16,
+                            "Sunset Park (End)" ~ 17))
+
+ 
+sankey_plot_bklyn = 
+  plot_ly(type = "sankey",
+          orientation = "h",
+          node = list(
+                label = c("Downtown Heights Slope (Start)", "Williamsburg Bushwick (Start)", "Greenpoint (Start)", "East New York (Start)", "Bedford Stuyvesant Crown Heights (Start)", "East Flatbush Flatbush (Start)", "Coney Island Sheepshead Bay (Start)", "Bensonhurst Bay Ridge (Start)", "Sunset Park (Start)", "Downtown Heights Slope (End)", "Williamsburg Bushwick (End)",  "Greenpoint (End)", "East New York (End)", "Bedford Stuyvesant Crown Heights (End)", "East Flatbush Flatbush (End)", "Coney Island Sheepshead Bay (End)", "Bensonhurst Bay Ridge (End)", "Sunset Park (End)"),
+                color = c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F", "#FF7F00", "#CAB2D6", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F", "#FF7F00", "#CAB2D6"),
+                pad = 15,
+                thickness = 20,
+                line = list(color = "black", width = 0.5)),
+          link = list(
+                source = sankey_bklyn |>  pull(node1),
+                target = sankey_bklyn |>  pull(node2),
+                value =  sankey_bklyn |>  pull(n)))
+
+sankey_plot_bklyn |> 
+  layout(
+    title = "Citibike Trips Completed in Brooklyn",
+    font = list(size = 10))
+}
+
+else if (input$borough_choice == "Queens") {
+  
+sankey_qns = 
+  start_end_queens |>
+  mutate(node1 = case_match(start_uhf34_neighborhood,
+                            "Long Island City Astoria (Start)" ~ 0,
+                            "West Queens (Start)" ~ 1,
+                            "Ridgewood Forest Hills (Start)" ~ 2),
+         node2 = case_match(end_uhf34_neighborhood,
+                            "Long Island City Astoria (End)" ~ 3,
+                            "West Queens (End)" ~ 4,
+                            "Ridgewood Forest Hills (End)" ~ 5))
+ 
+sankey_plot_qns = 
+  plot_ly(type = "sankey",
+          orientation = "h",
+          node = list(
+                label = c("Long Island City Astoria (Start)", "West Queens (Start)", "Ridgewood Forest Hills (Start)", "Long Island City Astoria (End)", "West Queens (End)", "Ridgewood Forest Hills (End)"),
+                color = c("#A6CEE3", "#1F78B4", "#B2DF8A", "#A6CEE3", "#1F78B4", "#B2DF8A"),
+                pad = 15,
+                thickness = 20,
+                line = list(color = "black", width = 0.5)),
+          link = list(
+                source = sankey_qns |>  pull(node1),
+                target = sankey_qns |>  pull(node2),
+                value =  sankey_qns |>  pull(n)))
+
+sankey_plot_qns |> 
+  layout(
+    title = "Citibike Trips Completed in Queens",
+    font = list(size = 10))
+
+}
+
+else if (input$borough_choice == "Bronx") {
+
+sankey_bx = 
+  start_end_bronx |>
+  mutate(node1 = case_match(start_uhf34_neighborhood,
+                            "Kingsbridge Riverdale (Start)" ~ 0),
+         node2 = case_match(end_uhf34_neighborhood,
+                            "Kingsbridge Riverdale (End)" ~ 1))
+sankey_bx
+ 
+sankey_plot_bx = 
+  plot_ly(type = "sankey",
+          orientation = "h",
+          node = list(
+                label = c("Kingsbridge Riverdale (Start)", "Kingsbridge Riverdale (End)"),
+                color = c("#A6CEE3","#A6CEE3"),
+                pad = 15,
+                thickness = 20,
+                line = list(color = "black", width = 0.5)),
+          link = list(
+                source = sankey_bx |>  pull(node1),
+                target = sankey_bx |>  pull(node2),
+                value =  sankey_bx |>  pull(n)))
+
+sankey_plot_bx |> 
+  layout(
+    title = "Citibike Trips Completed in the Bronx",
+    font = list(size = 10))
+}
+  
+})
 ```
 
 
@@ -177,41 +320,35 @@ borough_here = input$borough_choice
 
 if (input$health_var == "AQI") {
   
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
-  add_count(start_station_name, name = "station_count") |> 
-  distinct(start_station_name, .keep_all = TRUE) |> 
-  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
-  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
-  mutate(station_count = as.numeric(station_count)) |> 
-  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+  select(start_station_name, start_uhf34_neighborhood, start_borough, start_station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, start_station_count)) |> 
+  mutate(start_station_count = as.numeric(start_station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~start_station_count, type = "bar", color = ~start_uhf34_neighborhood)
   
 }
 
 
 else if (input$health_var == "Percent Overweight"){
   
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
-  add_count(start_station_name, name = "station_count") |> 
-  distinct(start_station_name, .keep_all = TRUE) |> 
-  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
-  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
-  mutate(station_count = as.numeric(station_count)) |> 
-  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+  select(start_station_name, start_uhf34_neighborhood, start_borough, start_station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, start_station_count)) |> 
+  mutate(start_station_count = as.numeric(start_station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~start_station_count, type = "bar", color = ~start_uhf34_neighborhood)
   
 }
 
 else if (input$health_var == "SDI") {
   
-  citibike_df |>
+  start_stations |>
   filter(start_borough == borough_here) |> 
-  add_count(start_station_name, name = "station_count") |> 
-  distinct(start_station_name, .keep_all = TRUE) |> 
-  select(start_station_name, start_uhf34_neighborhood, start_borough, station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
-  mutate(start_station_name = fct_reorder(start_station_name, station_count)) |> 
-  mutate(station_count = as.numeric(station_count)) |> 
-  plot_ly(x = ~start_station_name, y = ~station_count, type = "bar", color = ~start_uhf34_neighborhood)
+  select(start_station_name, start_uhf34_neighborhood, start_borough, start_station_count, start_sdi_score, start_percent_overweight, start_aq) |> 
+  mutate(start_station_name = fct_reorder(start_station_name, start_station_count)) |> 
+  mutate(start_station_count = as.numeric(start_station_count)) |> 
+  plot_ly(x = ~start_station_name, y = ~start_station_count, type = "bar", color = ~start_uhf34_neighborhood)
 
 }
 
@@ -227,38 +364,35 @@ borough_here = input$borough_choice
 
 if (input$health_var == "AQI") {
   
-  citibike_df |>
+  end_stations |>
   filter(end_borough == borough_here) |> 
-  add_count(end_station_name, name = "station_count") |> 
-  distinct(end_station_name, .keep_all = TRUE) |> 
-  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
-  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
-  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  select(end_station_name, end_uhf34_neighborhood, end_borough, end_station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, end_station_count)) |> 
+  mutate(end_station_count = as.numeric(end_station_count)) |>
+  plot_ly(x = ~end_station_name, y = ~end_station_count, type = "bar", color = ~end_uhf34_neighborhood)
   
 }
 
 
 else if (input$health_var == "Percent Overweight"){
   
-  citibike_df |>
+  end_stations |>
   filter(end_borough == borough_here) |> 
-  add_count(end_station_name, name = "station_count") |> 
-  distinct(end_station_name, .keep_all = TRUE) |> 
-  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
-  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
-  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  select(end_station_name, end_uhf34_neighborhood, end_borough, end_station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, end_station_count)) |> 
+  mutate(end_station_count = as.numeric(end_station_count)) |>
+  plot_ly(x = ~end_station_name, y = ~end_station_count, type = "bar", color = ~end_uhf34_neighborhood)
   
 }
 
 else if (input$health_var == "SDI") {
-  
-  citibike_df |>
+
+  end_stations |>
   filter(end_borough == borough_here) |> 
-  add_count(end_station_name, name = "station_count") |> 
-  distinct(end_station_name, .keep_all = TRUE) |> 
-  select(end_station_name, end_uhf34_neighborhood, end_borough, station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
-  mutate(end_station_name = fct_reorder(end_station_name, station_count)) |> 
-  plot_ly(x = ~end_station_name, y = ~station_count, type = "bar", color = ~end_uhf34_neighborhood)
+  select(end_station_name, end_uhf34_neighborhood, end_borough, end_station_count, end_sdi_score, end_percent_overweight, end_aq) |> 
+  mutate(end_station_name = fct_reorder(end_station_name, end_station_count)) |> 
+  mutate(end_station_count = as.numeric(end_station_count)) |>
+  plot_ly(x = ~end_station_name, y = ~end_station_count, type = "bar", color = ~end_uhf34_neighborhood)
   
 }
 

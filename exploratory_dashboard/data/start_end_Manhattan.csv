@@ -1,0 +1,50 @@
+start_uhf34_neighborhood,end_uhf34_neighborhood,n
+Chelsea Village (Start),Chelsea Village (End),273633
+"Union Square, Lower Manhattan (Start)","Union Square, Lower Manhattan (End)",155273
+Chelsea Village (Start),"Union Square, Lower Manhattan (End)",125553
+"Union Square, Lower Manhattan (Start)",Chelsea Village (End),123599
+Upper East Side Gramercy (Start),Chelsea Village (End),75022
+Chelsea Village (Start),Upper East Side Gramercy (End),74364
+Upper East Side Gramercy (Start),Upper East Side Gramercy (End),69713
+Upper East Side Gramercy (Start),"Union Square, Lower Manhattan (End)",40487
+Upper West Side (Start),Upper West Side (End),37507
+"Union Square, Lower Manhattan (Start)",Upper East Side Gramercy (End),37401
+Upper West Side (Start),Chelsea Village (End),27881
+Chelsea Village (Start),Upper West Side (End),21610
+Upper West Side (Start),Upper East Side Gramercy (End),17462
+Upper East Side Gramercy (Start),Upper West Side (End),14781
+Central Harlem Morningside Heights (Start),Chelsea Village (End),12124
+East Harlem (Start),East Harlem (End),11753
+Chelsea Village (Start),Central Harlem Morningside Heights (End),11714
+Upper East Side Gramercy (Start),East Harlem (End),11001
+East Harlem (Start),Upper East Side Gramercy (End),10996
+East Harlem (Start),Chelsea Village (End),10038
+Upper East Side Gramercy (Start),Central Harlem Morningside Heights (End),10007
+Chelsea Village (Start),East Harlem (End),9742
+Central Harlem Morningside Heights (Start),Central Harlem Morningside Heights (End),9285
+Central Harlem Morningside Heights (Start),Upper West Side (End),8954
+Central Harlem Morningside Heights (Start),Upper East Side Gramercy (End),8783
+Central Harlem Morningside Heights (Start),East Harlem (End),8004
+Upper West Side (Start),Central Harlem Morningside Heights (End),7775
+East Harlem (Start),Central Harlem Morningside Heights (End),7611
+East Harlem (Start),"Union Square, Lower Manhattan (End)",4873
+"Union Square, Lower Manhattan (Start)",East Harlem (End),4290
+Upper West Side (Start),East Harlem (End),4221
+East Harlem (Start),Upper West Side (End),4146
+Central Harlem Morningside Heights (Start),"Union Square, Lower Manhattan (End)",3774
+"Union Square, Lower Manhattan (Start)",Central Harlem Morningside Heights (End),2939
+Upper West Side (Start),"Union Square, Lower Manhattan (End)",2501
+"Union Square, Lower Manhattan (Start)",Upper West Side (End),2044
+Washington Heights Inwood (Start),Upper West Side (End),1201
+Upper West Side (Start),Washington Heights Inwood (End),1017
+Chelsea Village (Start),Washington Heights Inwood (End),606
+Washington Heights Inwood (Start),Chelsea Village (End),557
+Upper East Side Gramercy (Start),Washington Heights Inwood (End),413
+Washington Heights Inwood (Start),Upper East Side Gramercy (End),395
+Washington Heights Inwood (Start),Central Harlem Morningside Heights (End),131
+Central Harlem Morningside Heights (Start),Washington Heights Inwood (End),108
+"Union Square, Lower Manhattan (Start)",Washington Heights Inwood (End),79
+Washington Heights Inwood (Start),East Harlem (End),70
+East Harlem (Start),Washington Heights Inwood (End),61
+Washington Heights Inwood (Start),"Union Square, Lower Manhattan (End)",59
+Washington Heights Inwood (Start),Washington Heights Inwood (End),52

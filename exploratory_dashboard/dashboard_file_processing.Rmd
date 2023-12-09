@@ -1,0 +1,115 @@
+---
+title: "File processing for Shiny Dashboard"
+date: "2023-12-09"
+output: html_document
+---
+
+
+```{r, eval = FALSE}
+citibike_df = read_csv(here("citibike_clean/citibike_clean.csv"))
+stations_df = read_csv(here("citibike_clean/stations.csv"))
+
+```
+
+```{r, eval = FALSE}
+
+setwd(here())
+
+citibike_df |> 
+  filter(start_borough == "Manhattan") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/start_stations_Manhattan.csv") 
+
+citibike_df |> 
+  filter(start_borough == "Brooklyn") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |>  
+  write_csv(file = "exploratory_dashboard/data/start_stations_Brooklyn.csv")
+
+citibike_df |> 
+  filter(start_borough == "Queens") |>
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/start_stations_Queens.csv")
+
+citibike_df |> 
+  filter(start_borough == "Bronx") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(start_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/start_stations_Bronx.csv")
+
+
+citibike_df |> 
+  filter(end_borough == "Manhattan") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/end_stations_Manhattan.csv") 
+
+citibike_df |> 
+  filter(end_borough == "Brooklyn") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |>  
+  write_csv(file = "exploratory_dashboard/data/end_stations_Brooklyn.csv")
+
+citibike_df |> 
+  filter(end_borough == "Queens") |>
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/end_stations_Queens.csv")
+
+citibike_df |> 
+  filter(end_borough == "Bronx") |> 
+  add_count(start_station_name, name = "start_station_count") |> 
+  add_count(end_station_name, name = "end_station_count") |> 
+  distinct(end_station_name, .keep_all = TRUE) |> 
+  write_csv(file = "exploratory_dashboard/data/end_stations_Bronx.csv")
+
+
+citibike_df |> 
+  filter(start_borough == "Manhattan" & end_borough == "Manhattan") |> 
+  mutate(start_uhf34_neighborhood = str_c(start_uhf34_neighborhood, " (Start)"),
+         end_uhf34_neighborhood = str_c(end_uhf34_neighborhood, " (End)")) |> 
+  group_by(start_uhf34_neighborhood, end_uhf34_neighborhood) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  write_csv(file = "exploratory_dashboard/data/start_end_Manhattan.csv")
+
+citibike_df |> 
+  filter(start_borough == "Brooklyn" & end_borough == "Brooklyn") |> 
+  mutate(start_uhf34_neighborhood = str_c(start_uhf34_neighborhood, " (Start)"),
+         end_uhf34_neighborhood = str_c(end_uhf34_neighborhood, " (End)")) |> 
+  group_by(start_uhf34_neighborhood, end_uhf34_neighborhood) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  write_csv(file = "exploratory_dashboard/data/start_end_Brooklyn.csv")
+
+citibike_df |> 
+  filter(start_borough == "Queens" & end_borough == "Queens") |> 
+  mutate(start_uhf34_neighborhood = str_c(start_uhf34_neighborhood, " (Start)"),
+         end_uhf34_neighborhood = str_c(end_uhf34_neighborhood, " (End)")) |> 
+  group_by(start_uhf34_neighborhood, end_uhf34_neighborhood) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  write_csv(file = "exploratory_dashboard/data/start_end_Queens.csv")
+
+citibike_df |> 
+  filter(start_borough == "Bronx" & end_borough == "Bronx") |> 
+  mutate(start_uhf34_neighborhood = str_c(start_uhf34_neighborhood, " (Start)"),
+         end_uhf34_neighborhood = str_c(end_uhf34_neighborhood, " (End)")) |> 
+  group_by(start_uhf34_neighborhood, end_uhf34_neighborhood) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  write_csv(file = "exploratory_dashboard/data/start_end_Bronx.csv")
+
+
+
+```
+
