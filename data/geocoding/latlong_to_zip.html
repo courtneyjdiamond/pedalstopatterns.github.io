@@ -1645,8 +1645,7 @@ Sources page</a>.</p>
 <h2><span style="color: blue;">Load Citibike Data</span></h2>
 <p> </p>
 <p>The following code loads and tidies the Citibike data, identically as
-described in <a href="../../data_import_clean.html">Data
-Sources</a>.</p>
+described in <a href="./data_import_clean.html">Data Sources</a>.</p>
 <pre class="r"><code>citibike &lt;- 
   tibble(
     files = list.files(&quot;../../citibike/&quot;),
@@ -1777,13 +1776,12 @@ head(latlong_zip) |&gt;
 </table>
 <pre class="r"><code>#write_csv(latlong_zip, &quot;./data/geocoding/citibike_latlong_zip.csv&quot;)</code></pre>
 <p>For 19 coordinates, zipcodes were identified for 19, and 0 are
-missing zipcodes. These are handles later in data cleaning in <a href="../import_cleaning/data_import_clean.html">Data Sources</a>, where
-we manually lookup the remaining zipcodes, which is feasible for such a
-small subset. The manually annotated coordinates are stored on our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
+missing zipcodes. These are handles later in data cleaning in <a href="./data_import_clean.html">Data Sources</a>, where we manually
+lookup the remaining zipcodes, which is feasible for such a small
+subset. The manually annotated coordinates are stored on our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
 here</a>.</p>
 <p>Now we are ready for the dataset to be merged with our Citibike data.
-This is done in <a href="../../data_import_clean.html">Data
-Sources</a>.</p>
+This is done in <a href="./data_import_clean.html">Data Sources</a>.</p>
 </div>
 
 
