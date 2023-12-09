@@ -1631,8 +1631,8 @@ which converts coordinates to addresses, from which we can extract
 zipcodes.</p></li>
 <li><p>The output of the code below is a <strong>crosswalk from
 coordinates to Zipcode</strong> that is stored in our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/citibike_latlong_zip.csv">github
-here</a> and used in our <a href="../../import_cleaning/data_import_clean.html">Data Sources
-page</a>.</p>
+here</a> and used in our <a href="../data_import_clean.html">Data
+Sources page</a>.</p>
 <ul>
 <li>We generate a crosswalk here for efficiency purposes, as this takes
 ~20 minutes to execute, so is better suited as a one-time process.</li>
@@ -1645,12 +1645,12 @@ page</a>.</p>
 <h2><span style="color: blue;">Load Citibike Data</span></h2>
 <p> </p>
 <p>The following code loads and tidies the Citibike data, identically as
-described in <a href="../../import_cleaning/data_import_clean.html">Data
+described in <a href="../../data_import_clean.html">Data
 Sources</a>.</p>
 <pre class="r"><code>citibike &lt;- 
   tibble(
-    files = list.files(&quot;../../citibike_alt/&quot;),
-    path = str_c(&quot;../../citibike_alt/&quot;, files)
+    files = list.files(&quot;../../citibike/&quot;),
+    path = str_c(&quot;../../citibike/&quot;, files)
   ) |&gt;
   mutate(data = map(path, ~read_csv(.x, col_types = cols(
     &#39;end station id&#39; = col_double(),
@@ -1714,7 +1714,7 @@ citibike_end  = citibike_df |&gt;
 lat_long = rbind(citibike_start, citibike_end) |&gt;
   unique()</code></pre>
 <p>Of the 10 entries in the full Citibike dataset, there are 10 unique
-start station coordinates, 10 unique start station coordinates, and 18
+start station coordinates, 10 unique start station coordinates, and 19
 unique coordinates overall.</p>
 </div>
 <div id="convert-to-zipcodes" class="section level2">
@@ -1744,60 +1744,46 @@ head(latlong_zip) |&gt;
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">40.75680</td>
-<td align="right">-73.98291</td>
-<td align="left">10036</td>
+<td align="right">40.72431</td>
+<td align="right">-73.99601</td>
+<td align="left">10012</td>
 </tr>
 <tr class="even">
-<td align="right">40.72454</td>
-<td align="right">-73.98185</td>
-<td align="left">10009</td>
+<td align="right">40.75140</td>
+<td align="right">-74.00523</td>
+<td align="left">10001</td>
 </tr>
 <tr class="odd">
-<td align="right">40.71871</td>
-<td align="right">-74.00900</td>
-<td align="left">10013</td>
+<td align="right">40.68833</td>
+<td align="right">-73.95092</td>
+<td align="left">11216</td>
 </tr>
 <tr class="even">
-<td align="right">40.80456</td>
-<td align="right">-73.93969</td>
-<td align="left">10035</td>
+<td align="right">40.76303</td>
+<td align="right">-73.97210</td>
+<td align="left">10022</td>
 </tr>
 <tr class="odd">
-<td align="right">40.76030</td>
-<td align="right">-73.99884</td>
-<td align="left">10018</td>
+<td align="right">40.79879</td>
+<td align="right">-73.95230</td>
+<td align="left">10037</td>
 </tr>
 <tr class="even">
-<td align="right">40.76087</td>
-<td align="right">-74.00278</td>
-<td align="left">10199</td>
+<td align="right">40.67401</td>
+<td align="right">-73.96715</td>
+<td align="left">11238</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code>#write_csv(latlong_zip, &quot;./data/geocoding/citibike_latlong_zip.csv&quot;)</code></pre>
-<p>For 18 coordinates, zipcodes were identified for 18, and 0 are
-missing zipcodes. These are handles later in data cleaning in <a href="../../import_cleaning/data_import_clean.html">Data Sources</a>,
-where we manually lookup the remaining zipcodes, which is feasible for
-such a small subset. The manually annotated coordinates are stored on
-our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
+<p>For 19 coordinates, zipcodes were identified for 19, and 0 are
+missing zipcodes. These are handles later in data cleaning in <a href="../import_cleaning/data_import_clean.html">Data Sources</a>, where
+we manually lookup the remaining zipcodes, which is feasible for such a
+small subset. The manually annotated coordinates are stored on our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
 here</a>.</p>
-</div>
-<div id="merge-to-citibike" class="section level2">
-<h2><span style="color: blue;">Merge to Citibike</span></h2>
-<p> </p>
-<p>The below code is just a quick test and preview of how we bring
-Zipcode back onto Citibike data. This is done in full in <a href="../../import_cleaning/data_import_clean.html">Data
+<p>Now we are ready for the dataset to be merged with our Citibike data.
+This is done in <a href="../../data_import_clean.html">Data
 Sources</a>.</p>
-<pre class="r"><code>citibike_zip = citibike_df |&gt;
-  left_join(latlong_zip, 
-            by = c(&quot;start_station_latitude&quot; = &quot;latitude&quot;,
-                   &quot;start_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
-  rename(&quot;start_zipcode&quot; = &quot;postcode&quot;) |&gt;
-  left_join(latlong_zip, 
-            by = c(&quot;end_station_latitude&quot; = &quot;latitude&quot;,
-                   &quot;end_station_longitude&quot; = &quot;longitude&quot;)) |&gt;
-  rename(&quot;end_zipcode&quot; = &quot;postcode&quot;) </code></pre>
 </div>
 
 
