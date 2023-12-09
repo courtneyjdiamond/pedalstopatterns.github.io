@@ -67,7 +67,7 @@ data = citibike_df %>%
     overweight = coalesce(start_percent_overweight, end_percent_overweight),
     aq = coalesce(start_aq, end_aq)) |>
   group_by(neighborhood) |>
-  summarize(sdi = mean(sdi),
+  summarize(sdi = median(sdi),
             overweight = mean(overweight),
             mean(aq))
 
@@ -96,7 +96,10 @@ fit |>
   select(term, estimate, p.value) |>
   knitr::kable(digits = 3)
 
-scatter_plot + geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue")
+scatter_plot <- scatter_plot + 
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue")
+
+ggsave("scatter_plot.png", plot = scatter_plot, width = 6, height = 4)
 
 ```
 

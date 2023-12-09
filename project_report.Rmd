@@ -128,8 +128,10 @@ Data: Source, scraping method, cleaning, etc.
 ## <span style='color: blue;'>Exploratory Analysis</span>
 
   &nbsp;
-  
-We began our analysis by focusing on an exploration of the Citibike geographic data. We made a table of the stations used and available per neighborhood.
+
+Citibike Geographic Analysis
+
+We made a table of the stations used and available per neighborhood.
 
 ```{r station_usage, echo=FALSE}
 stations_available = stations_df|>
@@ -168,12 +170,12 @@ And the 10 most popular starting and stopping stations.
 ![](analysis_files/figure-html/start stations-1.png)
   &nbsp;
   
-Next we looked at user demographics. 
+Citibike user demographics
 
 ![](analysis_files/figure-html/user_demographics-1.png)
  &nbsp;
  
-Next, we explored the relationship between Citibike geographic utilization and SDI and percentage overweight by neighborhood. 
+Citibike Geographic Utilization with Health Metrics 
 
   * We used median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood. See [here](Exploration.html) for a more detailed description.
   
@@ -189,9 +191,11 @@ And we looked at percentage overweight and station use/availability by neighborh
 ![](analysis_files/figure-html/overweight_stations-1.png)
  &nbsp;
 
-Next, we looked at ridership and median SDI at the zipcode level. 
+Citibike Ridership and Health Metrics
 
 * We looked at zipcodes instead of neighborhood in order to have more datapoints to evaluate a trend (we only had 20 neighborhoods.)
+
+We looked at ridership and median SDI by zipcode
 
 ![](analysis_files/figure-html/sdi_rides_zipcode-1.png)
  &nbsp;
@@ -205,7 +209,9 @@ The best part is that we made an interactive [dashboard](https://courtneyjdiamon
 
 &nbsp;
 
-Finally, we performed an exploration of of the health variables individually by NYC location. [Check this out for a full view](Exploration.html), but here are some highlights.
+Exploration of Health Metrics
+
+Finally, we performed an exploration of of the health variables individually by NYC location. For the full page, [check this out](Exploration.html), but here are some highlights.
 
 Median SDI by Neighborhood in 2019.
 
@@ -242,11 +248,21 @@ health_plot |>
 
 ***
 
-## <span style='color: blue;'>Additional Analysis</span>
+## <span style='color: blue;'>Additional Analysis: Modeling</span>
 
-To build upon our exploratory analyses above we decided to pursue GLM with two sets of outcome in mind. The first was utilization of Citibike in a geographic area, based on health factors in the form of Air quality, SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
+Health Metric Modeling
 
-* We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
+Before building a model to understanding how health metrics play into Citibike usage, we wanted to explore interactions among the SDI and percentage overweight themselves.
+
+![](modeling/scatter_plot.png)
+Citibike with Health Metric Modeling
+
+Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 
+
+  * The first was utilization of Citibike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
+  * We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
+
+We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
 
 ![](modeling/compare_rides_models.png)
 
@@ -255,8 +271,6 @@ We then sought to see if conversely health metrics may be able to be predicted b
 * We found that the models had less variability in RMSE, and higher R2 values, in particular for percentage overweight. 
 
 ![](modeling/compare_healthoutcomes.png)
-
-
 
   &nbsp;
 
