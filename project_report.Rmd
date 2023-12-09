@@ -110,9 +110,9 @@ We specifically wanted to answer the following questions:
 
    a. Are there disparities in Citibike stations per neighborhood or ridership? Is there a relationship to the social deprivation index.
    
-   b. Are there differences in Citibike stations per neighborhood or ridership that is related to obesity? Do NYers who are overweight use Citibike more or less?
+   b. Are there differences in Citibike stations per neighborhood or ridership that is related to obesity? 
    
-   c. Can we build a model of Citibike utilization that integrates disparities, both social and environmental, and also health factors.
+   c. How do these variables interact? Can we build a model of Citibike utilization that integrates disparities, both social and environmental, and also health factors.
 
 
 ***
@@ -196,7 +196,7 @@ Next, we looked at ridership and median SDI at the zipcode level.
 ![](analysis_files/figure-html/sdi_rides_zipcode-1.png)
  &nbsp;
  
-And ridership and percentage overweight at the zipcode level.
+And ridership and percentage overweight at the zipcode level, while also looking at SDI.
 
 ![](analysis_files/figure-html/overweight_rides_zipcode-1.png)
 &nbsp;
