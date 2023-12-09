@@ -19,14 +19,14 @@ css: styles.css
 
 ------------------------------------------------------------------------
 
-To explore New Yorkers' use of the Citibike program, we examined data on geographic utilization, users demographics, and health implications. By looking at these facets individually, and then in comparison through exploratory data analysis and linear models, we sought to unravel the connections between bikes and health.
+To explore New Yorkers' use of the Citi Bike program, we examined data on geographic utilization, users demographics, and health implications. By looking at these facets individually, and then in comparison through exploratory data analysis and linear models, we sought to unravel the connections between bikes and health.
 
-This page includes a exploration of the Citibike data, links to view deeper explorations of the air quality index (AQ), social deprivation index (SDI), and weight data, an interactive dashboard, and links to our linear model.
+This page includes a exploration of the Citi Bike data, links to view deeper explorations of the air quality index (AQ), social deprivation index (SDI), and weight data, an interactive dashboard, and links to our linear model.
 
 
 ------------------------------------------------------------------------
 
-# [Citibike Exploration]{style="color: blue;"}
+# [Citi Bike Exploration]{style="color: blue;"}
 
   &nbsp;
 
@@ -98,6 +98,7 @@ station_usage |>
 There is consistency among stations available and used, with a mean of `r mean(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2)` (range: `r min(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2)`, `r max(station_usage$Stations_Used/station_usage$Stations_Available * 100)`).
 
 -   **Bronx has only a single station**, which makes sense given [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/) that describes Citibike expansion into the Bronx just after the time we're observing here (late 2019). While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas. So we'll see if this seems to be indicated when we incorporate SDI below.
+
 -   Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
 
   &nbsp;
@@ -198,7 +199,7 @@ age = ggplot(citibike_df, aes(x = age, fill = "Count")) +
 ```
 
 
-Which NYers use Citibikes the most - subscribers, males, and those aged 30 years and 50 years!
+Which New Yorkers use Citi Bikes the most - subscribers, males, and those aged 30 years and 50 years!
 
  &nbsp;
 
@@ -325,7 +326,7 @@ rides_SDI |>
   geom_smooth(se = FALSE)
 ```
 
-There seems to be a clear downward trend in ridership as median SDI increases. However, our sample size is limited here to only 20 (as rhere are only 20 neighborhoods). If we look by zipcode, we have a bit more sample, 53 distinct zipcodes.
+There seems to be a clear downward trend in ridership as median SDI increases. However, our sample size is limited here to only 20 (as there are only 20 neighborhoods). If we look by zipcode, we have a bit more disaggregation in the sample, with 53 distinct zipcodes.
 
  &nbsp;
 
@@ -420,6 +421,6 @@ For exploration of social deprivation index, overweight, and air quality check o
 
  &nbsp;
 
-We developed a linear model that characterizes the number of rides per station as a surrogate for utilization of Citibikes. Predictors included median air quality, median social deprivation index, and percentage of overweight individuals in a neighborhood. We then iterated on these models.
+We developed a linear model that characterizes the number of rides per station as a surrogate for utilization of Citi Bikes. Predictors included median air quality, median social deprivation index, and percentage of overweight individuals in a neighborhood. We then iterated on these models.
 
 [For fun with modeling see here!](Modeling.html)
