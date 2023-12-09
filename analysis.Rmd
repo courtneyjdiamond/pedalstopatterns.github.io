@@ -40,6 +40,7 @@ library(tidyverse)
 library(viridis)
 library(plotly)
 library(patchwork)
+library (DT)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -88,10 +89,29 @@ station_usage = citibike_df |>
   summarize(Stations_Used = n()) |>
   left_join(stations_available,
             by = c("Borough" = "borough",
-                   "Neighborhood" = "uhf34_neighborhood")) 
-station_usage |>
-  arrange(Borough, desc(Stations_Used)) |>
-  knitr::kable()
+                   "Neighborhood" = "uhf34_neighborhood")) |>
+  arrange(Borough, desc(Stations_Used)) 
+
+station_usage |> 
+  datatable(
+  options = list(
+    columnDefs = list(
+      list(
+        targets = "_all",
+        render = JS(
+          "function(data, type, row, meta) {",
+          "if (type === 'display') {",
+          "return '<span class=\"dropdown\">' + data + '</span>';",
+          "} else {",
+          "return data;",
+          "}",
+          "}"
+        )
+      )
+    )
+  ),
+  escape = FALSE
+)
 
 ```
 
