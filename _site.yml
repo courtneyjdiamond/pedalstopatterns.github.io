@@ -13,12 +13,8 @@ navbar:
       menu:
         - text: "Overall Analaysis"
           href: analysis.html
-        - text: "Air Quality"
-          href: exploratory/AirQual_exploratory.html
-        - text: "Social Deprivation Index"
-          href: exploratory/SDI_Exploratory.html
-        - text: "Overweight"
-          href: exploratory/Weight_exploratory.html
+        - text: "Exploration of Variables"
+          href: Exploration.html
         - text: "Modeling"
           href: modeling/Modeling.html
     - text: "Project Report"

@@ -1,0 +1,255 @@
+---
+title: "AirQuality Dataset Exploratoration"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    code_folding: hide
+css: styles.css
+---
+<style>
+  h1 {
+     font-weight: bold;
+  }
+</style>
+
+------------------------------------------------------------------------
+
+
+[The air quality index (AQ)](https://data.cityofnewyork.us/Environment/Air-Quality/c3uy-2p5r) originated from NYC Open Data, contributed by the Department of Hygiene and Mental Health and include air quality indexes measured across boroughs in NYC.
+
+In this webpage we will explore the AQI variable.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+
+knitr::opts_chunk$set(message = FALSE,
+	echo = TRUE,
+	warning = FALSE)
+```
+  &nbsp;
+
+## Load Data
+
+```{r}
+#import data
+air_quality_df = read_csv("../data/air_quality/Air_Quality_20231126.csv") |>
+  janitor::clean_names() |>
+  mutate(
+    start_date = mdy(start_date),
+    year = year(start_date)
+  ) |>
+  filter(year == "2019")
+
+joined_uhf_34_42 =  read_csv("../data/geocoding/joined_uhf_34_42.csv")
+
+# add zip codes
+air_geo =
+  air_quality_df |>
+  mutate(
+    uhf34 = case_when(geo_type_name == "UHF34" ~ "1")
+  )
+
+#break up by geocoding system, add zipcodes
+
+# uhf34
+air_zip_neighborhoods_34 =
+  air_geo |>
+  filter(uhf34 == "1") |>
+  select(-uhf34, - message)
+
+air_zip_neighborhoods_34 =
+  left_join(air_zip_neighborhoods_34, y = (joined_uhf_34_42),
+            by = join_by("geo_join_id" == "uhf34")) 
+
+air_final =
+  air_zip_neighborhoods_34 |>
+  select(-uhf34_neighborhood) |>
+filter(!duplicated(unique_id))
+
+
+head(air_final) |>
+  knitr::kable()
+
+```
+
+```{r, eval = FALSE}
+# save output for ease in other files
+write_csv(air_zip_uhf, here("data/air_quality/air_zip_uhf.csv"))
+```
+
+ &nbsp;
+  
+## Summary Statistics  Across 2019
+
+Average Air Quality Index Across Time Periods in 2019
+
+```{r}
+annual_aq = air_final |>
+  filter(time_period == "Annual Average 2019") 
+
+annual_aq|>
+  ggplot(aes(x = time_period, y = data_value)) +
+  geom_boxplot(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+       x = "Time Period",
+       y = "Air Quality Index") +
+  theme_minimal()
+
+# Calculate statistics
+midpoint <- median(annual_aq$data_value)
+low_quantile <- quantile(annual_aq$data_value, 0.25)
+top_quantile <- quantile(annual_aq$data_value, 0.75)
+
+```
+
+Summary of data particles: Fine particles (PM 2.5), Nitrogen dioxide (NO2), and Ozone (O3)
+
+```{r}
+air_final |>
+  group_by(name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+```{r}
+air_final|>
+  ggplot(aes(x = data_value, fill = name)) +
+  geom_histogram(binwidth = 1, position = "dodge", alpha = 0.7) +
+  facet_wrap(~ name, scales = "free") +
+  labs(
+       x = "Data Value",
+       y = "Frequency",
+       fill = "Pollutant") +
+  theme_minimal()
+```
+
+## Evaluation of data particles by Neighborhood
+
+### Fine Particles by Neighborhoods
+
+Comparison of fine particles by neighborhood 
+
+```{r}
+air_particles =
+  air_final |>
+  filter(name == "Fine particles (PM 2.5)")
+
+air_particles |>
+  filter(time_period == "Annual Average 2019") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue")  +
+  labs(
+       x = "Neighborhood",
+       y = "Mean Fine particles (mcg/m3)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of fine particles by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Fine particles (PM 2.5)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+### Nitrogen Dioxide (NO2) by Neighborhoods
+
+Comparison of NO2 by neighborhood 
+
+```{r}
+air_nitrogen =
+  air_final |>
+  filter(name == "Nitrogen dioxide (NO2)")
+
+air_nitrogen |>
+  filter(time_period == "Annual Average 2019") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue")  +
+  labs(x = "Neighborhood",
+       y = "Mean Nitrogen dioxide (ppb)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of NO2 by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Nitrogen dioxide (NO2)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  ) |>
+  knitr::kable()
+```
+
+### Ozone (NO2) by Neighborhoods
+
+Comparison of O3 by neighborhood 
+
+```{r}
+air_final |>
+  filter(name == "Ozone (O3)") |>
+  ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(
+       x = "Neighborhood",
+       y = "Mean Ozone (ppb)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+Summary statistics of O3 by Neighborhood
+
+```{r}
+air_final |>
+  filter(name == "Ozone (O3)") |>
+  group_by(geo_place_name) |>
+  summarise(
+    min_value = min(data_value, na.rm = TRUE),
+    q1 = quantile(data_value, 0.25, na.rm = TRUE),
+    median_value = median(data_value, na.rm = TRUE),
+    q3 = quantile(data_value, 0.75, na.rm = TRUE),
+    max_value = max(data_value, na.rm = TRUE)
+  )|>
+  knitr::kable()
+```
+
+
+
+
+
+
+
+

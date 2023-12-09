@@ -14,7 +14,8 @@ library(tidyverse)
 library(mgcv)
 library(modelr)
 library(purrr)
-library(here)
+library(knitr)
+#library(kableExtra)
 
 knitr::opts_chunk$set(message = FALSE,
 	echo = TRUE,
@@ -268,7 +269,13 @@ cv_df |>
 * Our density plot does show that there is a wide range of values for our models, suggesting there may be difficulty in accurately predicing out outcome of mean rides with our input variables.
 
 ```{r}
-performance::compare_performance(fit_model, fit_model_interactions)
+performance::compare_performance(fit_model, fit_model_interactions) %>% 
+  knitr::kable()
+
+#performance::compare_performance(fit_model, fit_model_interactions) %>%
+ # knitr::kable() %>% 
+  #kable_styling() %>%
+  #save_kable(file = "compare_rides_glm.png")
 ```
 
 * Our model without interaction terms had an R2 of 0.360.
@@ -391,7 +398,13 @@ cv_df |>
 * Here we can see that there is a much large spread compared to our RMSE density plots when predicting for mean number of rides. However, the least spread of RMSE values are for AQI, and largest are for median SDI as outcomes.
 
 ```{r}
-performance::compare_performance(fit_overweight, fit_sdi, fit_AQI)
+performance::compare_performance(fit_overweight, fit_sdi, fit_AQI) %>%
+  knitr::kable()
+
+#performance::compare_performance(fit_overweight, fit_sdi, fit_AQI) %>%
+ # knitr::kable() %>% 
+  #kable_styling() %>%
+  #save_kable(file = "compare_healthoutcomes_glm.png")
 ```
 
 * We can see that the model with the highest R2 was when the outcome was overweight values, with R2 = 0.757, with AQI next and SDI the lowest. 
