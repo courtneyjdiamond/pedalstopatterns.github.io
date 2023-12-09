@@ -63,24 +63,24 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ## <span style='color: blue;'>Motivation</span>
 
-Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citibike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, a critical question emerges: How do NYers in different neighborhoods use citibike, and how do environmental, health, and socioeconomic variables impact ridership and access to rides? 
+Increasing transportation costs, congested streets, and subway delays across New York City are pressuring residents to find cheaper and faster means of navigating the Big Apple. The introduction of [Citi Bike](https://citibikenyc.com/) has had an impact in increasing access to biking as an alternative means of transportation. Biking also has the added benefit of promoting health! However, a critical question emerges: How do New Yorkers in different neighborhoods use Citi Bike, and how do environmental, health, and socioeconomic variables impact ridership and access to rides? 
 
-As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a curiosity to determine the viability and equity of turning to CitiBike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of CitiBike use:
+As public health students grappling with the daily commute in the dynamic landscape of NYC, we are driven by a curiosity to determine the viability and equity of turning to Citi Bike as a transportation alternative. Our exploration is multi-faceted, aiming to explore the intricacies of Citi Bike use:
 
-   * <u>Geographical Utilization</u>: We seek to explore the patterns of CitiBike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
+   * <u>Geographical Utilization</u>: We seek to explore the patterns of Citi Bike usage throughout the diverse neighborhoods of NYC. Understanding where and when these bikes are utilized is key to discerning the impact on urban mobility.
    
-  * <u>User Demographics</u>: A crucial part of our exploration involves identifying the demographics of CitiBike users. 
+  * <u>User Demographics</u>: A crucial part of our exploration involves identifying the demographics of Citi Bike users. 
   
-  * <u>Health Implications</u>: Beyond transportation statistics, we aim to explore whether CitiBike use is related to health disparities and socioeconomic variables among NYers. This involves exploring associations between CitiBike ridership and bike availability with social deprivation indices (SDI), air quality, and being overweight.
+  * <u>Health Implications</u>: Beyond transportation statistics, we aim to explore whether Citi Bike use is related to health disparities and socioeconomic variables among New Yorkers. This involves exploring associations between Citi Bike ridership and bike availability with social deprivation indices (SDI), air quality, and being overweight.
 
-Overall, we aim to understand how CitiBike intersects with public health and urban life in NYC.
+Overall, we aim to understand how Citi Bike intersects with public health and urban life in NYC.
 
   &nbsp;
 
 ***
 ## <span style='color: blue;'>Related Work</span>
 
-After spending time on the airbnb data sources in class, we were particularly interested in exploring a NYC dataset. As we are public health students, and our group also includes healthcare professionals, our focus naturally gravitated toward a dataset with potential relevance to the health of NYers. While we evaluated several potential data sources, we were collectively interested in Citibike usage data, as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
+After spending time on the Airbnb data sources in class, we were particularly interested in exploring a NYC dataset. As we are public health students, including healthcare professionals, our focus naturally gravitated toward a dataset with potential relevance to the health of New Yorkers. While we evaluated several potential data sources, we were collectively interested in Citi Bike usage data as we recognized its potential to offer valuable insights into the intersection of transportation patterns and public health in NYC.
 
   &nbsp;
 
@@ -88,9 +88,9 @@ After spending time on the airbnb data sources in class, we were particularly in
 
 ## <span style='color: blue;'>Initial Questions</span>
 
-Initially, our view of this project was very grandiose. We wanted to explore all Citibike usage patterns throughout 2019. We specifically chose 2019 as we wanted to use the social deprivation index score which was most recently available for 2019. However, we quickly realized that examining data from all of 2019 was too much data (around 1 million rides) and consistently led to problems knitting. Instead we decided to limit our data to one month, September, which had the largest number of rides. The trade off was that we were unable to examine seasonal trends and ridership. We were particularly interested in rides and ridership during times of year that suggested tourist usage, especially around holidays, but this area of exploration was discarded.
+Initially, our ambitions for this project was very grandiose. We wanted to explore all Citi Bike usage patterns throughout 2019. We specifically chose 2019 as we wanted to use the social deprivation index (SDI) score, which was most recently available for 2019. However, we quickly realized that examining data from all of 2019 was too much data (around 1 million rides) and consistently led to problems knitting. Instead we decided to limit our data to one month, September 2019, which had the largest number of rides. The trade-off was that we were unable to examine seasonal trends and ridership. We were particularly interested in rides and ridership during times of year that suggested tourist usage, especially around holidays, but this area of exploration was discarded.
 
-Instead, we focused on questions related to Citibike usership and geographic utilization? Throughout the evolution of our project, we also decided to emphasize the exploration of health and socioeconomic variables, which introduced a more nuanced layer to our data exploration by providing a health and equity lens. 
+Instead, we focused on questions related to Citi Bike users and geographic utilization. Throughout the evolution of our project, we also decided to emphasize the exploration of health and socioeconomic variables, which introduced a more nuanced layer to our data exploration by providing a health and equity lens. 
 
 We specifically wanted to answer the following questions:
 
@@ -98,19 +98,19 @@ We specifically wanted to answer the following questions:
 
    a. How many stations are there in each neighborhood and borough of NYC?
    
-   b. Where are the most common stations?
+   b. Where are the most commonly used stations?
 
 ### 2. User Demographics
 
-   a. Who is the typical Citibike User?
+   a. Who is the typical Citi Bike User?
 
 ### 3. Health Implications
 
-   a. Are there disparities in Citibike stations per neighborhood or ridership? Is there a relationship to the social deprivation index.
+   a. Are there disparities in Citi Bike stations per neighborhood or in ridership? Is there a relationship to the social deprivation index (SDI)?
    
-   b. Are there differences in Citibike stations per neighborhood or ridership that is related to obesity? 
+   b. Are there differences in Citi Bike stations per neighborhood or ridership that is related to obesity? 
    
-   c. How do these variables interact? Can we build a model of Citibike utilization that integrates disparities, both social and environmental, and also health factors.
+   c. How do these variables interact? Can we build a model of Citi Bike utilization that integrates disparities, both social and environmental, and also health factors?
 
 
 ***
@@ -123,7 +123,7 @@ In the section below we explain our data sources and review our data cleaning an
 
 [**CitiBike Data**](https://s3.amazonaws.com/tripdata/index.html): These datasets contain monthly logs of trip, including ride ID, the user's status (subscriber or casual user), trip start/end longitude/latitude coordinates, and the trip start/stop times and duration. 
 
-[**Social Deprivation Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html): The social deprivation index (SDI) is an effort to generate a scoring system of socioeconomic factors using US census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage nonemployed adults under 65 years of age. For more details please see the webpage link.
+[**Social Deprivation Index**](https://www.graham-center.org/maps-data-tools/social-deprivation-index.html): The social deprivation index (SDI) is an effort to generate a scoring system of socioeconomic factors using U.S. Census data from the American Community Survey. The final SDI is a composite measure of percent living in poverty, percent with less than 12 years of education, percent single-parent households, the percentage living in rented housing units, the percentage living in the overcrowded housing unit, percent of households without a car, and percentage non-employed adults under 65 years of age. For more details please see the webpage link.
 
 [**Overweight Data**](https://a816-dohbesp.nyc.gov/IndicatorPublic/Subtopic.aspx?theme_code=2,3&subtopic_id=113): This dataset contains publicly available data from NYC regarding the percent of people who are overweight per area. 
 
@@ -133,9 +133,9 @@ In the section below we explain our data sources and review our data cleaning an
   
 ### Invididual Dataset Imports and Cleaning
 
-#### Citibike
+#### Citi Bike
 
-The Citibike data was a collection of csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available, so we downloaded the data files from December 2018 through January 2020.  
+The Citi Bike data was a collection of .csv files that we downloaded and merged. We were specifically interested in 2019 as this was when SDI scores were available, so we downloaded the data files from December 2018 through January 2020.  
 
 ```{r import citibike, eval = FALSE}
 citibike = 
@@ -158,7 +158,7 @@ We quickly realized that the large sample size limited technical processing feas
 
 ![](data_import_clean_files/figure-html/citibike_plot-1.png)
 
-We thus chose September as the month analysis.
+As mentioned above, we needed to subset our data to allow for faster processing. We thus chose September as the month analysis due to the high volume of rides in that single month.
 
 Before limiting the data to September, we want to get a list of all stations in the dataset for future exploration:
 
@@ -205,7 +205,7 @@ In order for the code below to run, we will call in only September here (though 
 citibike_df = read_csv("./citibike/201909-citibike-tripdata.csv")
 ```
 
-The cleaning of the citibike data included the following steps:
+The cleaning of the Citi Bike data included the following steps:
 
  * Recoding gender from numeric to text
  * Filtering trip duration to more than 5 minutes but less than 1 day in order to capture true trips taken
@@ -214,7 +214,7 @@ The cleaning of the citibike data included the following steps:
  * Creating a trip duration in minutes (as opposed to seconds) variable
  * Renaming variables
 
-A look at the tidied citibike dataframe:
+A look at the tidied Citi Bike dataframe:
  
 ```{r tidy citibike}
 citibike_df = 
@@ -245,12 +245,12 @@ head(citibike_df) |>
 
 ```
 
-The September citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
+The September Citi Bike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables. The variables in the dataframe are `r names(citibike_df)`. 
 
 
 #### Social Deprivation Index
 
-The social deprivation index (SDI) dataset was a csv. We renamed the zipcode variable to be more intuitive. As we were only interested in the entirety of the SDI score, we filtered the data to include zip code and sdi_score only. 
+The social deprivation index (SDI) dataset was a .csv. We renamed the zipcode variable to be more intuitive. As we were only interested in the entirety of the SDI score, we filtered the data to include `zipcode` and `sdi_score` only. 
 
 * Note: the higher the SDI score, the higher the social deprivation in that area.
 
@@ -270,7 +270,7 @@ head(SDI_df) |>
   
 #### Overweight data 
 
-The overweight data was downloaded as csv files for "Overweight and Obese Adults." We were specifically interested in 2019 as this was when SDI scores were available.
+The overweight data was downloaded as .csv files for "Overweight and Obese Adults." We were specifically interested in 2019 as this was when SDI scores were available.
 
 The cleaning of the overweight data included the following steps:
 
@@ -305,7 +305,7 @@ head(overweight_df) |>
   
 #### Air Quality
 
-The air quality (AQ) data was a downloaded from csv files. 
+The air quality (AQ) data was a downloaded from .csv files. 
 
 The cleaning of the air quality index data included the following steps:
 
@@ -313,7 +313,7 @@ The cleaning of the air quality index data included the following steps:
 * Filtering data to 2019
 * Filtering to geolocation type UHF34, as this is consistent with our other datasets (more on this below!)
 * Filtering to annual values, as this dataset also has seasonal values
-* Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3), but for the purpose of only a single value for AQ, we keep PM 2.5 as the most relevant 
+* Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer avereage values for Ozone (O3) levels. For the purpose of only a single value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality index.  
 
 A look at the tidied dataset: 
 
@@ -343,7 +343,7 @@ The AQ dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_qu
 
 ### NYC Neighborhood Data Merging
 
-To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UHF 34 (instead of other UHF codes, such as UHF 42) as UHF 34 had the least number of neighborhoods and is therefore more manageable (contains the largest area per neighborhood).
+To combine datasets, they all need to have the same geographic identifier. We decided to use United Hospital (UHF) 34 codes which consists of 34 adjoining zip codes with similar characteristics compiled by NYC Gov. We used UHF 34 (instead of other UHF codes, such as UHF 42) as UHF 34 had the least number of neighborhoods and is therefore more comparable (contains the largest area per neighborhood).
 
   * For more information about the background behind UHF codes, please see [**here**](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-stories/geographies/). 
 
@@ -477,15 +477,15 @@ select(data_value, neighborhood ) |>
 
   &nbsp;
 
-### Bring Neighborhood to Citibike Dataset
+### Bring Neighborhood to Citi Bike Dataset
 
-The Citibike data is coded by latitude/longitude To enable merging of Citibike data with the health datasets, we need to transform coordinates to zipcode, that can later be easily converted to UHF 34 identifiers.
+The Citi Bike data is coded by latitude/longitude To enable merging of Citi Bike data with the health datasets, we need to transform coordinates to zipcode, that can later be easily converted to UHF 34 identifiers.
 
-* To get zipcodes for each  latitude/longitude pair in the Citibike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](data/geocoding/latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
+* To get zipcodes for each  latitude/longitude pair in the Citi Bike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](data/geocoding/latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
 
-  * Note: Every Citibike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
+  * Note: Every Citi Bike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
   
-#### Merge Citibike with Zipcode
+#### Merge Citi Bike with Zipcode
 
 ```{r citibike_zip}
 latlong_zip = read_csv('./data/geocoding/citibike_latlong_zip.csv')
@@ -534,7 +534,7 @@ citibike_zip |>
 
 #### *Manual Zipcode Completion*
 
-For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a csv on our g[ithub here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
+For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our g[ithub here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
 
 
 ```{r manual_zip}
@@ -562,9 +562,9 @@ citibike_zip = citibike_zip |>
 
 ```
 
-####  Merge Citibike with UHF 34 Neighborhood
+####  Merge Citi Bike with UHF 34 Neighborhood
 
-Now that we have the zipcode for Citibike data, we can use the zipcode and UHF 34 crosswalk generated above to get neighborhood onto Citibike data. 
+Now that we have the zipcode for Citi Bike data, we can use the zipcode and UHF 34 crosswalk generated above to get neighborhood onto Citi Bike data. 
 
 ```{r citibike_neighborhoods}
 citibike_zip_neighborhoods =
@@ -586,7 +586,7 @@ head(citibike_zip_neighborhoods) |>
 
 ##### *Missing UHF34*
 
-There were some citibike zipcodes with missing UHF 34, which we explore below: 
+There were some Citi Bike zipcodes with missing UHF 34, which we explore below: 
 
 ```{r missing_uhf}
 missing_startuhf = citibike_zip_neighborhoods |>
@@ -613,7 +613,7 @@ There are `r missing_startuhf |> pull(n) |> sum()` entries whose start zipcode d
 
   &nbsp;
   
-### Final Dataset: Merge Citibike, SDI, Overweight, and AQ
+### Final Dataset: Merge Citi Bike, SDI, Overweight, and AQ
 
 Next we needed to create one large dataframe that merged the citibike data with and each health dataset by UHF 34 neighborhood.
 
@@ -641,7 +641,7 @@ remove(SDI_df)
 remove(overweight_df)
 ```
 
-#### Merge SDI and Overweight data onto citibike
+#### Merge SDI and Overweight data onto Citi Bike
 
 ```{r SDI_Overweight_join}
 citibike_df =
@@ -662,7 +662,7 @@ citibike_df = citibike_df |>
          "end_borough" = "borough") 
 ```
 
-#### Merge AQ data onto citibike
+#### Merge AQ data onto Citi Bike
 
 ```{r AQ_join} 
 #Join to final dataframe
@@ -679,9 +679,9 @@ citibike_df = citibike_df |>
 
 ```
 
-#### Final Tidy of Citibike Data 
+#### Final Tidy of Citi Bike Data 
 
-A view at the final dataset, as well as overall summary of variables included and their missingness:
+A view at the final dataset, as well as overall summary of variables included and any missing values:
 
 ```{r final_citibike_tidy}
 citibike_df = citibike_df |>
@@ -700,13 +700,13 @@ head(citibike_df) |>
   knitr::kable()
 ```
 
-The tidied citibike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`.
+The tidied Citi Bike dataframe includes `r nrow(citibike_df)` trips and `r ncol(citibike_df)` variables named `r names(citibike_df)`.
 
   &nbsp;
   
 ### Stations Analysis
 
-For some extra analysis work, we want to understand the full availability of stations, not just the ones used in September, So we also have to join zipcode and UHF 34 neighborhood to our full station data. We do not run this code here, if you would like to run, please see [Data Sources](./data_import_clean.html).
+For some extra analysis work, we want to understand the full availability of stations, not just the ones used in September. Therefore, we also have to join zipcodes and UHF 34 neighborhood to our full station data. We do not run this code here; if you would like to run, please see [Data Sources](./data_import_clean.html).
 
 ```{r station_uhf, eval = FALSE}
 stations = stations |>
@@ -740,7 +740,7 @@ stations = stations |>
 
   &nbsp;
 
-Citibike Geographic Analysis
+Citi Bike Geographic Analysis
 
 We made a table of the stations used and available per neighborhood.
 
@@ -785,12 +785,12 @@ And the 10 most popular starting and stopping stations.
 ![](analysis_files/figure-html/start stations-1.png)
   &nbsp;
   
-Citibike user demographics
+Citi Bike user demographics
 
 ![](analysis_files/figure-html/user_demographics-1.png)
  &nbsp;
  
-Citibike Geographic Utilization with Health Metrics 
+Citi Bike Geographic Utilization with Health Metrics 
 
   * We used median SDI for our analyses as this more accurately reflects the variation in SDI score across zip codes in a neighborhood. See [here](Exploration.html) for a more detailed description.
   
@@ -806,7 +806,7 @@ And we looked at percentage overweight and station use/availability by neighborh
 ![](analysis_files/figure-html/overweight_stations-1.png)
  &nbsp;
 
-Citibike Ridership and Health Metrics
+Citi Bike Ridership and Health Metrics
 
 * We looked at zipcodes instead of neighborhood in order to have more datapoints to evaluate a trend (we only had 20 neighborhoods.)
 
@@ -867,24 +867,24 @@ health_plot |>
 
 Health Metric Modeling
 
-Before building a model to understanding how health metrics play into Citibike usage, we wanted to explore interactions among the SDI and percentage overweight themselves.
+Before building a model to understanding how health metrics play into Citi Bike usage, we wanted to explore interactions among the SDI and percentage overweight themselves.
 
 ![](scatter_plot.png)
 
 
-Citibike use prediction with Health Metric Modeling
+Citi Bike use prediction with Health Metric Modeling
 
 Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 
 
-* The first was utilization of Citibike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
+* The first was utilization of Citi Bike in a geographic area, based on health factors in the form of median Air quality, median SDI, and overweight percentages. This utilized a linear model that at first took these three predictors separately into consideration. 
 
 ![](Beta_ride_model.png)
   
 * We then created an interaction model that included each of the three individual predictors, but added all possible two-way interactions, and a three-way interaction as we hypothesized that the health, environmental influences, and utilization of biking as a mode of transportation and leisure were related. 
 
-Health Metric Prediction including Citibike
+Health Metric Prediction including Citi Bike
 
-We then sought to see if conversely health metrics may be able to be predicted by the other metrics, and Citibike utilization. 
+We then sought to see if conversely health metrics may be able to be predicted by the other metrics, and Citi Bike utilization. 
 
 * We created three linear models to predict for Air Quality, SDI, and percentage overweight each, using the other factors and number of rides as the predictors. 
 
@@ -906,17 +906,17 @@ Health Metric Modeling
 
 We first explored the interactions among the health metrics (median SDI and percentage overweight) themselves. We found that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly.
 
-Citibike use prediction with Health Metric Modeling
+Citi Bike use prediction with Health Metric Modeling
 
-* Citibike use prediction with Health Metric Modeling: 
+* Citi Bike use prediction with Health Metric Modeling: 
 
   * We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
 
 ![](compare_rides_glm_cropped.png)
 
-* Health Metric Prediction including Citibike
+* Health Metric Prediction including Citi Bike
 
-  * We found that the models had less variability in RMSE, and higher R2 values than our prior models trying to predict Citibike usage. Our most impressive model was to predict for percentage overweight. 
+  * We found that the models had less variability in RMSE, and higher R2 values than our prior models trying to predict Citi Bike usage. Our most impressive model was to predict for percentage overweight. 
 
 ![](compare_healthoutcomes_glm_cropped.png)
 
