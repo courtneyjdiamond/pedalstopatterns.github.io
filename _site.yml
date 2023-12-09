@@ -8,7 +8,9 @@ navbar:
         - text: 'Data Sources'
           href: data_import_clean.html
         - text: 'Coordinates to Zipcodes'
-          href: data/geocoding/latlong_to_zip.html
+          href: latlong_to_zip.html
+    - text: "Exploratory Dashboard"
+      href: https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/
     - text: "Analysis"
       menu:
         - text: "Overall Analaysis"

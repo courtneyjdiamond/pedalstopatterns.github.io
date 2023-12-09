@@ -21,7 +21,7 @@ Laura is a second year MPH student and a Senior Policy Analyst for the Chicago D
 
 # Courtney Diamond
 
-Courtney is a third year PhD student in the Department of Biomedical Informatics at Columbia University. 
+Courtney is a third year PhD student in the Department of Biomedical Informatics at Columbia University. She is a member of the [OPTACIMM Lab](https://www.dbmi.columbia.edu/optacimm/) and is advised by Dr. Sarah Rossetti. 
 
 [Learn more about Courtney](https://courtneyjdiamond.github.io/)
 
