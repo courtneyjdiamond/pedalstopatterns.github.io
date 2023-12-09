@@ -481,7 +481,7 @@ select(data_value, neighborhood ) |>
 
 The Citi Bike data is coded by latitude/longitude To enable merging of Citi Bike data with the health datasets, we need to transform coordinates to zipcode, that can later be easily converted to UHF 34 identifiers.
 
-* To get zipcodes for each  latitude/longitude pair in the Citi Bike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](data/geocoding/latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
+* To get zipcodes for each  latitude/longitude pair in the Citi Bike data, we used the [tidygeocoder](https://jessecambon.github.io/tidygeocoder/) packager. The full code with details of how that was created [can be found here](latlong_to_zip.html). Here, we import the latitude/longitude to zipcode crosswalk that we generated. 
 
   * Note: Every Citi Bike entry has a start_latitude/longitude, and end_latitude/longitude. Each row will accordingly have a start_zipcode and end_zipcode. 
   
@@ -534,7 +534,7 @@ citibike_zip |>
 
 #### *Manual Zipcode Completion*
 
-For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our g[ithub here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
+For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
 
 
 ```{r manual_zip}
@@ -826,7 +826,7 @@ The best part is that we made an interactive [dashboard](https://courtneyjdiamon
 
 Exploration of Health Metrics
 
-Finally, we performed an exploration of of the health variables individually by NYC location. For the full page, [check this out](Exploration.html), but here are some highlights.
+We performed an exploration of of the health variables individually by NYC location. For the full page, [check this out](Exploration.html), but here are some highlights.
 
 Median SDI by Neighborhood in 2019.
 
@@ -840,7 +840,7 @@ Percent of adults classified as overweight or obese by neighborhood.
 
 ![](Exploration_files/figure-html/uhf-1.png)
 
-We also made this plot of latitute/longitude of NYC by SDI, percentage overweight, and AQI (Mean fine particle (PM 2.5)) below. 
+Plot of latitute/longitude of NYC by SDI, percentage overweight, and AQI (Mean fine particle (PM 2.5))
 
 ```{r , echo=FALSE}
 health_plot = citibike_df |>
@@ -871,7 +871,6 @@ Before building a model to understanding how health metrics play into Citi Bike 
 
 ![](scatter_plot.png)
 
-
 Citi Bike use prediction with Health Metric Modeling
 
 Next, we build upon our exploratory analyses by pursuing GLM with two sets of outcome in mind. 
@@ -897,39 +896,25 @@ We then sought to see if conversely health metrics may be able to be predicted b
 ***
 
 ## <span style='color: blue;'>Discussion</span>
-Discussion: 
 
-Our research underlines the value of introducing health supporting interventions, like more opportunities for physical activity and accessible transportation, throughout New York. At the same time, these data highlight existing discrepancies in public investment that build on long-running inequities in resource allocation that have shaped the landscape of New York's neighborhoods. 
+The overall results of our analyses support our hypothesis that Citi Bike usage and availibility are impacted by disparities in health and equity factors.
 
-We set out to examine the following questions: 
+  &nbsp;
 
- ***Geographic Utilization***
-How many stations are there in each neighborhood and borough of NYC? Where are the most commonly used stations?
+*Geographic utilization and Integration with Health Variables*
 
- ***User Demographics***
-Who is the typical Citi Bike User?
+As we expected, station availability and usage varies across the boroughs and within the boroughs. Our September 2019 sample included only one station in the Bronx, 355 stations in Brooklyn, 466 in Manhattan, and 97 in Queens. Of these stations, 276 stations were used in Brooklyn, 380 in Manhattan, and 77 in Queens were utilized. Of all the boroughs, Manhattan saw the highest number of rides. The 10 most popular starting and stopping stations in September 2019 were all in Manhattan.
 
- ***Health Implications***
-Are there disparities in Citi Bike stations per neighborhood or in ridership? Is there a relationship to the social deprivation index (SDI)? Are there differences in Citi Bike stations per neighborhood or ridership that is related to obesity? And, how do these variables interact? Can we build a model of Citi Bike utilization that integrates disparities, both social and environmental, and also health factors?
+It was surprising to see only one Citi Bike station in the Bronx. But this was consistent with a Citi Bike expansion into the Bronx shortly after the period we observed for this study, as seen in [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/).
 
 
+While we saw fairly consistent number of stations used to stations available,the biggest discrepancies in availability and usage were in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`. While East New York and Williamsburg Bushwick are among the top 5 highest median SDIs, Ridgewood Forest Hills is in the middle. However, these stations may be unreliable as noted in an[ article from 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/), and that this disproportionately impacts low-income areas.
 
+When we specifically looked at the relationship between median SDI and Citi Bike station usage/availability by NYC location, there didn't seem to be too much discernible pattern. But the largest number of available stations, though, did appear in the lower median SDI areas (the areas with lowest social deprivation, ie more privileged areas). We did not see much of a pattern when we looked at this variable by percentage overweight.
 
-*Geographic utilization*
+We next looked at how ridership is impacted by median SDI and percentage overweight. We found a clear downward trend in ridership as median SDI increased, but also low ridership at the lowest end of median SDI (ie more privileged zip codes). Perhaps this speaks to alternative modes of transportation that people in these zip codes take at both ends of the SDI spectrum. Unlike median SDI, there didn't seem to be a dip in ridership for the low range of overweight percentage by zip code. There did appear to be more consistent decreases in ridership as overweight percentage increases, which is not surprising. It is likely that that people who are overweight are less fit and use Citi bikes less.
 
-As we expected, station availability varies across the boroughs and within the boroughs. 
-
-Our September 2019 sample included only one station in the Bronx, 355 stations in Brooklyn, 466 in Manhattan, and 97 in Queens. Of these stations, 276 stations were used in Brooklyn, 380 in Manhattan, and 77 in Queens were utilized (for full details, see Exploratory Analysis above). Of all the boroughs, Manhattan saw the highest number of rides. The 10 most popular starting and stopping stations in September 2019 were all in Manhattan.
-
-As a note, there was a Citi Bike expansion into the Bronx shortly after the period we observed for this study, as seen in [this article](https://www.bxtimes.com/first-citi-bike-stations-installed-in-the-bronx-as-part-of-continued-expansion/).
-
-While we see fairly consistent nummber of stations used to stations available, a [later article in 2023](https://comptroller.nyc.gov/newsroom/comptrollers-review-of-citi-bike-finds-worrying-decreases-in-service-reliability-under-lyfts-operation-especially-in-low-income-neighborhoods/) does show that many stations are unreliable, and that this disproportionately impacts low-income areas.
-
-Some of the biggest discrepancies in availability and usage are in the following neighborhoods: `r station_usage |> mutate(percent = Stations_Used/Stations_Available * 100) |>  filter(percent < 60) |> pull(Neighborhood)`
-
-There is consistency among stations available and used, with a mean of `r mean(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2)` (range: `r min(station_usage$Stations_Used/station_usage$Stations_Available * 100) |> round(2)`, `r max(station_usage$Stations_Used/station_usage$Stations_Available * 100)`).
-
-There doesn't seem to be too much discernible pattern between median SDI and station usage/availability per neighborhood. The highest number of available stations, though, does appear in the lower median SDI areas (the areas with lowest social deprivation, ie more privileged areas). Our analysis above showed variation between station usage and availability only for a few neighborhoods, so it's not surprising that there's not much discernible difference in station usage/availability by median SDI.
+  &nbsp;
 
 *User Demographics*
 
@@ -937,28 +922,25 @@ The most common Citi Bike users were subscribers, males, and those aged 30 years
 
 Most rides were taken by a Citi Bike subscriber compared to a customer, which shows that the Citi Bike system is appealing to New York residents and not just tourists. Our data showed a gender disparity between female and male subscribers, with more male riders than female riders. Across the ages self reported by subscribers, the most common age of riders was 30 years old and then 50 years old. This might suggest that biking is a viable exercise intervention for older adults. 
 
-*Health Implications*
+  &nbsp;
 
-A deep dive into the relationship between Citibike and the health variables can be found on our interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together.
+*Modeling*
 
-As overweight percentage increases, there seems to be a downward trend in stations both available and used. While we can't make any causative assumptions here, it's interesting to note that the correlation is roughly the same in **available** and **used** stations - that is, individuals will use whatever stations are available, so perhaps the introduction of more stations could be beneficial to population health.
+We first explored the interactions among the health metrics (median SDI and percentage overweight) themselves. We found that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly. This suggests that people of lower socioeconomics tend to be more overweight, though correlation does not apply causation.
 
-We first explored the interactions among the health metrics (median SDI and percentage overweight) themselves. We found that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly.
-
-* Citi Bike Use Prediction with Health Metric Modeling
+</u>Citi Bike Use Prediction with Health Metric Modeling</u>
 
 We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
 
 ![](compare_rides_glm_cropped.png)
 
-* Health Metric Prediction including Citi Bike
-
-There seems to be a clear downward trend in ridership as median SDI increases. However, our sample size is limited here to only 20 (as there are only 20 neighborhoods). If we look by zipcode, we have a bit more disaggregation in the sample, with 53 distinct zipcodes. Both of these analysis show a clear downward trend in ridership as median SDI increases, but they also show low ridership at the lowest end of median SDI (i.e., the more privileged zip codes). Perhaps this speaks to alternative modes of transportation that people in these zip codes take at both ends of the SDI spectrum.
-
-When consider if ridership varied by overweight percentage by zipcode, we saw that unlike median SDI, there doesn't seem to be a dip in ridership for the low range of overweight percentage by zip code. Here, there is a more consistent decrease in ridership as overweight percentage increases.
+</u>Health Metric Prediction including Citi Bike</u>
 
 We found that the models had less variability in RMSE, and higher R2 values than our prior models trying to predict Citi Bike usage. Our most impressive model was to predict for percentage overweight. 
 
 ![](compare_healthoutcomes_glm_cropped.png)
+  &nbsp;
 
+*Conclusion*
 
+Our exploration of Citi Bike reveals significant disparities in public investments across NYC. These discrepancies highlight the inequities in resource allocation that have played a role in shaping the diverse landscapes of NYC's neighborhoods. Our research emphasizes the importance of implementing health-supporting interventions, such as creating more opportunities for physical activity and ensuring accessible transportation options. The insights from our findings can provide a valuable roadmap (or bikemap!) for identifying specific NYC neighborhoods and demographics that would benefit from targeted efforts to promote Citi Bike utilization and expansion.
