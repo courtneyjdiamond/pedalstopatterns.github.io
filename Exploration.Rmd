@@ -263,7 +263,7 @@ air_final|>
 
 Comparison of fine particles by neighborhood 
 
-```{r}
+```{r particles_neighborhood}
 air_particles =
   air_final |>
   filter(name == "Fine particles (PM 2.5)")
@@ -271,7 +271,7 @@ air_particles =
 air_particles |>
   filter(time_period == "Annual Average 2019") |>
   ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
-  geom_bar(stat = "identity", fill = "skyblue")  +
+  geom_point() +
   labs(
        x = "Neighborhood",
        y = "Mean Fine particles (mcg/m3)") +
@@ -301,7 +301,7 @@ air_final |>
 
 Comparison of NO2 by neighborhood 
 
-```{r}
+```{r nitrogen_neighborhood}
 air_nitrogen =
   air_final |>
   filter(name == "Nitrogen dioxide (NO2)")
@@ -309,7 +309,7 @@ air_nitrogen =
 air_nitrogen |>
   filter(time_period == "Annual Average 2019") |>
   ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
-  geom_bar(stat = "identity", fill = "skyblue")  +
+  geom_point() +
   labs(x = "Neighborhood",
        y = "Mean Nitrogen dioxide (ppb)") +
   theme_minimal() +
@@ -338,11 +338,11 @@ air_final |>
 
 Comparison of O3 by neighborhood 
 
-```{r}
+```{r ozone_neighborhood}
 air_final |>
   filter(name == "Ozone (O3)") |>
   ggplot(aes(x = reorder(geo_place_name, -data_value), y = data_value)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_point() +
   labs(
        x = "Neighborhood",
        y = "Mean Ozone (ppb)") +
@@ -424,6 +424,8 @@ overweight_data |>
 
 
 ## Percent by Zipcode
+
+Percent of adults classified as overweight or obese, by zipcode
 ```{r zip}
 percent_obese =
 overweight_data |>
@@ -431,7 +433,7 @@ ggplot(aes(x = reorder(zipcode, -overweight), y = overweight,)) +
   geom_point() +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
+  labs( x = "Location", y = "Percent")  
 
 print(percent_obese)
 
@@ -439,6 +441,8 @@ print(percent_obese)
 ```
 
 ## Percent by Neighborhood
+
+Percent of adults classified as overweight or obese, by neighborhood
 
 ```{r uhf}
 percent_obese =
@@ -449,7 +453,7 @@ ggplot(aes(x = reorder(neighborhood, -overweight), y = overweight,)) +
   geom_point() +  
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  labs(title = "Percent of adults classified as overweight or obese, by area", x = "Location", y = "Percent")  
+  labs( x = "Location", y = "Percent")  
 
 print(percent_obese)
 
