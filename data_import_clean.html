@@ -13,7 +13,7 @@
 
 <title>Data Sources and Overview</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -357,7 +357,7 @@ div.tocify {
       <a href="Exploration.html">Exploration of Variables</a>
     </li>
     <li>
-      <a href="modeling/Modeling.html">Modeling</a>
+      <a href="Modeling.html">Modeling</a>
     </li>
   </ul>
 </li>
@@ -454,9 +454,9 @@ Cleaning</span></h2>
 <div id="citibike" class="section level3">
 <h3>Citibike</h3>
 <p>The Citibike data was a collection of csv files that we downloaded
-and merged. We were specifically interested in 2019 as this was when SDI
-scores were available. We downloaded the data files from December 2018
-through January 2020.</p>
+and merged. At first, we were specifically interested in 2019 as this
+was when SDI scores were available. We downloaded the data files from
+December 2018 through January 2020.</p>
 <p>A look at the raw data:</p>
 <pre class="r"><code>citibike = 
   tibble(
@@ -846,8 +846,9 @@ start_station_latitude, start_station_longitude, end_station_id,
 end_station_name, end_station_latitude, end_station_longitude, bikeid,
 user_type, birth_year, gender, month, age.</p>
 <p>Due to large sample size that limits technical processing
-feasibility, we decided to focus on only a month of Citibike data. To do
-so, we look at the distribution of number of rides by month.</p>
+feasibility, we decided to focus on only one month of Citibike data. To
+do so, we look at the distribution of number of rides by month. We chose
+September as our month of focus because of the high ride volume.</p>
 <p>Before limiting the data to September, we want to get a list of all
 stations in the dataset for future exploration:</p>
 <pre class="r"><code>start_station = citibike_df |&gt;
@@ -892,7 +893,7 @@ stations = rbind(start_station, end_station) |&gt;
 </div>
 <div id="social-deprivation-index" class="section level3">
 <h3>Social Deprivation Index</h3>
-<p>The social deprivation index (SDI) dataset was a csv. We renamed the
+<p>The social deprivation index (SDI) dataset was a .csv. We renamed the
 zipcode variable to be more intuitive. As we were only interested in the
 entirety of the SDI score, we filtered the data to include zip code and
 sdi_score only.</p>
@@ -946,7 +947,7 @@ head(SDI_df) |&gt;
 </div>
 <div id="overweight-data" class="section level3">
 <h3>Overweight data</h3>
-<p>The overweight data was downloaded as csv files for “Overweight and
+<p>The overweight data was downloaded as .csv files for “Overweight and
 Obese Adults.” We were specifically interested in 2019 as this was when
 SDI scores were available.</p>
 <p>The cleaning of the overweight data included the following steps:</p>
@@ -1073,7 +1074,7 @@ head(overweight_df) |&gt;
 </div>
 <div id="air-quality" class="section level3">
 <h3>Air Quality</h3>
-<p>The air quality (AQ) data was a downloaded from csv files.</p>
+<p>The air quality (AQ) data was a downloaded from .csv files.</p>
 <p>The cleaning of the air quality index data included the following
 steps:</p>
 <ul>
@@ -1084,8 +1085,11 @@ other datasets (more on this below!)</li>
 <li>Filtering to annual values, as this dataset also has seasonal
 values</li>
 <li>Filtering to Fine Particles (PM 2.5) (the original dataset also had
-Nitrogen dioxide (NO2) and Ozone (O3), but for the purpose of only a
-single value for AQ, we keep PM 2.5 as the most relevant</li>
+Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values
+for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer
+avereage values for Ozone (O3) levels. For the purpose of only a single
+value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality
+index.</li>
 </ul>
 <p>A look at the tidied dataset:</p>
 <pre class="r"><code>air_quality_df = read_csv(&quot;./data/air_quality/Air_Quality_20231126.csv&quot;) |&gt;
@@ -1243,9 +1247,10 @@ start_date, data_value, message, year.</p>
 <p>To combine datasets, they all need to have the same geographic
 identifier. We decided to use United Hospital (UHF) 34 codes which
 consists of 34 adjoining zip codes with similar characteristics compiled
-by NYC Gov. We used UHF 34 (instead of other UHF codes, such as UHF 42)
-as UHF 34 had the least number of neighborhoods and is therefore more
-manageable (contains the largest area per neighborhood).</p>
+by the NYC government. We used UHF 34 instead of other UHF codes, such
+as UHF 42, as UHF 34 had the least number of neighborhoods and is
+therefore more comparable (contains the largest area per
+neighborhood).</p>
 <ul>
 <li>For more information about the background behind UHF codes, please
 see <a
@@ -1379,9 +1384,9 @@ select(data_value, neighborhood ) |&gt;
 <div id="bring-neighborhood-to-citibike-dataset" class="section level2">
 <h2><span style="color: blue;">Bring Neighborhood to Citibike
 Dataset</span></h2>
-<p>The Citibike data is coded by latitude/longitude To enable merging of
-Citibike data with the health datasets, we need to transform coordinates
-to zipcode, that can later be easily converted to UHF 34
+<p>The Citibike data is coded by latitude/longitude. To enable merging
+of Citibike data with the health datasets, we need to transform
+coordinates to zipcode, which can later be easily converted to UHF 34
 identifiers.</p>
 <ul>
 <li><p>To get zipcodes for each latitude/longitude pair in the Citibike
@@ -1587,12 +1592,12 @@ remove(citibike_df)</code></pre>
 </div>
 <div id="manual-zipcode-completion" class="section level4">
 <h4><em>Manual Zipcode Completion</em></h4>
-<p>For the above missing zipcodes, we manually looked up based on
-latitude, longitude, and station_name what the correct zipcode is. Upon
-manually exploration, these looked like some data quality issues with
-the coordinates, but based on the staton name we were able to identify
-the correct zipcode. We stored this work in a csv on our g<a
-href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">ithub
+<p>For the above missing zipcodes, we manually coded based on latitude,
+longitude, and <code>station_name</code> to identify what the correct
+zipcode. Upon manually exploration, these looked like some data quality
+issues with the coordinates, but based on the staton name we were able
+to identify the correct zipcode. We stored this work in a .csv on our <a
+href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
 here</a>. The code below implements filling in those missing zipcode
 values.</p>
 <pre class="r"><code>citibike_zip = citibike_zip |&gt;
@@ -1621,9 +1626,9 @@ values.</p>
 <div id="merge-citibike-with-uhf-34-neighborhood"
 class="section level3">
 <h3>Merge Citibike with UHF 34 Neighborhood</h3>
-<p>Now that we have the zipcode for Citibike data, we can use the
-zipcode and UHF 34 crosswalk generated above to get neighborhood onto
-Citibike data.</p>
+<p>Now that we have the zipcodes for Citibike data, we can use the
+zipcode and UHF 34 crosswalk generated above to get neighborhood names
+onto the Citibike data.</p>
 <pre class="r"><code>citibike_zip_neighborhoods =
   citibike_zip |&gt;
   left_join(y = (joined_uhf_34_42 |&gt; select(zip, uhf42_neighborhood, uhf34_neighborhood)),
@@ -1888,7 +1893,7 @@ size. The resulting dataset has 1628960 entries.</p>
 class="section level2">
 <h2><span style="color: blue;">Final Dataset: Merge Citibike, SDI,
 Overweight, and AQ</span></h2>
-<p>Next we needed to create one large dataframe that merged the citibike
+<p>Next we needed to create one large dataframe that merged the Citibike
 data with and each health dataset by UHF 34 neighborhood.</p>
 <div id="merge-sdi-and-overweight-data" class="section level3">
 <h3>Merge SDI and Overweight data</h3>
@@ -1953,7 +1958,7 @@ citibike_df = citibike_df |&gt;
 <div id="final-tidy-of-citibike-data" class="section level3">
 <h3>Final Tidy of Citibike Data</h3>
 <p>A view at the final dataset, as well as overall summary of variables
-included and their missingness:</p>
+included and any missing values:</p>
 <pre class="r"><code>citibike_df = citibike_df |&gt;
   select(bikeid, user_type, gender, age,
          start_time, stop_time, 
@@ -2651,7 +2656,7 @@ end_percent_overweight, end_aq, end_borough, start_borough.</p>
 <div id="stations-analysis" class="section level2">
 <h2><span style="color: blue;">Stations Analysis</span></h2>
 <p>For some extra analysis work, we want to understand the full
-availability of stations, not just the ones used in September, So we
+availability of stations (not just the ones used in September). So we
 also have to join zipcode and UHF 34 neighborhood to our full station
 data.</p>
 <pre class="r"><code>stations = stations |&gt;
