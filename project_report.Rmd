@@ -161,7 +161,7 @@ We quickly realized that the large sample size limited technical processing feas
 
 As mentioned above, we needed to subset our data to allow for faster processing. We thus chose September as the month analysis due to the high volume of rides in that single month.
 
-Before limiting the data to September, we want to get a list of all stations in the dataset for future exploration:
+Before limiting the data to September, we wanted to get a list of all stations in the dataset for future exploration.
 
 ```{r unique_stations, eval = FALSE}
 start_station = citibike_df |>
@@ -255,16 +255,11 @@ The social deprivation index (SDI) dataset was a .csv. We renamed the zipcode va
 
 * Note: the higher the SDI score, the higher the social deprivation in that area.
 
-A look at the tidied dataframe: 
-
 ```{r sdi_import}
 SDI_df <- read_csv("./data/SDI_data/rgcsdi-2015-2019-zcta.csv") |>
   janitor::clean_names() |>
   select(zcta5_fips, sdi_score)|>
   rename(zip=zcta5_fips)
-
-head(SDI_df) |>
-  knitr::kable()
 ```
 
   &nbsp;
@@ -279,8 +274,6 @@ The cleaning of the overweight data included the following steps:
 * Separating out the high and low confidence intervals of percent
 * Renaming time to year
 * Filtering data to 2019
-
-A look at the tidied dataframe:
 
 ```{r overweight_import}
 overweight_df =
@@ -297,9 +290,6 @@ percent = as.numeric(ifelse(grepl("\\*", percent),
                                 gsub("\\s*\\(.*", "", percent)))) |>
   rename(year = time) |>
   filter (year == 2019)
-
-head(overweight_df) |>
-  knitr::kable()
 ```
 
   &nbsp;
@@ -315,8 +305,6 @@ The cleaning of the air quality index data included the following steps:
 * Filtering to geolocation type UHF34, as this is consistent with our other datasets (more on this below!)
 * Filtering to annual values, as this dataset also has seasonal values
 * Filtering to Fine Particles (PM 2.5) (the original dataset also had Nitrogen dioxide (NO2) and Ozone (O3). There were annual average values for Nitrogen dioxide (NO2) and Fine Particles (PM 2.5) but only summer avereage values for Ozone (O3) levels. For the purpose of only a single value for AQ, we chose to use Fine Particles (PM 2.5) as the air quality index.  
-
-A look at the tidied dataset: 
 
 ```{r air_quality}
 air_quality_df = read_csv("./data/air_quality/Air_Quality_20231126.csv") |>
@@ -334,11 +322,7 @@ air_quality_df =
   filter(time_period == "Annual Average 2019") |>
   filter(name == "Fine particles (PM 2.5)")
 
-head(air_quality_df) |>
-  knitr::kable()
 ```
-
-The AQ dataframe now includes `r nrow( air_quality_df)` rows and `r ncol( air_quality_df)` variables. The variables in the dataframe are `r names( air_quality_df)`.
 
   &nbsp;
 
@@ -441,11 +425,11 @@ joined_uhf_34_42 =
 
 ### Bring Neighborhood to Health Datasets
 
-Now that we have a crosswalk among all location identifiers (UHF 34, UHF 42, and zipcode) used in our datasets, we'll make sure they all have UHF 34 so they can be merged together later. 
+Now that we have a crosswalk among all location identifiers (UHF 34, UHF 42, and zipcode) used in our datasets, we made sure they all have UHF 34 so they can be merged together later. 
 
 1. Join SDI data to UHF/Zip/Neighborhood data
 
-```{r SDI_zip,}
+```{r SDI_zip}
 joined_SDI_zip_neighborhood = 
   SDI_df |> 
   filter(zip %in% pull(joined_uhf_34_42, zip)) |> 
@@ -466,7 +450,6 @@ joined_overweight_zip_neighborhood =
 3. Join Air Quality data to UHF/Zip/Neighborhood data
 
 ```{r air_quality_uhf}
-#Align UHF neighborhood names
 air_quality_df = 
   left_join(air_quality_df, uhf_34_df, by = c("geo_join_id" = "uhf34"))
 
@@ -509,33 +492,9 @@ remove(citibike_df)
 There are `r citibike_zip |> filter(is.na(start_zipcode) | is.na(end_zipcode)) |> nrow()` entries missing either the start or end zipcode.
 
 
-##### *Missing Zipcodes*
+##### *Missing Zipcodes and Completion*
 
-A look at the start coordinates with missing zipcodes below: 
-
-```{r missing_zip_start}
-citibike_zip |>
-  filter(is.na(start_zipcode)) |>
-  group_by(start_station_name, start_station_latitude, start_station_longitude) |>
-  summarize(n = n()) |> 
-  knitr::kable()
-```
-
-A look at the end coordinates with missing zipcodes below: 
-
-```{r missing_zip_end}
-citibike_zip |>
-  filter(is.na(end_zipcode)) |>
-  group_by(end_station_name, end_station_latitude, end_station_longitude) |>
-  summarize(n = n()) |>
-  knitr::kable()
-
-```
-
-
-#### *Manual Zipcode Completion*
-
-For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the staton name we were able to identify the correct zipcode. We stored this work in a .csv on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
+For the above missing zipcodes, we manually looked up based on latitude, longitude, and station_name what the correct zipcode is. Upon manually exploration, these looked like some data quality issues with the coordinates, but based on the station name we were able to identify the correct zipcode. We stored this work in a .csv on our [github here](https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv). The code below implements filling in those missing zipcode values. 
 
 
 ```{r manual_zip}
@@ -565,7 +524,7 @@ citibike_zip = citibike_zip |>
 
 ####  Merge Citi Bike with UHF 34 Neighborhood
 
-Now that we have the zipcode for Citi Bike data, we can use the zipcode and UHF 34 crosswalk generated above to get neighborhood onto Citi Bike data. 
+Now that we have the zipcode for Citi Bike data, we used the zipcode and UHF 34 crosswalk generated above to get the neighborhood variable onto Citi Bike data. 
 
 ```{r citibike_neighborhoods}
 citibike_zip_neighborhoods =
@@ -581,8 +540,6 @@ citibike_zip_neighborhoods =
 
 remove(citibike_zip)
 
-head(citibike_zip_neighborhoods) |> 
-  knitr::kable()
 ```
 
 ##### *Missing UHF34*
@@ -601,8 +558,6 @@ missing_enduhf = citibike_zip_neighborhoods |>
   group_by(end_zipcode) |>
   summarize(n = n()) |>
   rename(zipcode = end_zipcode)
-
-#write_csv(rbind(missing_startuhf, missing_enduhf) ,'../data/geocoding/missing_uhf34.csv')
 
 citibike_zip_neighborhoods = citibike_zip_neighborhoods |>
   filter(!is.na(end_uhf34_neighborhood) & !is.na(start_uhf34_neighborhood))
@@ -707,7 +662,7 @@ The tidied Citi Bike dataframe includes `r nrow(citibike_df)` trips and `r ncol(
   
 ### Stations Analysis
 
-For some extra analysis work, we want to understand the full availability of stations, not just the ones used in September. Therefore, we also have to join zipcodes and UHF 34 neighborhood to our full station data. We do not run this code here; if you would like to run, please see [Data Sources](./data_import_clean.html).
+For the analysis of station use and availibility (see below), we wanted to understand the full availability of stations, not just the ones used in September. Therefore, we had to join zipcodes and UHF 34 neighborhood to our full station data. We do not run this code here; if you would like to run, please see [Data Sources](./data_import_clean.html).
 
 ```{r station_uhf, eval = FALSE}
 stations = stations |>
@@ -768,8 +723,7 @@ station_usage = citibike_df |>
   summarize(Stations_Used = n()) |>
   left_join(stations_available,
             by = c("Borough" = "borough",
-                   "Neighborhood" = "uhf34_neighborhood")) 
-station_usage |>
+                   "Neighborhood" = "uhf34_neighborhood")) |>
   arrange(Borough, desc(Stations_Used)) 
 
 station_usage |> 
