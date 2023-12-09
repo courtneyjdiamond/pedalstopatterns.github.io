@@ -903,28 +903,19 @@ Our research underlines the value of introducing health supporting interventions
 
 We set out to examine the following questions: 
 
-### 1. Geographic Utilization
+ ***Geographic Utilization***
+How many stations are there in each neighborhood and borough of NYC? Where are the most commonly used stations?
 
-   a. How many stations are there in each neighborhood and borough of NYC?
-   
-   b. Where are the most commonly used stations?
+ ***User Demographics***
+Who is the typical Citi Bike User?
 
-### 2. User Demographics
-
-   a. Who is the typical Citi Bike User?
-
-### 3. Health Implications
-
-   a. Are there disparities in Citi Bike stations per neighborhood or in ridership? Is there a relationship to the social deprivation index (SDI)?
-   
-   b. Are there differences in Citi Bike stations per neighborhood or ridership that is related to obesity? 
-   
-   c. How do these variables interact? Can we build a model of Citi Bike utilization that integrates disparities, both social and environmental, and also health factors?
+ ***Health Implications***
+Are there disparities in Citi Bike stations per neighborhood or in ridership? Is there a relationship to the social deprivation index (SDI)? Are there differences in Citi Bike stations per neighborhood or ridership that is related to obesity? And, how do these variables interact? Can we build a model of Citi Bike utilization that integrates disparities, both social and environmental, and also health factors?
 
 
 
 
-1. Geographic utilization 
+*Geographic utilization*
 
 As we expected, station availability varies across the boroughs and within the boroughs. 
 
@@ -940,13 +931,13 @@ There is consistency among stations available and used, with a mean of `r mean(s
 
 There doesn't seem to be too much discernible pattern between median SDI and station usage/availability per neighborhood. The highest number of available stations, though, does appear in the lower median SDI areas (the areas with lowest social deprivation, ie more privileged areas). Our analysis above showed variation between station usage and availability only for a few neighborhoods, so it's not surprising that there's not much discernible difference in station usage/availability by median SDI.
 
-2. User Demographics
+*User Demographics*
 
 The most common Citi Bike users were subscribers, males, and those aged 30 years and 50 years.
 
 Most rides were taken by a Citi Bike subscriber compared to a customer, which shows that the Citi Bike system is appealing to New York residents and not just tourists. Our data showed a gender disparity between female and male subscribers, with more male riders than female riders. Across the ages self reported by subscribers, the most common age of riders was 30 years old and then 50 years old. This might suggest that biking is a viable exercise intervention for older adults. 
 
-3. Health Implications
+*Health Implications*
 
 A deep dive into the relationship between Citibike and the health variables can be found on our interactive [dashboard](https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/) to visualize some of these exploratory analyses all together.
 
@@ -954,7 +945,7 @@ As overweight percentage increases, there seems to be a downward trend in statio
 
 We first explored the interactions among the health metrics (median SDI and percentage overweight) themselves. We found that for every one-unit increase in SDI, overweight percentage is estimated to increase by 0.194, assuming all other factors remain constant. They are positively correlated, but not very strongly.
 
-Citi Bike Use Prediction with Health Metric Modeling
+* Citi Bike Use Prediction with Health Metric Modeling
 
 We found that the models had significant Beta statistics, but overall had very variable RMSE values in our cross-validation analyses. We also found the R2 to be low for both. 
 
