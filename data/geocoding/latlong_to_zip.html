@@ -1631,8 +1631,8 @@ which converts coordinates to addresses, from which we can extract
 zipcodes.</p></li>
 <li><p>The output of the code below is a <strong>crosswalk from
 coordinates to Zipcode</strong> that is stored in our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/citibike_latlong_zip.csv">github
-here</a> and used in our <a href="../data_import_clean.html">Data
-Sources page</a>.</p>
+here</a> and used in our <a href="../../data_import_clean.html">Data
+Sources page</a></p>
 <ul>
 <li>We generate a crosswalk here for efficiency purposes, as this takes
 ~20 minutes to execute, so is better suited as a one-time process.</li>
@@ -1645,7 +1645,8 @@ Sources page</a>.</p>
 <h2><span style="color: blue;">Load Citibike Data</span></h2>
 <p> </p>
 <p>The following code loads and tidies the Citibike data, identically as
-described in <a href="./data_import_clean.html">Data Sources</a>.</p>
+described in <a href="../../data_import_clean.html">Data
+Sources</a>.</p>
 <pre class="r"><code>citibike &lt;- 
   tibble(
     files = list.files(&quot;../../citibike/&quot;),
@@ -1776,7 +1777,7 @@ head(latlong_zip) |&gt;
 </table>
 <pre class="r"><code>#write_csv(latlong_zip, &quot;./data/geocoding/citibike_latlong_zip.csv&quot;)</code></pre>
 <p>For 19 coordinates, zipcodes were identified for 19, and 0 are
-missing zipcodes. These are handles later in data cleaning in <a href="./data_import_clean.html">Data Sources</a>, where we manually
+missing zipcodes. These are handles later in data cleaning in <a href="../../data_import_clean.html">Data Sources</a>, where we manually
 lookup the remaining zipcodes, which is feasible for such a small
 subset. The manually annotated coordinates are stored on our <a href="https://github.com/courtneyjdiamond/pedalstopatterns.github.io/blob/main/data/geocoding/manual_zipcodes.csv">github
 here</a>.</p>
