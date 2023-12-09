@@ -213,7 +213,7 @@ Median SDI by Neighborhood in 2019.
 
 Mean Fine Particles by Neighborhood in 2019.
 
-![](Exploration_files/figure-html/unnamed-chunk-8-1.png)
+![](Exploration_files/figure-html/particles_neighborhood-1.png)
 
 Percent of adults classified as overweight or obese by neighborhood.
 
