@@ -65,7 +65,7 @@ start_end_bronx = read_csv("data/start_end_Bronx.csv")
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-This is a test header.
+This dashboard can help you explore Citibike ridership data for September 2019 by borough. The top left GeoMap also allows you to investigate specific health metrics for each Citibike station.
 
 
 ```{r inputs, echo = FALSE}
@@ -142,7 +142,7 @@ else if (input$health_var == "SDI") {
 ```
 
 
-### Sankey chart of most frequent rides taken from station to station
+### Sankey Flowchart of Intra-Borough Rides
 
 ```{r, echo = FALSE}
 
@@ -187,7 +187,7 @@ sankey_plot_man =
 
 sankey_plot_man |> 
   layout(
-    title = "Citibike Trips Completed in Manhattan",
+    title = "Citibike Trips Completed in Manhattan, by Neighborhood",
     font = list(size = 10))  
   
 }
@@ -235,7 +235,7 @@ sankey_plot_bklyn =
 
 sankey_plot_bklyn |> 
   layout(
-    title = "Citibike Trips Completed in Brooklyn",
+    title = "Citibike Trips Completed in Brooklyn, by Neighborhood",
     font = list(size = 10))
 }
 
@@ -268,7 +268,7 @@ sankey_plot_qns =
 
 sankey_plot_qns |> 
   layout(
-    title = "Citibike Trips Completed in Queens",
+    title = "Citibike Trips Completed in Queens, by Neighborhood",
     font = list(size = 10))
 
 }
@@ -299,7 +299,7 @@ sankey_plot_bx =
 
 sankey_plot_bx |> 
   layout(
-    title = "Citibike Trips Completed in the Bronx",
+    title = "Citibike Trips Completed in the Bronx, by Neighborhood",
     font = list(size = 10))
 }
   

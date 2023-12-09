@@ -5,9 +5,9 @@ account: courtneyjdiamond
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10748020
-bundleId: 8027489
+bundleId: 8028981
 url: https://courtneyjdiamond.shinyapps.io/ExploratoryDashboard/
 version: 1
 asMultiple: FALSE
 asStatic: TRUE
-ignoredFiles: dashboard_file_processing.html|dashboard_file_processing.Rmd|test.csv
+ignoredFiles: dashboard_file_processing.html|dashboard_file_processing.Rmd
